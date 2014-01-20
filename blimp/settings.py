@@ -39,6 +39,7 @@ INSTALLED_APPS = (
 
     'south',
     'django_extensions',
+    'corsheaders',
     'rest_framework',
 
     'blimp.utils',
@@ -54,6 +55,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'blimp.urls'
@@ -114,3 +116,9 @@ COMPANY_RESERVED_KEYWORDS = [
     'import', 'discussions', 'inbound_webhook', 'workspace', 'workspaces',
     'referrals', 'account', 'accounts', 'tasks'
 ]
+
+
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:8000',
+    'localhost:8000',
+)
