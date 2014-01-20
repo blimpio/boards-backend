@@ -20,8 +20,6 @@ class ValidateUsernameSerializer(serializers.Serializer):
             'exists': User.objects.filter(username=username).exists()
         }
 
-        return attrs
-
 
 class SignupSerializer(serializers.Serializer):
     """
@@ -111,8 +109,10 @@ class SignupSerializer(serializers.Serializer):
     def signup(self):
         user = self.create_user()
         account, owner = self.create_account(user)
-        invited_users = self.invite_users(account, user)
-        print user, account, owner, invited_users
+
+        self.invite_users(account, user)
+
+        return user
 
     def create_user(self):
         username = self.object['username']

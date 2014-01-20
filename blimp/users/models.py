@@ -28,7 +28,7 @@ def get_user_upload_path(instance, filename):
     # TODO: Change to uploads/users/avatars/?
     identifier = str(uuid.uuid4())
     return os.path.join(
-        'uploads', 'users', instance.user.email, identifier, filename)
+        'uploads', 'users', instance.email, identifier, filename)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
