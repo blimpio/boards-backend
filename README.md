@@ -18,5 +18,5 @@ pip install -r requirements.txt
 ## Running
 
 ```
-./manage runserver_plus
+./manage.py runserver_plus
 ```
