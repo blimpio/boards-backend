@@ -1,5 +1,7 @@
 import re
 import pytz
+import uuid
+import os
 from datetime import datetime
 
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
@@ -12,32 +14,13 @@ from django.contrib.auth.signals import user_logged_in
 from django.utils import timezone
 
 
-username_help_text = _(
-    'Required. 30 characters or fewer. '
-    'Letters, numbers and '
-    '@/./+/-/_ characters'
-)
-
-username_validator = validators.RegexValidator(
-    re.compile('^[\w.@+-]+$'),
-    _('Enter a valid username.'),
-    'invalid'
-)
-
-is_staff_help_text = _(
-    'Designates whether the user can log into this admin site.'
-)
-
-is_active_help_text = _(
-    'Designates whether this user should be treated as '
-    'active. Unselect this instead of deleting accounts.'
-)
-
-
 def update_last_ip(sender, user, request, **kwargs):
+    """
+    A signal receiver which updates the last_ip for
+    the user logging in.
+    """
     user.last_ip = request.META.get('REMOTE_ADDR', '0.0.0.0')
     user.save()
-
 user_logged_in.connect(update_last_ip)
 
 
@@ -55,6 +38,27 @@ class User(AbstractBaseUser, PermissionsMixin):
         now = datetime.now(pytz.timezone(tz))
         PRETTY_TIMEZONE_CHOICES.append(
             (tz, ' %s (GMT%s)' % (tz, now.strftime('%z'))))
+
+    username_help_text = _(
+        'Required. 30 characters or fewer. '
+        'Letters, numbers and '
+        '@/./+/-/_ characters'
+    )
+
+    username_validator = validators.RegexValidator(
+        re.compile('^[\w.@+-]+$'),
+        _('Enter a valid username.'),
+        'invalid'
+    )
+
+    is_staff_help_text = _(
+        'Designates whether the user can log into this admin site.'
+    )
+
+    is_active_help_text = _(
+        'Designates whether this user should be treated as '
+        'active. Unselect this instead of deleting accounts.'
+    )
 
     username = models.CharField(
         _('username'), max_length=30, unique=True,
