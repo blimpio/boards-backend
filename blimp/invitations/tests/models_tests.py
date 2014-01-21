@@ -1,4 +1,7 @@
+import jwt
+
 from django.test import TestCase
+from django.conf import settings
 
 from blimp.users.models import User
 from blimp.accounts.models import Account
@@ -10,22 +13,26 @@ class SignupRequestTestCase(TestCase):
         self.signup_request = SignupRequest.objects.create(
             email='jpueblo@example.com')
 
-        self.token = ('eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.'
-                      'eyJ0eXBlIjogIlNpZ251cFJlcXVlc3QiLCAiaWQiOiAxfQ.'
-                      'IeyWuyJBKOK93iGSybajLMU3PyYAya9q_UCCZCS_rDI')
-
     def test_token_property(self):
         """
         Tests that the token property returns the expected JWT token.
         """
-        self.assertTrue(self.signup_request.token, self.token)
+        payload = jwt.decode(self.signup_request.token, settings.SECRET_KEY)
+        expected_payload = {
+            'type': 'SignupRequest',
+            'id': 1
+        }
+
+        self.assertTrue(payload, expected_payload)
 
     def test_get_from_token(self):
         """
         Tests that the manager's get_from_token() returns an SignupRequest
         for a given token.
         """
-        signup_request = SignupRequest.objects.get_from_token(self.token)
+        signup_request = SignupRequest.objects.get_from_token(
+            self.signup_request.token)
+
         self.assertEqual(signup_request, self.signup_request)
 
 
@@ -46,10 +53,6 @@ class InvitedUserTestCase(TestCase):
 
         self.invited_user = InvitedUser.objects.create(
             user=self.user, account=self.account, created_by=self.user)
-
-        self.token = ('eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.'
-                      'eyJ0eXBlIjogIkludml0ZWRVc2VyIiwgImlkIjogMX0._VT6-'
-                      'fWVseLemG99pbcftEr4uVNxv7iivOO_FLvYFcg')
 
     def test_save_should_set_additional_user_data_if_available(self):
         """
@@ -76,7 +79,14 @@ class InvitedUserTestCase(TestCase):
         """
         Tests that the token property returns the expected JWT token.
         """
-        self.assertEqual(self.invited_user.token, self.token)
+
+        payload = jwt.decode(self.invited_user.token, settings.SECRET_KEY)
+        expected_payload = {
+            'type': 'InvitedUser',
+            'id': 1
+        }
+
+        self.assertTrue(payload, expected_payload)
 
     def test_get_gravatar_url_should_return_user_gravatar_url(self):
         """

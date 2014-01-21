@@ -43,7 +43,9 @@ class SignupRequest(models.Model):
             'id': self.pk
         }
 
-        return jwt.encode(payload, settings.SECRET_KEY)
+        jwt_token = jwt.encode(payload, settings.SECRET_KEY)
+
+        return jwt_token.decode('utf-8')
 
 
 class InvitedUser(models.Model):
@@ -96,7 +98,9 @@ class InvitedUser(models.Model):
             'id': self.pk
         }
 
-        return jwt.encode(payload, settings.SECRET_KEY)
+        jwt_token = jwt.encode(payload, settings.SECRET_KEY)
+
+        return jwt_token.decode('utf-8')
 
     @classmethod
     def notify_pending_invitations(cls, user):

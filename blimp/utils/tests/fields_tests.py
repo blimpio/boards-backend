@@ -9,14 +9,14 @@ class FieldsTestCase(TestCase):
         Tests that field should have a default comma separator specified.
         """
         field = CharacterSeparatedField()
-        self.assertEquals(field.separator, ',')
+        self.assertEqual(field.separator, ',')
 
     def test_field_should_accept_custom_separator(self):
         """
         Tests that field should accept a custom separator.
         """
         field = CharacterSeparatedField(separator='.')
-        self.assertEquals(field.separator, '.')
+        self.assertEqual(field.separator, '.')
 
     def test_field_to_native_should_return_str_for_given_list(self):
         """
@@ -24,7 +24,7 @@ class FieldsTestCase(TestCase):
         from a specified list.
         """
         field = CharacterSeparatedField()
-        self.assertEquals(field.to_native(['a', 'b', 'c']), 'a,b,c')
+        self.assertEqual(field.to_native(['a', 'b', 'c']), 'a,b,c')
 
     def test_field_from_native_should_return_list_for_given_str(self):
         """
@@ -32,4 +32,4 @@ class FieldsTestCase(TestCase):
         from a specified string.
         """
         field = CharacterSeparatedField()
-        self.assertEquals(field.from_native('a,b,c'), ['a', 'b', 'c'])
+        self.assertEqual(field.from_native('a,b,c'), ['a', 'b', 'c'])
