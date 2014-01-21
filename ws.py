@@ -1,4 +1,3 @@
-import logging
 import json
 
 from tornado import web, ioloop
@@ -18,14 +17,40 @@ class EchoConnection(SockJSConnection):
     def send_json(self, obj):
         self.send(json.dumps(obj))
 
+
 if __name__ == '__main__':
-    logging.getLogger().setLevel(logging.DEBUG)
+    import logging
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--port',
+        help='Optional port number. Defaults to 8080',
+        default=8080,
+    )
+    parser.add_argument('--debug',
+        help='Verbosity level set to DEBUG. Defaults to WARNING.',
+        action='store_const',
+        dest='loglevel',
+        const=logging.DEBUG,
+        default=logging.WARNING
+    )
+    parser.add_argument('--verbose',
+        help='Verbosity level set to INFO.',
+        action='store_const',
+        dest='loglevel',
+        const=logging.INFO
+    )
+
+    args = parser.parse_args()
+    port = args.port
+
+    logging.getLogger().setLevel(args.loglevel)
 
     EchoRouter = SockJSRouter(EchoConnection, '/echo')
 
     app = web.Application(EchoRouter.urls)
-    app.listen(8080)
+    app.listen(port)
 
-    logging.info(" [*] Listening on 0.0.0.0:8080")
+    logging.info(" [*] Listening on 0.0.0.0:{}".format(port))
 
     ioloop.IOLoop.instance().start()
