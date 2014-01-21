@@ -19,4 +19,6 @@ pytz==2013.9
 requests==2.2.0
 requests-oauthlib==0.4.0
 six==1.5.2
+sockjs-tornado==1.0.0
 sqlparse==0.1.10
+tornado==3.2
