@@ -2,31 +2,31 @@ from django.test import TestCase
 
 from blimp.users.models import User
 from blimp.accounts.models import Account
-from ..models import InviteRequest, InvitedUser
+from ..models import SignupRequest, InvitedUser
 
 
-class InviteRequestTestCase(TestCase):
+class SignupRequestTestCase(TestCase):
     def setUp(self):
-        self.invite_request = InviteRequest.objects.create(
+        self.signup_request = SignupRequest.objects.create(
             email='jpueblo@example.com')
 
         self.token = ('eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.'
-                      'eyJ0eXBlIjogIkludml0ZVJlcXVlc3QiLCAiaWQiOiAxfQ.'
-                      't_1N9AqszcmFH9Pgku2KtRulm0NZbasgverhD2HlrVk')
+                      'eyJ0eXBlIjogIlNpZ251cFJlcXVlc3QiLCAiaWQiOiAxfQ.'
+                      'IeyWuyJBKOK93iGSybajLMU3PyYAya9q_UCCZCS_rDI')
 
     def test_token_property(self):
         """
         Tests that the token property returns the expected JWT token.
         """
-        self.assertTrue(self.invite_request.token, self.token)
+        self.assertTrue(self.signup_request.token, self.token)
 
     def test_get_from_token(self):
         """
-        Tests that the manager's get_from_token() returns an InviteRequest
+        Tests that the manager's get_from_token() returns an SignupRequest
         for a given token.
         """
-        invite_request = InviteRequest.objects.get_from_token(self.token)
-        self.assertEqual(invite_request, self.invite_request)
+        signup_request = SignupRequest.objects.get_from_token(self.token)
+        self.assertEqual(signup_request, self.signup_request)
 
 
 class InvitedUserTestCase(TestCase):

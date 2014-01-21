@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import InviteRequest, InvitedUser
+from .models import SignupRequest, InvitedUser
 
 
-admin.site.register([InviteRequest, InvitedUser])
+admin.site.register([SignupRequest, InvitedUser])

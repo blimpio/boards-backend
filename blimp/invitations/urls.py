@@ -1,16 +1,16 @@
 from django.conf.urls import patterns, url
 
-from .views import InviteRequestCreateAPIView, ValidateInviteRequestAPIView
+from .views import SignupRequestCreateAPIView, ValidateSignupRequestAPIView
 
 
 urlpatterns = patterns(
     # Prefix
     '',
 
-    url(r'auth/invite_request/$',
-        InviteRequestCreateAPIView.as_view(), name='invite-request-create'),
+    url(r'auth/signup_request/$',
+        SignupRequestCreateAPIView.as_view(), name='invite-request-create'),
 
-    url(r'auth/invite_request/validate/$',
-        ValidateInviteRequestAPIView.as_view(),
+    url(r'auth/signup_request/validate/$',
+        ValidateSignupRequestAPIView.as_view(),
         name='validate-invite-request'),
 )

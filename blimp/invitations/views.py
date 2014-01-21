@@ -2,12 +2,12 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import InviteRequest
-from .serializers import ValidateInviteRequestSerializer
+from .models import SignupRequest
+from .serializers import ValidateSignupRequestSerializer
 
 
-class InviteRequestCreateAPIView(generics.CreateAPIView):
-    model = InviteRequest
+class SignupRequestCreateAPIView(generics.CreateAPIView):
+    model = SignupRequest
     authentication_classes = ()
     permission_classes = ()
 
@@ -15,7 +15,7 @@ class InviteRequestCreateAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.DATA)
 
         if serializer.is_valid():
-            return super(InviteRequestCreateAPIView, self).post(
+            return super(SignupRequestCreateAPIView, self).post(
                 request, *args, **kwargs)
 
         return Response({
@@ -23,10 +23,10 @@ class InviteRequestCreateAPIView(generics.CreateAPIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ValidateInviteRequestAPIView(APIView):
+class ValidateSignupRequestAPIView(APIView):
     authentication_classes = ()
     permission_classes = ()
-    serializer_class = ValidateInviteRequestSerializer
+    serializer_class = ValidateSignupRequestSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.DATA)

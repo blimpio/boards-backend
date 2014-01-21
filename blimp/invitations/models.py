@@ -7,7 +7,7 @@ from blimp.accounts.constants import MEMBER_ROLES
 from blimp.users.utils import get_gravatar_url
 
 
-class InviteRequestManager(models.Manager):
+class SignupRequestManager(models.Manager):
     def get_from_token(self, token):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
@@ -17,18 +17,18 @@ class InviteRequestManager(models.Manager):
         payload_type = payload.get('type')
         payload_id = payload.get('id')
 
-        if payload_type == 'InviteRequest' and payload_id:
+        if payload_type == 'SignupRequest' and payload_id:
             try:
-                return InviteRequest.objects.get(pk=payload_id)
-            except InviteRequest.DoesNotExist:
+                return SignupRequest.objects.get(pk=payload_id)
+            except SignupRequest.DoesNotExist:
                 pass
 
         return None
 
 
-class InviteRequest(models.Model):
+class SignupRequest(models.Model):
     email = models.EmailField(unique=True)
-    objects = InviteRequestManager()
+    objects = SignupRequestManager()
 
     def __unicode__(self):
         return self.email
@@ -39,7 +39,7 @@ class InviteRequest(models.Model):
         Returns a JSON Web Token
         """
         payload = {
-            'type': 'InviteRequest',
+            'type': 'SignupRequest',
             'id': self.pk
         }
 
