@@ -103,6 +103,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
+    'EXCEPTION_HANDLER': 'blimp.utils.exceptions.custom_exception_handler',
 }
 
 
