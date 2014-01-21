@@ -15,8 +15,14 @@ pip install -r requirements.txt
 ./manage.py loaddata blimp/users/fixtures/users.json
 ```
 
-## Running
+## Running web server
 
 ```
 ./manage.py runserver_plus
+```
+
+## Running websockets server
+
+```
+python ws.py --debug
 ```
