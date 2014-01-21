@@ -58,13 +58,11 @@ class Account(models.Model):
 
     def invite_user(self, user_data):
         """
-        Receives a list of dictionaries of InvitedUser fields
-        and returns a list of InvitedUser.
+        Receives dictionary of InvitedUser fields
+        and returns a tuple of InvitedUser, created.
         """
-        email = user_data.pop('email')
-
         return InvitedUser.objects.get_or_create(
-            email=email, account=self, defaults=user_data)
+            account=self, defaults=user_data, **user_data)
 
 
 class AccountMember(models.Model):
