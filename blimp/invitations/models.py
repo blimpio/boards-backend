@@ -2,13 +2,9 @@ import jwt
 
 from django.db import models
 from django.conf import settings
-from django.contrib.auth import get_user_model
 
 from blimp.accounts.constants import MEMBER_ROLES
 from blimp.users.utils import get_gravatar_url
-
-
-User = get_user_model()
 
 
 class InviteRequestManager(models.Manager):
@@ -25,25 +21,6 @@ class InviteRequestManager(models.Manager):
             try:
                 return InviteRequest.objects.get(pk=payload_id)
             except InviteRequest.DoesNotExist:
-                pass
-
-        return None
-
-
-class InvitedUserManager(models.Manager):
-    def get_from_token(self, token):
-        try:
-            payload = jwt.decode(token, settings.SECRET_KEY)
-        except jwt.DecodeError:
-            return None
-
-        payload_type = payload.get('type')
-        payload_id = payload.get('id')
-
-        if payload_type == 'InvitedUser' and payload_id:
-            try:
-                return InvitedUser.objects.get(pk=payload_id)
-            except InvitedUser.DoesNotExist:
                 pass
 
         return None
@@ -94,7 +71,11 @@ class InvitedUser(models.Model):
         return self.user.email if self.user else self.email
 
     def get_full_name(self):
-        return u'{} {}'.format(self.first_name, self.last_name)
+        """
+        Returns the first_name plus the last_name, with a space in between.
+        """
+        full_name = u'{} {}'.format(self.first_name, self.last_name)
+        return full_name.strip()
 
     def get_gravatar_url(self):
         return get_gravatar_url(self.email)

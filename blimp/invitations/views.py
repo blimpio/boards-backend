@@ -11,6 +11,17 @@ class InviteRequestCreateAPIView(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
 
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.DATA)
+
+        if serializer.is_valid():
+            return super(InviteRequestCreateAPIView, self).post(
+                request, *args, **kwargs)
+
+        return Response({
+            'error': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ValidateInviteRequestAPIView(APIView):
     authentication_classes = ()
