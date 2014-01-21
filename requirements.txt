@@ -3,6 +3,7 @@ Pillow==2.3.0
 PyJWT==0.1.7
 South==0.8.4
 Werkzeug==0.9.4
+coverage==3.7.1
 django-allauth==0.15.0
 django-cors-headers==0.12
 django-debug-toolbar==1.0.1
