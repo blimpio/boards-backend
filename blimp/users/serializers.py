@@ -5,6 +5,7 @@ from blimp.utils import fields
 from blimp.utils.validators import is_valid_email
 from blimp.accounts.models import Account, AccountMember, EmailDomain
 from blimp.accounts.constants import BLACKLIST_SIGNUP_DOMAINS
+from blimp.invitations.models import SignupRequest
 from .models import User
 
 
@@ -36,6 +37,23 @@ class SignupSerializer(serializers.Serializer):
     allow_signup = serializers.BooleanField()
     signup_domains = fields.CharacterSeparatedField(required=False)
     invite_emails = fields.CharacterSeparatedField(required=False)
+    signup_request_token = serializers.CharField(write_only=True)
+
+    def validate_signup_request_token(self, attrs, source):
+        token = attrs[source]
+        email = attrs['email']
+
+        signup_request = SignupRequest.objects.get_from_token(token)
+
+        if not signup_request:
+            msg = 'No signup request found for token.'
+            raise serializers.ValidationError(msg)
+
+        if signup_request.email != email:
+            msg = 'Signup request email does not match email.'
+            raise serializers.ValidationError(msg)
+
+        return attrs
 
     def validate_full_name(self, attrs, source):
         full_name = attrs[source]

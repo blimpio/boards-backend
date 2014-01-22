@@ -2,6 +2,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from blimp.invitations.models import SignupRequest
 from ..models import User
 
 
@@ -49,6 +50,10 @@ class SignupAPIView(TestCase):
     def setUp(self):
         self.client = APIClient()
 
+        self.email = 'juan@example.com'
+
+        self.signup_request = SignupRequest.objects.create(email=self.email)
+
     def test_post_valid_data(self):
         """
         Tests that POST request with valid data to endpoint
@@ -56,20 +61,21 @@ class SignupAPIView(TestCase):
         """
         data = {
             'full_name': 'Juan Pueblo',
-            'email': 'juan@example.com',
+            'email': self.email,
             'username': 'juan',
             'password': 'abc123',
             'account_name': 'Pueblo Co.',
             'allow_signup': True,
             'signup_domains': 'example.com,example2.com',
-            'invite_emails': 'pedro@example.com,sara@example2.com'
+            'invite_emails': 'pedro@example.com,sara@example2.com',
+            'signup_request_token': self.signup_request.token
         }
 
         response = self.client.post(
             '/api/auth/signup/', data, format='json')
 
         expected_response = {
-            'email': 'juan@example.com',
+            'email': self.email,
             'full_name': 'Juan Pueblo',
             'first_name': 'Juan',
             'last_name': 'Pueblo',
@@ -96,7 +102,8 @@ class SignupAPIView(TestCase):
                 'password': ['This field is required.'],
                 'email': ['This field is required.'],
                 'full_name': ['This field is required.'],
-                'account_name': ['This field is required.']
+                'account_name': ['This field is required.'],
+                'signup_request_token': ['This field is required.']
             }
         }
 

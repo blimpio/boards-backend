@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from blimp.accounts.models import Account, AccountMember
+from blimp.invitations.models import SignupRequest
 from ..models import User
 from ..serializers import ValidateUsernameSerializer, SignupSerializer
 
@@ -9,10 +10,11 @@ class ValidateUsernameSerializerTestCase(TestCase):
     def setUp(self):
         self.username = 'jpueblo'
         self.password = 'abc123'
+        self.email = 'jpueblo@example.com'
 
         self.user = User.objects.create_user(
             username=self.username,
-            email='jpueblo@example.com',
+            email=self.email,
             password=self.password,
             first_name='Juan',
             last_name='Pueblo'
@@ -75,6 +77,7 @@ class SignupSerializerTestCase(TestCase):
     def setUp(self):
         self.username = 'jpueblo'
         self.password = 'abc123'
+        self.email = 'jpueblo@example.com'
 
         self.user = User.objects.create_user(
             username=self.username,
@@ -84,13 +87,17 @@ class SignupSerializerTestCase(TestCase):
             last_name='Pueblo'
         )
 
+        self.signup_request = SignupRequest.objects.create(
+            email='juan@example.com')
+
         self.data = {
             'full_name': 'Juan Pueblo',
             'email': 'juan@example.com',
             'username': 'juan',
             'password': 'abc123',
             'account_name': 'Pueblo Co.',
-            'allow_signup': False
+            'allow_signup': False,
+            'signup_request_token': self.signup_request.token
         }
 
     def test_serializer_empty_data(self):
@@ -130,11 +137,48 @@ class SignupSerializerTestCase(TestCase):
 
         self.assertEqual(serializer.data, expected_data)
 
+    def test_serializer_should_validate_token_not_found(self):
+        """
+        Tests that serializer should return an error if a signup request
+        is not found for a token.
+        """
+        self.data['signup_request_token'] = 'nonexistent'
+
+        serializer = SignupSerializer(data=self.data)
+        serializer.is_valid()
+        expected_error = {
+            'signup_request_token': ['No signup request found for token.']
+        }
+
+        self.assertEqual(serializer.errors, expected_error)
+
+    def test_serializer_should_validate_token_email_no_match(self):
+        """
+        Tests that serializer should return an error if a signup request
+        email does not match signup email.
+        """
+        self.data['signup_request_token'] = 'nonexistent'
+        signup_request = SignupRequest.objects.create(email=self.email)
+        self.data['signup_request_token'] = signup_request.token
+
+        serializer = SignupSerializer(data=self.data)
+        serializer.is_valid()
+        expected_error = {
+            'signup_request_token': [
+                'Signup request email does not match email.'
+            ]
+        }
+
+        self.assertEqual(serializer.errors, expected_error)
+
     def test_serializer_should_return_error_email_exists(self):
         """
         Tests that serializer should return an error if an email exists.
         """
         self.data['email'] = 'jpueblo@example.com'
+        signup_request = SignupRequest.objects.create(email=self.data['email'])
+        self.data['signup_request_token'] = signup_request.token
+
         serializer = SignupSerializer(data=self.data)
         serializer.is_valid()
         expected_error = {
