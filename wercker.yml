@@ -17,3 +17,8 @@ build:
         name: test
         code: |
           python manage.py test --pattern=*_tests.py
+
+    after-steps:
+      - hipchat-notify:
+          token: $HIPCHAT_TOKEN
+          room-id: $HIPCHAT_ROOM_ID
