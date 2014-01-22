@@ -6,7 +6,7 @@ from sockjs.tornado import SockJSRouter, SockJSConnection
 from blimp.utils.websockets import WebSocketsRequest
 
 
-class EchoConnection(SockJSConnection):
+class RESTAPIConnection(SockJSConnection):
     def on_open(self, info):
         self.send_json({'connected': True})
 
@@ -23,18 +23,21 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--port',
+    parser.add_argument(
+        '--port',
         help='Optional port number. Defaults to 8080',
         default=8080,
     )
-    parser.add_argument('--debug',
+    parser.add_argument(
+        '--debug',
         help='Verbosity level set to DEBUG. Defaults to WARNING.',
         action='store_const',
         dest='loglevel',
         const=logging.DEBUG,
         default=logging.WARNING
     )
-    parser.add_argument('--verbose',
+    parser.add_argument(
+        '--verbose',
         help='Verbosity level set to INFO.',
         action='store_const',
         dest='loglevel',
@@ -46,7 +49,7 @@ if __name__ == '__main__':
 
     logging.getLogger().setLevel(args.loglevel)
 
-    EchoRouter = SockJSRouter(EchoConnection, '/echo')
+    EchoRouter = SockJSRouter(RESTAPIConnection, '/ws/api/')
 
     app = web.Application(EchoRouter.urls)
     app.listen(port)
