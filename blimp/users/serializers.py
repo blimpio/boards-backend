@@ -3,7 +3,8 @@ from rest_framework import serializers
 
 from blimp.utils import fields
 from blimp.utils.validators import is_valid_email
-from blimp.accounts.models import Account, AccountMember
+from blimp.accounts.models import Account, AccountMember, EmailDomain
+from blimp.accounts.constants import BLACKLIST_SIGNUP_DOMAINS
 from .models import User
 
 
@@ -82,11 +83,12 @@ class SignupSerializer(serializers.Serializer):
         signup_domains = set(attrs.get(source, []))
         allow_signup = attrs.get('allow_signup')
 
-        blacklist = set(['gmail.com', 'yahoo.com', 'hotmail.com'])
-        unallowed_domains = signup_domains.intersection(blacklist)
+        if not allow_signup:
+            return attrs
 
-        if allow_signup and len(unallowed_domains) > 0:
-            for domain in unallowed_domains:
+        for domain in signup_domains:
+            is_valid = EmailDomain.is_signup_domain_valid(domain)
+            if not is_valid:
                 msg = "You can't have {} as a sign-up domain.".format(domain)
                 raise serializers.ValidationError(msg)
 

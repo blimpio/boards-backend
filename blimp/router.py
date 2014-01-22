@@ -6,5 +6,6 @@ urlpatterns = patterns(
     '',
 
     url(r'', include('blimp.users.urls')),
+    url(r'', include('blimp.accounts.urls')),
     url(r'', include('blimp.invitations.urls')),
 )
