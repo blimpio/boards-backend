@@ -1,6 +1,12 @@
 box: wercker/python
 build:
   steps:
+    - virtualenv:
+        name: setup virtual environment
+
+    - pip-install:
+        requirements_file: "requirements.txt" # Optional argument.
+
     - script:
         name: echo python information
         code: |
