@@ -28,7 +28,8 @@ class SignupRequestCreateAPIView(generics.CreateAPIView):
         obj.send_email()
 
 
-class ValidateSignupRequestAPIView(APIView):
+class ValidateSignupRequestAPIView(generics.CreateAPIView):
+    model = SignupRequest
     serializer_class = ValidateSignupRequestSerializer
     authentication_classes = ()
     permission_classes = ()
