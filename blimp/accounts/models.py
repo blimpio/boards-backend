@@ -2,13 +2,13 @@ import os
 import uuid
 
 from django.db import models
-from django.conf import settings
 from django.template.defaultfilters import slugify
 
 from blimp.users.models import User
 from blimp.utils.slugify import unique_slugify
 from blimp.invitations.models import InvitedUser
-from .constants import MEMBER_ROLES, BLACKLIST_SIGNUP_DOMAINS
+from .constants import (MEMBER_ROLES, BLACKLIST_SIGNUP_DOMAINS,
+                        COMPANY_RESERVED_KEYWORDS)
 
 
 def get_company_upload_path(instance, filename):
@@ -56,7 +56,7 @@ class Account(models.Model):
         if not self.slug:
             pre_slug = slugify(self.name)
             if not self.pk or pre_slug != self.slug:
-                if pre_slug in settings.COMPANY_RESERVED_KEYWORDS:
+                if pre_slug in COMPANY_RESERVED_KEYWORDS:
                     pre_slug = '%s1' % pre_slug
                 else:
                     pre_slug = self.name
