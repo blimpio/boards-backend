@@ -3,7 +3,7 @@ build:
   steps:
 
     - install-packages:
-        packages: postgresql-devel
+        packages: libpq-dev python-dev
 
     - script:
         name: setup virtual environment
