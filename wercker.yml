@@ -1,11 +1,22 @@
-box: wercker/python
+box: flenter/multi-python
 build:
   steps:
-    - virtualenv:
-        name: setup virtual environment
 
-    - pip-install:
-        requirements_file: "requirements.txt" # Optional argument.
+    - script:
+        name: setup virtual environment
+        code: |
+          sudo pip install virtualenv
+
+    - script:
+        name: setup/activate virtualenv using 3.3.3
+        code: |
+            virtualenv -p /usr/local/bin/python3 /tmp/venv33
+            source /tmp/venv33/bin/activate
+
+    - script:
+        name: pip install
+        code: |
+          pip install -r requirements.txt
 
     - script:
         name: echo python information
@@ -17,6 +28,11 @@ build:
         name: test
         code: |
           python manage.py test --pattern=*_tests.py
+
+    - script:
+        name: deactivate virtualenv
+        code: |
+            deactivate
 
   after-steps:
     - hipchat-notify:
