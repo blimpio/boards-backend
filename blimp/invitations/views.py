@@ -24,6 +24,9 @@ class SignupRequestCreateAPIView(generics.CreateAPIView):
             'error': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
+    def post_save(self, obj, created=False):
+        obj.send_email()
+
 
 class ValidateSignupRequestAPIView(APIView):
     serializer_class = ValidateSignupRequestSerializer

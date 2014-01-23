@@ -47,6 +47,19 @@ class SignupRequest(models.Model):
 
         return jwt_token.decode('utf-8')
 
+    def send_email(self):
+        from django.core.mail import send_mail
+
+        message = '{}'.format(self.token)
+
+        return send_mail(
+            'Blimp Signup Request',
+            message,
+            'from@example.com',
+            [self.email],
+            fail_silently=False
+        )
+
 
 class InvitedUser(models.Model):
     first_name = models.CharField(max_length=30, blank=True)
