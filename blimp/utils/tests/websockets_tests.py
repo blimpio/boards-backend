@@ -12,7 +12,7 @@ from rest_framework.test import APIClient
 from blimp.users.models import User
 from blimp.users.views import SigninAPIView
 from blimp.users.authentication import JWTAuthentication
-from ..websockets import WebSocketsRequest
+from ..websockets import WebSocketRequest
 
 
 class MockAPIView(APIView):
@@ -41,43 +41,43 @@ urlpatterns = patterns(
 )
 
 
-class WebSocketsRequestTestCase(TestCase):
+class WebSocketRequestTestCase(TestCase):
     urls = 'blimp.utils.tests.websockets_tests'
 
     def test_initilize_needs_message(self):
         with self.assertRaises(TypeError):
-            WebSocketsRequest()
+            WebSocketRequest()
 
     def test_initilize_with_message(self):
         message = json.dumps({'url': '/api/mock/'})
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
 
         self.assertEqual(request.message, message)
 
     def test_get_url_should_return_url(self):
         message = json.dumps({'url': '/api/mock/'})
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         request.is_valid_message()
 
         self.assertEqual(request.get_url(), '/api/mock/')
 
     def test_get_url_should_return_none(self):
         message = json.dumps({})
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         request.is_valid_message()
 
         self.assertEqual(request.get_url(), None)
 
     def test_get_method_should_return_lower_method(self):
         message = json.dumps({'method': 'POST'})
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         request.is_valid_message()
 
         self.assertEqual(request.get_method(), 'post')
 
     def test_get_method_should_return_default_lower_method(self):
         message = json.dumps({})
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         request.is_valid_message()
 
         self.assertEqual(request.get_method(), 'get')
@@ -90,14 +90,14 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         request.is_valid_message()
 
         self.assertEqual(request.get_data(), data['data'])
 
     def test_get_data_should_return_default_empty_dict(self):
         message = json.dumps({})
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         request.is_valid_message()
 
         self.assertEqual(request.get_data(), {})
@@ -108,21 +108,21 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         request.is_valid_message()
 
         self.assertEqual(request.get_token(), data['token'])
 
     def test_get_token_should_return_none(self):
         message = json.dumps({})
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         request.is_valid_message()
 
         self.assertEqual(request.get_token(), None)
 
     def test_set_error_should_set_error_message_and_code(self):
         message = json.dumps({})
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         request.set_error('Error message', 123)
 
         expected_error = {
@@ -138,7 +138,7 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
 
         self.assertTrue(request.is_valid())
 
@@ -148,7 +148,7 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
 
         self.assertFalse(request.is_valid())
 
@@ -158,17 +158,17 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
 
         self.assertTrue(request.is_valid_message())
 
     def test_is_valid_message_should_return_false_for_invalid_message(self):
-        request = WebSocketsRequest('errormsg')
+        request = WebSocketRequest('errormsg')
 
         self.assertFalse(request.is_valid_message())
 
     def test_is_valid_message_should_set_error_on_invalid_message(self):
-        request = WebSocketsRequest('{')
+        request = WebSocketRequest('{')
         request.is_valid_message()
 
         expected_error = {
@@ -184,7 +184,7 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         expected_match = resolve('/api/mock/')
         request.is_valid()
         resolver_match = request.get_url_resolver_match()
@@ -197,7 +197,7 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         request.is_valid()
         request.get_url_resolver_match()
 
@@ -214,7 +214,7 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         request.is_valid()
 
         factory = request.get_factory()
@@ -228,7 +228,7 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         request.is_valid()
 
         factory = request.get_factory()
@@ -246,7 +246,7 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        request = WebSocketsRequest(message)
+        request = WebSocketRequest(message)
         request.is_valid()
         factory = request.get_factory()
         request = request.get_request(factory)
@@ -260,7 +260,7 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        wsrequest = WebSocketsRequest(message)
+        wsrequest = WebSocketRequest(message)
         wsrequest.is_valid()
         resolver_match = wsrequest.get_url_resolver_match()
         factory = wsrequest.get_factory()
@@ -276,7 +276,7 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        wsrequest = WebSocketsRequest(message)
+        wsrequest = WebSocketRequest(message)
         response = wsrequest.get_response()
 
         expected_response = {
@@ -293,7 +293,7 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        wsrequest = WebSocketsRequest(message)
+        wsrequest = WebSocketRequest(message)
         response = wsrequest.get_response()
 
         expected_response = {
@@ -329,7 +329,7 @@ class WebSocketsRequestTestCase(TestCase):
         }
 
         message = json.dumps(data)
-        wsrequest = WebSocketsRequest(message)
+        wsrequest = WebSocketRequest(message)
         response = wsrequest.get_response()
 
         expected_response = {

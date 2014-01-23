@@ -1,14 +1,10 @@
-import os
 import json
-
-# Set Django Environment
-os.environ['DJANGO_SETTINGS_MODULE'] = 'blimp.settings'
 
 from django.test.client import RequestFactory
 from django.core.urlresolvers import resolve, Resolver404
 
 
-class WebSocketsRequest(object):
+class WebSocketRequest(object):
     def __init__(self, message):
         self.message = message
         self.error = None
