@@ -2,9 +2,9 @@ from django.utils.encoding import smart_str
 from rest_framework import serializers
 
 from blimp.utils import fields
+from blimp.utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from blimp.utils.validators import is_valid_email
 from blimp.accounts.models import Account, AccountMember, EmailDomain
-from blimp.accounts.constants import BLACKLIST_SIGNUP_DOMAINS
 from blimp.invitations.models import SignupRequest
 from .models import User
 
@@ -40,10 +40,11 @@ class SignupSerializer(serializers.Serializer):
     signup_request_token = serializers.CharField(write_only=True)
 
     def validate_signup_request_token(self, attrs, source):
-        token = attrs[source]
+        signup_request_token = attrs[source]
         email = attrs['email']
 
-        signup_request = SignupRequest.objects.get_from_token(token)
+        signup_request = SignupRequest.objects.get_from_token(
+            signup_request_token)
 
         if not signup_request:
             msg = 'No signup request found for token.'
@@ -126,52 +127,38 @@ class SignupSerializer(serializers.Serializer):
 
         return attrs
 
-    def signup(self):
-        user = self.create_user()
-        account, owner = self.create_account(user)
-
-        self.invite_users(account, user)
-
-        return user
-
-    def create_user(self):
-        username = self.object['username']
-        email = self.object['email']
-        password = self.object['password']
-        first_name = self.object['first_name']
-        last_name = self.object['last_name']
+    def validate(self, attrs):
+        username = attrs['username']
+        email = attrs['email']
+        password = attrs['password']
+        first_name = attrs['first_name']
+        last_name = attrs['last_name']
+        account_name = attrs['account_name']
+        allow_signup = attrs['allow_signup']
+        invite_emails = attrs.get('invite_emails', [])
+        signup_domains = attrs.get('signup_domains', [])
 
         extra_fields = {
             'first_name': first_name,
             'last_name': last_name
         }
 
-        return User.objects.create_user(
+        user = User.objects.create_user(
             username=username,
             email=email,
             password=password,
             **extra_fields
         )
 
-    def create_account(self, user):
-        account_name = self.object['account_name']
-        allow_signup = self.object['allow_signup']
-
         account = Account.objects.create(
             name=account_name,
             allow_signup=allow_signup
         )
 
-        if allow_signup:
-            account.add_email_domains(self.object['signup_domains'])
+        if allow_signup and signup_domains:
+            account.add_email_domains(signup_domains)
 
-        owner = AccountMember.objects.create_owner(account=account, user=user)
-
-        return account, owner
-
-    def invite_users(self, account, user):
-        invite_emails = self.object.get('invite_emails', [])
-        invited_users = []
+        AccountMember.objects.create_owner(account=account, user=user)
 
         for invite_email in invite_emails:
             user_data = {
@@ -180,6 +167,10 @@ class SignupSerializer(serializers.Serializer):
                 'created_by': user
             }
 
-            invited_users.append(account.invite_user(user_data))
+            account.invite_user(user_data)
 
-        return invited_users
+        payload = jwt_payload_handler(user)
+
+        return {
+            'token': jwt_encode_handler(payload)
+        }

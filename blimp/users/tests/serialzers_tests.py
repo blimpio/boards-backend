@@ -1,7 +1,8 @@
 from django.test import TestCase
 
 from blimp.accounts.models import Account, AccountMember
-from blimp.invitations.models import SignupRequest
+from blimp.invitations.models import SignupRequest, InvitedUser
+from blimp.utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..models import User
 from ..serializers import ValidateUsernameSerializer, SignupSerializer
 
@@ -100,42 +101,28 @@ class SignupSerializerTestCase(TestCase):
             'signup_request_token': self.signup_request.token
         }
 
-    def test_serializer_empty_data(self):
+    def test_serializer_empty_object(self):
         """
-        Tests that serializer.data returns expected data when empty.
+        Tests that serializer.object returns expected data when empty.
         """
         serializer = SignupSerializer()
-        expected_data = {
-            'email': '',
-            'full_name': '',
-            'account_name': '',
-            'username': '',
-            'allow_signup': False,
-            'signup_domains': '',
-            'invite_emails': ''
-        }
-
-        self.assertEqual(serializer.data, expected_data)
+        self.assertEqual(serializer.object, None)
 
     def test_serializer_should_return_expected_data_if_valid(self):
         """
-        Tests that serializer.data should return expected data when valid.
+        Tests that serializer.object should return expected data when valid.
         """
         serializer = SignupSerializer(data=self.data)
         serializer.is_valid()
+
+        user = User.objects.get(username='juan')
+        payload = jwt_payload_handler(user)
+
         expected_data = {
-            'email': 'juan@example.com',
-            'full_name': 'Juan Pueblo',
-            'first_name': 'Juan',
-            'last_name': 'Pueblo',
-            'account_name': 'Pueblo Co.',
-            'username': 'juan',
-            'allow_signup': False,
-            'signup_domains': None,
-            'invite_emails': None
+            'token': jwt_encode_handler(payload)
         }
 
-        self.assertEqual(serializer.data, expected_data)
+        self.assertEqual(serializer.object, expected_data)
 
     def test_serializer_should_validate_token_not_found(self):
         """
@@ -252,10 +239,9 @@ class SignupSerializerTestCase(TestCase):
         """
         serializer = SignupSerializer(data=self.data)
         serializer.is_valid()
-        user = serializer.signup()
-        expected_user = User.objects.get(username=self.data['username'])
+        expected_user = User.objects.filter(username=self.data['username'])
 
-        self.assertEqual(user, expected_user)
+        self.assertEqual(expected_user.count(), 1)
 
     def test_create_user_should_return_created_user(self):
         """
@@ -263,27 +249,34 @@ class SignupSerializerTestCase(TestCase):
         """
         serializer = SignupSerializer(data=self.data)
         serializer.is_valid()
-        user = serializer.create_user()
-        expected_user = User.objects.get(username=self.data['username'])
+        expected_user = User.objects.filter(username=self.data['username'])
 
-        self.assertEqual(user, expected_user)
+        self.assertEqual(expected_user.count(), 1)
 
-    def test_create_account_should_return_created_account_and_owner(self):
+    def test_create_account_should_return_created_account(self):
         """
-        Tests that serializer.create_account() should return a tuple of
-        the created account and created owner.
+        Tests that serializer should create an account
+        and owner when validated.
         """
         serializer = SignupSerializer(data=self.data)
         serializer.is_valid()
-        user = serializer.create_user()
-        account_tuple = serializer.create_account(user)
+        expected_account = Account.objects.filter(slug='pueblo-co')
+
+        self.assertEqual(expected_account.count(), 1)
+
+    def test_create_account_should_return_created_owner(self):
+        """
+        Tests that serializer should create an account
+        and owner when validated.
+        """
+        serializer = SignupSerializer(data=self.data)
+        serializer.is_valid()
+        user = User.objects.get(username=self.data['username'])
         expected_account = Account.objects.get(slug='pueblo-co')
-        expected_owner = AccountMember.objects.get(
+        expected_owner = AccountMember.objects.filter(
             account=expected_account, user=user, role='owner')
 
-        expected_tuple = expected_account, expected_owner
-
-        self.assertEqual(account_tuple, expected_tuple)
+        self.assertEqual(expected_owner.count(), 1)
 
     def test_invite_users_should_return_invited_users(self):
         """
@@ -298,8 +291,7 @@ class SignupSerializerTestCase(TestCase):
 
         serializer = SignupSerializer(data=self.data)
         serializer.is_valid()
-        user = serializer.create_user()
-        account, owner = serializer.create_account(user)
-        invited_users = serializer.invite_users(account, user)
+        invited_users = InvitedUser.objects.filter(
+            email__in=['ppueblo@example.com', 'qpueblo@example.com'])
 
-        self.assertEqual(len(invited_users), 2)
+        self.assertEqual(invited_users.count(), 2)

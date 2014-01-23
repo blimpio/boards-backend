@@ -1,3 +1,6 @@
+import os
+import datetime
+
 """
 Django settings for blimp project.
 
@@ -9,9 +12,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -106,9 +107,14 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'blimp.users.authentication.JWTAuthentication',
     ),
     'EXCEPTION_HANDLER': 'blimp.utils.exceptions.custom_exception_handler',
+}
+
+JWT_AUTH = {
+    'JWT_PAYLOAD_HANDLER': 'blimp.utils.jwt_handlers.jwt_payload_handler',
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=90)
 }
 
 

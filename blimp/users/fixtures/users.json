@@ -25,6 +25,7 @@
         "groups": [],
         "password": "pbkdf2_sha256$12000$mm5GJQwrzckU$32IxmABIWM90geaJlom2xIJxr48Z4a0rusPBlqq0xGw=",
         "is_staff": true,
-        "avatar": ""
+        "avatar": "",
+        "token_version": "550e8400-e29b-41d4-a716-446655440000"
     }
 }]

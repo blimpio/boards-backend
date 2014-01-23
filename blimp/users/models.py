@@ -13,6 +13,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.signals import user_logged_in
 from django.utils import timezone
 
+from django_extensions.db.fields import UUIDField
+
 
 def update_last_ip(sender, user, request, **kwargs):
     """
@@ -95,6 +97,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_ip = models.IPAddressField(blank=True, null=True, default='127.0.0.1')
     timezone = models.CharField(max_length=255, default='UTC',
                                 choices=PRETTY_TIMEZONE_CHOICES)
+
+    token_version = UUIDField()
 
     objects = UserManager()
 

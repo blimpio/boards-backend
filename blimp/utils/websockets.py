@@ -73,7 +73,7 @@ class WebSocketsRequest(object):
         defaults = {}
 
         if self.token:
-            defaults['HTTP_AUTHORIZATION'] = "Bearer {}".format(self.token)
+            defaults['HTTP_AUTHORIZATION'] = "JWT {}".format(self.token)
 
         return RequestFactory(**defaults)
 

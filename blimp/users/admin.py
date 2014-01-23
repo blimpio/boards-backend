@@ -2,25 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm
 
+from blimp.utils.admin import get_profile_fields
 from .models import User
-
-
-def get_profile_fields(model_class, admin_class):
-    """
-    Returns a set of additional model fields that are not already in an
-    admin site's fieldsets.
-    """
-    fields = []
-    additional_fields = []
-
-    for name, field_options in admin_class.fieldsets:
-        fields.extend(list(field_options['fields']))
-
-    for field in model_class._meta.fields:
-        if field.name not in fields and field.name != 'id':
-            additional_fields.append(field.name)
-
-    return set(additional_fields)
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -30,6 +13,8 @@ class CustomUserChangeForm(UserChangeForm):
 
 class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
+
+    readonly_fields = ('token_version',)
 
     fieldsets = UserAdmin.fieldsets + (
         ('Profile', {'fields': get_profile_fields(User, UserAdmin)}),

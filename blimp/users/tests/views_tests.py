@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from blimp.invitations.models import SignupRequest
+from blimp.utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..models import User
 
 
@@ -74,16 +75,11 @@ class SignupAPIView(TestCase):
         response = self.client.post(
             '/api/auth/signup/', data, format='json')
 
+        user = User.objects.get(username='juan')
+        payload = jwt_payload_handler(user)
+
         expected_response = {
-            'email': self.email,
-            'full_name': 'Juan Pueblo',
-            'first_name': 'Juan',
-            'last_name': 'Pueblo',
-            'account_name': 'Pueblo Co.',
-            'username': 'juan',
-            'allow_signup': True,
-            'signup_domains': 'example.com,example2.com',
-            'invite_emails': 'pedro@example.com,sara@example2.com'
+            'token': jwt_encode_handler(payload)
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -167,12 +163,14 @@ class SigninAPIEndpoint(TestCase):
         response = self.client.post('/api/auth/signin/')
 
         expected_response = {
-            'password': [
-                'This field is required.'
-            ],
-            'username': [
-                'This field is required.'
-            ]
+            'error': {
+                'password': [
+                    'This field is required.'
+                ],
+                'username': [
+                    'This field is required.'
+                ]
+            }
         }
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -192,9 +190,11 @@ class SigninAPIEndpoint(TestCase):
             '/api/auth/signin/', data, format='json')
 
         expected_response = {
-            'non_field_errors': [
-                'Unable to login with provided credentials.'
-            ]
+            'error': {
+                'non_field_errors': [
+                    'Unable to login with provided credentials.'
+                ]
+            }
         }
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
