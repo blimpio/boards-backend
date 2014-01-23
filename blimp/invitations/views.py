@@ -3,11 +3,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import SignupRequest
-from .serializers import ValidateSignupRequestSerializer
+from .serializers import (ValidateSignupRequestSerializer,
+                          SignupRequestSerializer)
 
 
 class SignupRequestCreateAPIView(generics.CreateAPIView):
     model = SignupRequest
+    serializer_class = SignupRequestSerializer
     authentication_classes = ()
     permission_classes = ()
 
@@ -24,9 +26,9 @@ class SignupRequestCreateAPIView(generics.CreateAPIView):
 
 
 class ValidateSignupRequestAPIView(APIView):
+    serializer_class = ValidateSignupRequestSerializer
     authentication_classes = ()
     permission_classes = ()
-    serializer_class = ValidateSignupRequestSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.DATA)

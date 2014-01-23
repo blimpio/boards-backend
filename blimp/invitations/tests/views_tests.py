@@ -28,7 +28,6 @@ class SignupRequestCreateAPIViewTestCase(TestCase):
         signup_request = SignupRequest.objects.get(email=data['email'])
 
         expected_response = {
-            'id': signup_request.id,
             'email': signup_request.email
         }
 

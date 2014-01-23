@@ -3,6 +3,12 @@ from rest_framework import serializers
 from .models import SignupRequest
 
 
+class SignupRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SignupRequest
+        fields = ('email',)
+
+
 class ValidateSignupRequestSerializer(serializers.Serializer):
     email = serializers.CharField(read_only=True)
     token = serializers.CharField(write_only=True)
