@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
     logging.getLogger().setLevel(args.loglevel)
 
-    EchoRouter = SockJSRouter(RESTAPIConnection, '/ws/api/')
+    EchoRouter = SockJSRouter(RESTAPIConnection, '/ws/api')
 
     app = web.Application(EchoRouter.urls)
     app.listen(port)
