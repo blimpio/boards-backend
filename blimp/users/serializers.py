@@ -174,3 +174,57 @@ class SignupSerializer(serializers.Serializer):
         return {
             'token': jwt_encode_handler(payload)
         }
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    """
+    Serializer that handles forgot password endpoint.
+    """
+    email = serializers.EmailField()
+
+    def validate_email(self, attrs, source):
+        email = attrs[source].lower()
+
+        try:
+            self.user = User.objects.get(email__iexact=email)
+        except User.DoesNotExist:
+            msg = 'No user found.'
+            raise serializers.ValidationError(msg)
+
+        return attrs
+
+    def validate(self, attrs):
+        self.user.send_password_reset_email()
+        return attrs
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    token = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True)
+
+    def validate_password(self, attrs, source):
+        password = attrs[source]
+
+        if password:
+            attrs['password'] = smart_str(password)
+
+        return attrs
+
+    def validate_token(self, attrs, source):
+        token = attrs[source]
+
+        self.user = User.objects.get_from_password_reset_token(token)
+
+        if not self.user:
+            msg = 'Invalid password reset token.'
+            raise serializers.ValidationError(msg)
+
+        return attrs
+
+    def validate(self, attrs):
+        self.user.set_password(attrs['password'])
+        self.user.save()
+
+        return {
+            'password_reset': True
+        }

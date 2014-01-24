@@ -2,18 +2,20 @@ import re
 import pytz
 import uuid
 import os
-from datetime import datetime
+import datetime
+import jwt
 
-from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
-                                        UserManager)
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.mail import send_mail
 from django.core import validators
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.signals import user_logged_in
 from django.utils import timezone
-
+from django.conf import settings
 from django_extensions.db.fields import UUIDField
+
+from .managers import UserManager
 
 
 def update_last_ip(sender, user, request, **kwargs):
@@ -37,7 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     PRETTY_TIMEZONE_CHOICES = [('', '--- Select ---')]
 
     for tz in pytz.common_timezones:
-        now = datetime.now(pytz.timezone(tz))
+        now = datetime.datetime.now(pytz.timezone(tz))
         PRETTY_TIMEZONE_CHOICES.append(
             (tz, ' %s (GMT%s)' % (tz, now.strftime('%z'))))
 
@@ -112,6 +114,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __unicode__(self):
         return self.username
 
+    @property
+    def password_reset_token(self):
+        """
+        Returns a JSON Web Token used for Password Reset
+        """
+        payload = {
+            'type': 'PasswordReset',
+            'id': self.pk,
+            'token_version': self.token_version,
+        }
+
+        jwt_token = jwt.encode(payload, settings.SECRET_KEY)
+
+        return jwt_token.decode('utf-8')
+
     def get_full_name(self):
         """
         Returns the first_name plus the last_name, with a space in between.
@@ -120,7 +137,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         return full_name.strip()
 
     def get_short_name(self):
-        "Returns the short name for the user."
+        """
+        Returns the short name for the user.
+        """
         return self.first_name
 
     def email_user(self, subject, message, from_email=None, **kwargs):
@@ -128,3 +147,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         Sends an email to this User.
         """
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    def set_password(self, raw_password):
+        """
+        Sets the user's password and changes token_version.
+        """
+        super(User, self).set_password(raw_password)
+        self.token_version = uuid.uuid4()
+
+    def send_password_reset_email(self):
+        message = '{}'.format(self.password_reset_token)
+
+        self.email_user(
+            'Password Reset',
+            message,
+            from_email='from@example.com',
+        )

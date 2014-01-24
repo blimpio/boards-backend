@@ -200,7 +200,7 @@ class SigninAPIEndpoint(TestCase):
         self.assertEqual(response.data, expected_response)
 
 
-class SignupValidateTokenAPIViewTestCase(TestCase):
+class SignupValidateTokenHTMLViewTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
 
