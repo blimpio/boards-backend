@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url
 from .views import SignupRequestCreateAPIView, ValidateSignupRequestAPIView
 
 
-urlpatterns = patterns(
+api_urlpatterns = patterns(
     # Prefix
     '',
 

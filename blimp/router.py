@@ -1,11 +1,19 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, include
+from django.utils.module_loading import import_by_path
 
 
-urlpatterns = patterns(
-    # Prefix
-    '',
+def get_api_urlpatterns(apps):
+    urls = []
 
-    url(r'', include('blimp.users.urls')),
-    url(r'', include('blimp.accounts.urls')),
-    url(r'', include('blimp.invitations.urls')),
-)
+    for app in apps:
+        dotted_path = 'blimp.{}.urls.api_urlpatterns'.format(app)
+        urls.append((r'', include(import_by_path(dotted_path))))
+
+    return patterns('', *urls)
+
+
+urlpatterns = get_api_urlpatterns([
+    'users',
+    'accounts',
+    'invitations'
+])
