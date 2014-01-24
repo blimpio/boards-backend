@@ -7,7 +7,7 @@ from sockjs.tornado import SockJSRouter, SockJSConnection
 # Set Django Environment
 os.environ['DJANGO_SETTINGS_MODULE'] = 'blimp.settings'
 
-from blimp.utils.websockets import WebSocketRequest
+from wsrequest import WebSocketRequest
 
 
 class RESTAPIConnection(SockJSConnection):
@@ -16,7 +16,7 @@ class RESTAPIConnection(SockJSConnection):
 
     def on_message(self, data):
         response = WebSocketRequest(data).get_response()
-        self.send_json(response)
+        self.send_json(response.data)
 
     def send_json(self, obj):
         self.send(json.dumps(obj))
