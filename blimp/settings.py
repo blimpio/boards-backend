@@ -93,6 +93,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
+# Templates
+TEMPLATE_DIRS = (
+    os.path.normpath(os.path.join(BASE_DIR, 'templates')),
+)
+
+
 # Custom User Model
 AUTH_USER_MODEL = 'users.User'
 
