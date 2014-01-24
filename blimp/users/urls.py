@@ -13,3 +13,10 @@ api_urlpatterns = patterns(
         views.ValidateUsernameAPIView.as_view(),
         name='auth-username-validate'),
 )
+
+urlpatterns = patterns(
+    # Prefix
+    '',
+
+    (r'signup/$', views.SignupValidateTokenAPIView.as_view()),
+)
