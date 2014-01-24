@@ -186,8 +186,7 @@ class SigninAPIEndpoint(TestCase):
             'password': 'b'
         }
 
-        response = self.client.post(
-            '/api/auth/signin/', data, format='json')
+        response = self.client.post('/api/auth/signin/', data, format='json')
 
         expected_response = {
             'error': {
@@ -199,3 +198,48 @@ class SigninAPIEndpoint(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data, expected_response)
+
+
+class SignupValidateTokenAPIViewTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        self.username = 'jpueblo'
+        self.password = 'abc123'
+        self.email = 'jpueblo@example.com'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            email=self.email,
+            password=self.password,
+            first_name='Juan',
+            last_name='Pueblo'
+        )
+
+    def test_view_should_not_allow_post_method(self):
+        """
+        Tests that view returns methods now allowed.
+        """
+        response = self.client.post('/signup/')
+        self.assertEqual(response.status_code, 405)
+
+    def test_view_should_allow_get_method(self):
+        """
+        Tests that view allows GET.
+        """
+        response = self.client.get('/signup/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_should_render_html_template(self):
+        """
+        Tests that view renders our expected template.
+        """
+        response = self.client.get('/signup/')
+        self.assertTemplateUsed(response, 'index.html')
+
+    def test_view_should_raise_404_invalid_token(self):
+        """
+        Tests that view raises 404 for invalid tokens.
+        """
+        response = self.client.get('/signup/', {'token': 'abc'})
+        self.assertEqual(response.status_code, 404)
