@@ -15,11 +15,11 @@ class SignupRequestManager(models.Manager):
             return None
 
         payload_type = payload.get('type')
-        payload_id = payload.get('id')
+        payload_email = payload.get('email')
 
-        if payload_type == 'SignupRequest' and payload_id:
+        if payload_type == 'SignupRequest' and payload_email:
             try:
-                return SignupRequest.objects.get(pk=payload_id)
+                return SignupRequest.objects.get(email=payload_email)
             except SignupRequest.DoesNotExist:
                 pass
 
@@ -40,7 +40,7 @@ class SignupRequest(models.Model):
         """
         payload = {
             'type': 'SignupRequest',
-            'id': self.pk
+            'email': self.email,
         }
 
         jwt_token = jwt.encode(payload, settings.SECRET_KEY)
