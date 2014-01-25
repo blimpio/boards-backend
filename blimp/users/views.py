@@ -96,10 +96,11 @@ class SignupValidateTokenHTMLView(APIView):
     def get(self, request, *args, **kwargs):
         token = request.QUERY_PARAMS.get('token')
 
-        signup_request = SignupRequest.objects.get_from_token(token)
+        if token:
+            signup_request = SignupRequest.objects.get_from_token(token)
 
-        if not signup_request:
-            raise Http404
+            if not signup_request:
+                raise Http404
 
         return Response(template_name='index.html')
 

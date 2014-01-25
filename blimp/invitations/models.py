@@ -11,7 +11,7 @@ class SignupRequestManager(models.Manager):
     def get_from_token(self, token):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
-        except jwt.DecodeError:
+        except:
             return None
 
         payload_type = payload.get('type')
