@@ -7,6 +7,7 @@ from django.template.defaultfilters import slugify
 from blimp.users.models import User
 from blimp.utils.slugify import unique_slugify
 from blimp.invitations.models import InvitedUser
+from .managers import AccountMemberManager
 from .constants import (MEMBER_ROLES, BLACKLIST_SIGNUP_DOMAINS,
                         COMPANY_RESERVED_KEYWORDS)
 
@@ -15,12 +16,6 @@ def get_company_upload_path(instance, filename):
     identifier = str(uuid.uuid4())
     return os.path.join(
         'uploads', 'companies', str(instance.pk), identifier, filename)
-
-
-class AccountMemberManager(models.Manager):
-    def create_owner(self, *args, **kwargs):
-        kwargs.update({'role': 'owner'})
-        return super(AccountMemberManager, self).create(*args, **kwargs)
 
 
 class EmailDomain(models.Model):

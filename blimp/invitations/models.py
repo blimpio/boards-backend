@@ -5,25 +5,7 @@ from django.conf import settings
 
 from blimp.accounts.constants import MEMBER_ROLES
 from blimp.users.utils import get_gravatar_url
-
-
-class SignupRequestManager(models.Manager):
-    def get_from_token(self, token):
-        try:
-            payload = jwt.decode(token, settings.SECRET_KEY)
-        except:
-            return None
-
-        payload_type = payload.get('type')
-        payload_email = payload.get('email')
-
-        if payload_type == 'SignupRequest' and payload_email:
-            try:
-                return SignupRequest.objects.get(email=payload_email)
-            except SignupRequest.DoesNotExist:
-                pass
-
-        return None
+from .managers import SignupRequestManager
 
 
 class SignupRequest(models.Model):
