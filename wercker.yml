@@ -38,11 +38,6 @@ build:
             deactivate
 
     - script:
-        name: deactivate virtualenv
-        code: |
-            deactivate
-
-    - script:
         name: 'run tests with tox'
         code: |
           tox -v
