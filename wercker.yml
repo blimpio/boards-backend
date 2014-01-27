@@ -11,36 +11,14 @@ build:
           sudo pip install virtualenv
 
     - script:
-        name: setup/activate virtualenv using 3.3.3
+        name: install tox
         code: |
-            virtualenv -p /usr/local/bin/python3 /tmp/venv33
-            source /tmp/venv33/bin/activate
+          sudo pip install tox
 
     - script:
-        name: pip install
-        code: |
-          pip install -r requirements.txt
-
-    - script:
-        name: echo python information
-        code: |
-          echo "python version $(python --version) running"
-          echo "pip version $(pip --version) running"
-
-    - script:
-        name: test
-        code: |
-          python manage.py test --pattern=*_tests.py
-
-    - script:
-        name: 'run tests with tox'
+        name: run tests with tox
         code: |
           tox -v
-
-    - script:
-        name: deactivate virtualenv
-        code: |
-            deactivate
 
   after-steps:
     - hipchat-notify:
