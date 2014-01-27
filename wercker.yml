@@ -33,14 +33,14 @@ build:
           python manage.py test --pattern=*_tests.py
 
     - script:
-        name: deactivate virtualenv
-        code: |
-            deactivate
-
-    - script:
         name: 'run tests with tox'
         code: |
           tox -v
+
+    - script:
+        name: deactivate virtualenv
+        code: |
+            deactivate
 
   after-steps:
     - hipchat-notify:
