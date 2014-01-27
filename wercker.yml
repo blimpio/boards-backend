@@ -43,9 +43,9 @@ build:
             deactivate
 
     -script:
-      name: 'run tests with tox'
-      code: |
-        tox -v
+        name: 'run tests with tox'
+        code: |
+          tox -v
 
   after-steps:
     - hipchat-notify:
