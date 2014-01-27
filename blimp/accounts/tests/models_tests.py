@@ -90,36 +90,3 @@ class AccountMemberTestCase(TestCase):
             account=self.account, user=self.user)
 
         self.assertEqual(account_member.role, 'owner')
-
-
-class EmailDomainTestCase(TestCase):
-    def setUp(self):
-        EmailDomain.objects.create(domain_name='example.com')
-
-    def test_is_signup_domain_valid_should_return_true_if_valid(self):
-        """
-        Tests that is_signup_domain_valid() returns True if
-        domain name is not blacklisted or used.
-        """
-        self.assertTrue(EmailDomain.is_signup_domain_valid('example2.com'))
-
-    def test_is_signup_domain_valid_should_return_false_if_blacklisted(self):
-        """
-        Tests that is_signup_domain_valid() returns False if
-        domain name is blacklisted.
-        """
-        self.assertFalse(EmailDomain.is_signup_domain_valid('gmail.com'))
-
-    def test_is_signup_domain_valid_should_return_false_if_used(self):
-        """
-        Tests that is_signup_domain_valid() returns False if
-        domain name is used.
-        """
-        self.assertFalse(EmailDomain.is_signup_domain_valid('example.com'))
-
-    def test_is_signup_domain_valid_should_return_false_if_invalid(self):
-        """
-        Tests that is_signup_domain_valid() returns False if
-        domain name fails validation.
-        """
-        self.assertFalse(EmailDomain.is_signup_domain_valid('examplecom'))

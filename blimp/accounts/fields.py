@@ -1,6 +1,7 @@
 from blimp.utils.fields import CharacterSeparatedField
-from blimp.utils.validators import validate_domain_name
+
+from .validators import validate_signup_domain
 
 
 class SignupDomainsField(CharacterSeparatedField):
-    default_validators = [validate_domain_name]
+    default_validators = [validate_signup_domain]

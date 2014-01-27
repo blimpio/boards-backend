@@ -85,6 +85,34 @@ class SignupAPIView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)
 
+    def test_post_valid_data_simple(self):
+        """
+        Tests that POST request with valid data to endpoint
+        returns expected data. Skips signup domains and invites.
+        """
+        data = {
+            'full_name': 'Juan Pueblo',
+            'email': self.email,
+            'username': 'juan',
+            'password': 'abc123',
+            'account_name': 'Pueblo Co.',
+            'allow_signup': False,
+            'signup_request_token': self.signup_request.token
+        }
+
+        response = self.client.post(
+            '/api/auth/signup/', data, format='json')
+
+        user = User.objects.get(username='juan')
+        payload = jwt_payload_handler(user)
+
+        expected_response = {
+            'token': jwt_encode_handler(payload)
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
     def test_post_invalid_data(self):
         """
         Tests that POST request with invalid data to endpoint

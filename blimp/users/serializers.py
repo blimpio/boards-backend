@@ -99,22 +99,6 @@ class SignupSerializer(serializers.Serializer):
 
         return attrs
 
-    def validate_signup_domains(self, attrs, source):
-        signup_domains = set(attrs.get(source, []))
-        allow_signup = attrs.get('allow_signup')
-
-        if not allow_signup:
-            return attrs
-
-        for domain in signup_domains:
-            is_valid = EmailDomain.is_signup_domain_valid(domain)
-
-            if not is_valid:
-                msg = "{} is an invalid sign-up domain.".format(domain)
-                raise serializers.ValidationError(msg)
-
-        return attrs
-
     def validate_invite_emails(self, attrs, source):
         invite_emails = set(attrs.get(source, []))
         allow_signup = attrs.get('allow_signup')

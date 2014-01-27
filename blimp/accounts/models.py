@@ -6,11 +6,9 @@ from django.template.defaultfilters import slugify
 
 from blimp.users.models import User
 from blimp.utils.slugify import unique_slugify
-from blimp.utils.validators import is_valid_domain_name
 from blimp.invitations.models import InvitedUser
 from .managers import AccountMemberManager
-from .constants import (MEMBER_ROLES, BLACKLIST_SIGNUP_DOMAINS,
-                        COMPANY_RESERVED_KEYWORDS)
+from .constants import MEMBER_ROLES, COMPANY_RESERVED_KEYWORDS
 
 
 def get_company_upload_path(instance, filename):
@@ -24,20 +22,6 @@ class EmailDomain(models.Model):
 
     def __unicode__(self):
         return self.domain_name
-
-    @classmethod
-    def is_signup_domain_valid(cls, signup_domain):
-        """
-        Validates the specified signup_domain by checking for blacklisted
-        domains and already existing signup domains.
-        """
-        if not is_valid_domain_name(signup_domain):
-            return False
-
-        exists = EmailDomain.objects.filter(
-            domain_name=signup_domain).exists()
-
-        return signup_domain not in BLACKLIST_SIGNUP_DOMAINS and not exists
 
 
 class Account(models.Model):
