@@ -13,6 +13,7 @@ djangorestframework==2.3.12
 djangorestframework-jwt==0.1.2
 oauthlib==0.6.0
 psycopg2==2.5.2
+py==1.4.19
 pycrypto==2.6.1
 python-openid==2.2.5
 python3-openid==3.0.3
@@ -23,3 +24,5 @@ six==1.5.2
 sockjs-tornado==1.0.0
 sqlparse==0.1.10
 tornado==3.2
+tox==1.6.1
+virtualenv==1.11.2
