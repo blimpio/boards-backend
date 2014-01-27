@@ -243,3 +243,158 @@ class SignupValidateTokenHTMLViewTestCase(TestCase):
         """
         response = self.client.get('/signup/', {'token': 'abc'})
         self.assertEqual(response.status_code, 404)
+
+
+class ForgotPasswordAPIViewTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        self.username = 'jpueblo'
+        self.password = 'abc123'
+        self.email = 'jpueblo@example.com'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            email=self.email,
+            password=self.password,
+            first_name='Juan',
+            last_name='Pueblo'
+        )
+
+        self.url = '/api/auth/forgot_password/'
+
+    def test_post_valid_data(self):
+        """
+        Tests that POST request with valid data to endpoint
+        returns expected data.
+        """
+        data = {
+            'email': self.email,
+        }
+
+        response = self.client.post(self.url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, data)
+
+    def test_post_invalid_data(self):
+        """
+        Tests that POST request with invalid data to endpoint
+        returns expected error.
+        """
+        response = self.client.post(self.url)
+
+        expected_response = {
+            'error': {
+                'email': ['This field is required.']
+            }
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, expected_response)
+
+
+class ResetPasswordAPIViewTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        self.username = 'jpueblo'
+        self.password = 'abc123'
+        self.email = 'jpueblo@example.com'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            email=self.email,
+            password=self.password,
+            first_name='Juan',
+            last_name='Pueblo'
+        )
+
+        self.url = '/api/auth/reset_password/'
+
+    def test_post_valid_data(self):
+        """
+        Tests that POST request with valid data to endpoint
+        returns expected data.
+        """
+        data = {
+            'token': self.user.password_reset_token,
+            'password': 'newpassword'
+        }
+
+        response = self.client.post(self.url, data, format='json')
+
+        expected_response = {
+            'password_reset': True
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+    def test_post_invalid_data(self):
+        """
+        Tests that POST request with invalid data to endpoint
+        returns expected error.
+        """
+        response = self.client.post(self.url)
+
+        expected_response = {
+            'error': {
+                'token': ['This field is required.'],
+                'password': ['This field is required.']
+            }
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, expected_response)
+
+
+class ResetPasswordHTMLView(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        self.username = 'jpueblo'
+        self.password = 'abc123'
+        self.email = 'jpueblo@example.com'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            email=self.email,
+            password=self.password,
+            first_name='Juan',
+            last_name='Pueblo'
+        )
+
+        self.data = {
+            'token': self.user.password_reset_token
+        }
+
+        self.url = '/reset_password/'
+
+    def test_view_should_not_allow_post_method(self):
+        """
+        Tests that view returns methods now allowed.
+        """
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 405)
+
+    def test_view_should_allow_get_method(self):
+        """
+        Tests that view allows GET.
+        """
+        response = self.client.get(self.url, self.data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_should_render_html_template(self):
+        """
+        Tests that view renders our expected template.
+        """
+        response = self.client.get(self.url, self.data)
+        self.assertTemplateUsed(response, 'index.html')
+
+    def test_view_should_raise_404_invalid_token(self):
+        """
+        Tests that view raises 404 for invalid tokens.
+        """
+        response = self.client.get(self.url, {'token': 'abc'})
+        self.assertEqual(response.status_code, 404)

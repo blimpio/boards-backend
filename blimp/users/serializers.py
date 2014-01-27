@@ -33,7 +33,7 @@ class SignupSerializer(serializers.Serializer):
     last_name = serializers.CharField(read_only=True)
     account_name = serializers.CharField()
     username = serializers.CharField()
-    password = serializers.CharField(write_only=True)
+    password = fields.PasswordField(write_only=True)
     allow_signup = serializers.BooleanField()
     signup_domains = fields.CharacterSeparatedField(required=False)
     invite_emails = fields.CharacterSeparatedField(required=False)
@@ -200,7 +200,7 @@ class ForgotPasswordSerializer(serializers.Serializer):
 
 class ResetPasswordSerializer(serializers.Serializer):
     token = serializers.CharField(write_only=True)
-    password = serializers.CharField(write_only=True)
+    password = fields.PasswordField(write_only=True)
 
     def validate_password(self, attrs, source):
         password = attrs[source]

@@ -1,3 +1,5 @@
+import jwt
+
 from django.test import TestCase
 
 from ..models import User, get_user_upload_path
@@ -61,3 +63,26 @@ class UserModelTestCase(TestCase):
         segments = path.split('/')
 
         self.assertEqual('myfile.jpg', segments[-1])
+
+    def test_user_password_reset_token(self):
+        """
+        Tests that password_reset_token returns a token that the manager's
+        get_from_password_reset_token can use to return a User.
+        """
+        token = self.user.password_reset_token
+        user = User.objects.get_from_password_reset_token(token)
+
+        self.assertEqual(self.user, user)
+
+    def test_user_set_password_changes_token_version(self):
+        """
+        Tests that set_password set's the user password and
+        changes the token_version.
+        """
+        password = str(self.user.password)
+        token_version = str(self.user.token_version)
+
+        self.user.set_password('newpassword')
+
+        self.assertNotEqual(self.user.password, password)
+        self.assertNotEqual(self.user.token_version, token_version)

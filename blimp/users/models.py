@@ -122,7 +122,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         payload = {
             'type': 'PasswordReset',
             'id': self.pk,
-            'token_version': self.token_version,
+            'token_version': str(self.token_version),
         }
 
         jwt_token = jwt.encode(payload, settings.SECRET_KEY)

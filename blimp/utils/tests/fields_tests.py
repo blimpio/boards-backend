@@ -1,9 +1,9 @@
 from django.test import TestCase
 
-from ..fields import CharacterSeparatedField
+from ..fields import CharacterSeparatedField, PasswordField
 
 
-class FieldsTestCase(TestCase):
+class CharacterSeparatedFieldTestCase(TestCase):
     def test_field_default_separator_is_comma(self):
         """
         Tests that field should have a default comma separator specified.
@@ -33,3 +33,10 @@ class FieldsTestCase(TestCase):
         """
         field = CharacterSeparatedField()
         self.assertEqual(field.from_native('a,b,c'), ['a', 'b', 'c'])
+
+
+class PasswordFieldTesetCase(TestCase):
+    def test_field_should_have_default_length_options(self):
+        field = PasswordField()
+        self.assertEqual(field.min_length, 6)
+        self.assertEqual(field.max_length, None)

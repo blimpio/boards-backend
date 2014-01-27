@@ -4,7 +4,8 @@ from blimp.accounts.models import Account, AccountMember
 from blimp.invitations.models import SignupRequest, InvitedUser
 from blimp.utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..models import User
-from ..serializers import ValidateUsernameSerializer, SignupSerializer
+from ..serializers import (ValidateUsernameSerializer, SignupSerializer,
+                           ForgotPasswordSerializer, ResetPasswordSerializer)
 
 
 class ValidateUsernameSerializerTestCase(TestCase):
@@ -295,3 +296,199 @@ class SignupSerializerTestCase(TestCase):
             email__in=['ppueblo@example.com', 'qpueblo@example.com'])
 
         self.assertEqual(invited_users.count(), 2)
+
+    def test_serializer_should_validate_password_requirements(self):
+        """
+        Tests that serializer validates password field.
+        """
+        self.data['password'] = 'a.'
+        serializer = SignupSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_error = {
+            'password': [
+                'Ensure this value has at least 6 characters (it has 2).'
+            ]
+        }
+
+        self.assertEqual(serializer.errors, expected_error)
+
+
+
+class ForgotPasswordSerializerTestCase(TestCase):
+    def setUp(self):
+        self.username = 'jpueblo'
+        self.password = 'abc123'
+        self.email = 'jpueblo@example.com'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            email='jpueblo@example.com',
+            password=self.password,
+            first_name='Juan',
+            last_name='Pueblo'
+        )
+
+        self.data = {
+            'email': self.email
+        }
+
+    def test_serializer_empty_object(self):
+        """
+        Tests that serializer.object returns expected data when empty.
+        """
+        serializer = ForgotPasswordSerializer()
+        self.assertEqual(serializer.object, None)
+        self.assertEqual(serializer.data, {'email': ''})
+
+    def test_serializer_should_return_expected_data_if_valid(self):
+        """
+        Tests that serializer.object should return expected data when valid.
+        """
+        serializer = ForgotPasswordSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_data = {
+            'email': self.email
+        }
+
+        self.assertEqual(serializer.object, expected_data)
+
+    def test_serializer_should_return_expected_error_email_required(self):
+        """
+        Tests that serializer.errors should return expected
+        error when invalid.
+        """
+        self.data['email'] = None
+        serializer = ForgotPasswordSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_error = {
+            'email': ['This field is required.']
+        }
+
+        self.assertEqual(serializer.errors, expected_error)
+        self.assertEqual(serializer.object, None)
+        self.assertEqual(serializer.data, {'email': ''})
+
+    def test_serializer_should_return_expected_error_no_user_found(self):
+        """
+        Tests that serializer.object should return expected
+        error when no user found for given email.
+        """
+        self.data['email'] = 'nonexistent@example.com'
+        serializer = ForgotPasswordSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_error = {
+            'email': ['No user found.']
+        }
+
+        self.assertEqual(serializer.errors, expected_error)
+        self.assertEqual(serializer.object, None)
+        self.assertEqual(serializer.data, {'email': ''})
+
+
+class ResetPasswordSerializerTestCase(TestCase):
+    def setUp(self):
+        self.username = 'jpueblo'
+        self.password = 'abc123'
+        self.email = 'jpueblo@example.com'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            email='jpueblo@example.com',
+            password=self.password,
+            first_name='Juan',
+            last_name='Pueblo'
+        )
+
+        self.data = {
+            'token': self.user.password_reset_token,
+            'password': 'newpassword'
+        }
+
+    def test_serializer_empty_object(self):
+        """
+        Tests that serializer.object returns expected data when empty.
+        """
+        serializer = ResetPasswordSerializer()
+
+        self.assertEqual(serializer.object, None)
+        self.assertEqual(serializer.data, {})
+
+    def test_serializer_should_return_expected_data_if_valid(self):
+        """
+        Tests that serializer.object should return expected data when valid.
+        """
+        serializer = ResetPasswordSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_data = {
+            'password_reset': True
+        }
+
+        self.assertEqual(serializer.object, expected_data)
+
+    def test_serializer_should_return_expected_error_if_invalid(self):
+        """
+        Tests that serializer.errors should return expected
+        error when invalid.
+        """
+        self.data['password'] = None
+        self.data['token'] = None
+        serializer = ResetPasswordSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_error = {
+            'password': ['This field is required.'],
+            'token': ['This field is required.']
+        }
+
+        self.assertEqual(serializer.errors, expected_error)
+        self.assertEqual(serializer.object, None)
+        self.assertEqual(serializer.data, {})
+
+    def test_serializer_should_return_expected_error_invalid_token(self):
+        """
+        Tests that serializer.errors should return expected
+        error for invalid token.
+        """
+        self.data['token'] = 'invalidtoken'
+        serializer = ResetPasswordSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_error = {
+            'token': ['Invalid password reset token.']
+        }
+
+        self.assertEqual(serializer.errors, expected_error)
+        self.assertEqual(serializer.object, None)
+        self.assertEqual(serializer.data, {})
+
+    def test_serializer_validate_should_set_user_password(self):
+        """
+        Tests that serializer.validate() should set new password.
+        """
+        serializer = ResetPasswordSerializer(data=self.data)
+        serializer.is_valid()
+
+        user = User.objects.get(username=self.username)
+
+        self.assertTrue(user.check_password(self.data['password']))
+
+    def test_serializer_should_validate_password_requirements(self):
+        """
+        Tests that serializer validates password field.
+        """
+        self.data['password'] = 'a.'
+        serializer = ResetPasswordSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_error = {
+            'password': [
+                'Ensure this value has at least 6 characters (it has 2).'
+            ]
+        }
+
+        self.assertEqual(serializer.errors, expected_error)

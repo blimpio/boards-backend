@@ -57,9 +57,9 @@ class SignupAPIView(APIView):
 
 
 class ForgotPasswordAPIView(generics.CreateAPIView):
-    serializer_class = ForgotPasswordSerializer
     authentication_classes = ()
     permission_classes = ()
+    serializer_class = ForgotPasswordSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.DATA)
@@ -73,9 +73,9 @@ class ForgotPasswordAPIView(generics.CreateAPIView):
 
 
 class ResetPasswordAPIView(generics.CreateAPIView):
-    serializer_class = ResetPasswordSerializer
     authentication_classes = ()
     permission_classes = ()
+    serializer_class = ResetPasswordSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.DATA)
