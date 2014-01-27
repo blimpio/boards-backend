@@ -42,7 +42,7 @@ build:
         code: |
             deactivate
 
-    -script:
+    - script:
         name: 'run tests with tox'
         code: |
           tox -v
