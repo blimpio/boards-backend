@@ -57,7 +57,7 @@ class ValidateSignupDomainsAPIViewTestCase(TestCase):
         expected_response = {
             'error': {
                 'signup_domains': [
-                    "You can't have gmail.com as a sign-up domain."
+                    "gmail.com is an invalid sign-up domain."
                 ]
             }
         }

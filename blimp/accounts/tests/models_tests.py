@@ -116,3 +116,10 @@ class EmailDomainTestCase(TestCase):
         domain name is used.
         """
         self.assertFalse(EmailDomain.is_signup_domain_valid('example.com'))
+
+    def test_is_signup_domain_valid_should_return_false_if_invalid(self):
+        """
+        Tests that is_signup_domain_valid() returns False if
+        domain name fails validation.
+        """
+        self.assertFalse(EmailDomain.is_signup_domain_valid('examplecom'))

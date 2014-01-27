@@ -1,11 +1,10 @@
-from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework import status, generics
 from rest_framework.response import Response
 
 from .serializers import ValidateSignupDomainsSerializer
 
 
-class ValidateSignupDomainsAPIView(APIView):
+class ValidateSignupDomainsAPIView(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
     serializer_class = ValidateSignupDomainsSerializer

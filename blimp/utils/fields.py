@@ -18,6 +18,10 @@ class CharacterSeparatedField(serializers.WritableField):
     def from_native(self, data):
         return data.split(self.separator)
 
+    def run_validators(self, value):
+        for val in value:
+            return super(CharacterSeparatedField, self).run_validators(val)
+
 
 class PasswordField(serializers.CharField):
     """

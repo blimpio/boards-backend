@@ -5,6 +5,7 @@ from blimp.utils import fields
 from blimp.utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from blimp.utils.validators import is_valid_email
 from blimp.accounts.models import Account, AccountMember, EmailDomain
+from blimp.accounts.fields import SignupDomainsField
 from blimp.invitations.models import SignupRequest
 from .models import User
 
@@ -35,7 +36,7 @@ class SignupSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = fields.PasswordField(write_only=True)
     allow_signup = serializers.BooleanField()
-    signup_domains = fields.CharacterSeparatedField(required=False)
+    signup_domains = SignupDomainsField(required=False)
     invite_emails = fields.CharacterSeparatedField(required=False)
     signup_request_token = serializers.CharField(write_only=True)
 
@@ -107,8 +108,9 @@ class SignupSerializer(serializers.Serializer):
 
         for domain in signup_domains:
             is_valid = EmailDomain.is_signup_domain_valid(domain)
+
             if not is_valid:
-                msg = "You can't have {} as a sign-up domain.".format(domain)
+                msg = "{} is an invalid sign-up domain.".format(domain)
                 raise serializers.ValidationError(msg)
 
         return attrs

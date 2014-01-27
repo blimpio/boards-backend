@@ -52,7 +52,7 @@ class ValidateSignupDomainsSerializerTestCase(TestCase):
         serializer = ValidateSignupDomainsSerializer(data=self.data)
         serializer.is_valid()
         expected_errors = {
-            'signup_domains': ["You can't have gmail.com as a sign-up domain."]
+            'signup_domains': ["gmail.com is an invalid sign-up domain."]
         }
 
         self.assertEqual(serializer.errors, expected_errors)
