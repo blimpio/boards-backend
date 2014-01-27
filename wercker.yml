@@ -37,6 +37,16 @@ build:
         code: |
             deactivate
 
+    - script:
+        name: deactivate virtualenv
+        code: |
+            deactivate
+
+    -script:
+      name: 'run tests with tox'
+      code: |
+        tox -v
+
   after-steps:
     - hipchat-notify:
         token: $HIPCHAT_TOKEN
