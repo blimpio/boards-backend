@@ -24,7 +24,7 @@ class SigninAPIView(ObtainJSONWebToken):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ValidateUsernameAPIView(APIView):
+class ValidateUsernameAPIView(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
     serializer_class = ValidateUsernameSerializer
@@ -40,7 +40,7 @@ class ValidateUsernameAPIView(APIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SignupAPIView(APIView):
+class SignupAPIView(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
     serializer_class = SignupSerializer
