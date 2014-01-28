@@ -23,7 +23,7 @@ class ValidateUsernameSerializerTestCase(TestCase):
         )
 
         self.data = {
-            'username': self.username
+            'username': 'pedro'
         }
 
     def test_serializer_empty_data(self):
@@ -31,7 +31,7 @@ class ValidateUsernameSerializerTestCase(TestCase):
         Tests that serializer.data doesn't return any data.
         """
         serializer = ValidateUsernameSerializer()
-        self.assertEqual(serializer.data, {})
+        self.assertEqual(serializer.data, {'username': ''})
 
     def test_serializer_validation(self):
         """
@@ -45,34 +45,38 @@ class ValidateUsernameSerializerTestCase(TestCase):
 
         self.assertEqual(serializer.errors, expected_errors)
 
-    def test_serializer_object_should_have_exists_key(self):
+    def test_serializer_object_should_have_username_key(self):
         """
         Tests that serializer.object should be a dictionary
-        with an exists key.
+        with an username key.
         """
         serializer = ValidateUsernameSerializer(data=self.data)
         serializer.is_valid()
 
-        self.assertTrue('exists' in serializer.object)
+        self.assertTrue('username' in serializer.object)
 
-    def test_serializer_should_return_true_if_user_exists(self):
+    def test_serializer_should_return_error_if_user_exists(self):
         """
-        Tests that serializer should return True if user exists.
+        Tests that serializer should return error if user exists.
+        """
+        self.data['username'] = self.username
+        serializer = ValidateUsernameSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_errors = {
+            'username': ['Username is already taken.']
+        }
+
+        self.assertEqual(serializer.errors, expected_errors)
+
+    def test_serializer_should_return_data_if_valid(self):
+        """
+        Tests that serializer should return data if user doesn't exists.
         """
         serializer = ValidateUsernameSerializer(data=self.data)
         serializer.is_valid()
 
-        self.assertTrue(serializer.object['exists'])
-
-    def test_serializer_should_return_false_if_user_doesnt_exists(self):
-        """
-        Tests that serializer should return False if user doesn't exists.
-        """
-        self.data['username'] = 'nonexistent'
-        serializer = ValidateUsernameSerializer(data=self.data)
-        serializer.is_valid()
-
-        self.assertFalse(serializer.object['exists'])
+        self.assertEqual(serializer.object, self.data)
 
 
 class SignupSerializerTestCase(TestCase):

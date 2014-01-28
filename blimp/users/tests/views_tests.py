@@ -11,23 +11,52 @@ class ValidateUsernameAPIViewTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
 
+        self.username = 'jpueblo'
+        self.password = 'abc123'
+        self.email = 'jpueblo@example.com'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            email='jpueblo@example.com',
+            password=self.password,
+            first_name='Juan',
+            last_name='Pueblo'
+        )
+
     def test_post_valid_data(self):
         """
         Tests that POST request with valid data to endpoint
         returns expected data.
         """
         data = {
-            'username': 'jpueblo'
+            'username': 'pedro'
+        }
+
+        response = self.client.post(
+            '/api/auth/username/validate/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, data)
+
+    def test_post_valid_data_taken_username(self):
+        """
+        Tests that POST request with taken username to endpoint
+        returns expected error.
+        """
+        data = {
+            'username': self.username
         }
 
         response = self.client.post(
             '/api/auth/username/validate/', data, format='json')
 
         expected_response = {
-            'exists': False
+            'error': {
+                'username': ['Username is already taken.']
+            }
         }
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data, expected_response)
 
     def test_post_invalid_data(self):

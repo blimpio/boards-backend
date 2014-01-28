@@ -4,7 +4,7 @@ from rest_framework import serializers
 from blimp.utils import fields
 from blimp.utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from blimp.utils.validators import is_valid_email
-from blimp.accounts.models import Account, AccountMember, EmailDomain
+from blimp.accounts.models import Account, AccountMember
 from blimp.accounts.fields import SignupDomainsField
 from blimp.invitations.models import SignupRequest
 from .models import User
@@ -14,14 +14,16 @@ class ValidateUsernameSerializer(serializers.Serializer):
     """
     Serializer that handles username validation endpoint.
     """
-    username = serializers.CharField(write_only=True)
+    username = serializers.CharField()
 
     def validate_username(self, attrs, source):
         username = attrs[source]
 
-        return {
-            'exists': User.objects.filter(username=username).exists()
-        }
+        if User.objects.filter(username__iexact=username).exists():
+            msg = 'Username is already taken.'
+            raise serializers.ValidationError(msg)
+
+        return attrs
 
 
 class SignupSerializer(serializers.Serializer):

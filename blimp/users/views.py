@@ -33,7 +33,7 @@ class ValidateUsernameAPIView(APIView):
         serializer = self.serializer_class(data=request.DATA)
 
         if serializer.is_valid():
-            return Response(serializer.object)
+            return Response(serializer.data)
 
         return Response({
             'error': serializer.errors
