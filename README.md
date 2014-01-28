@@ -1,5 +1,7 @@
 # Blimp Backend
 
+![wercker status](https://app.wercker.com/status/975e87e15b2890a96efc090fb2664d5e "wercker status")
+
 ## Install
 
 ```
