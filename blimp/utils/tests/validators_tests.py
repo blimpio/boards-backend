@@ -2,7 +2,8 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
-from ..validators import (DomainNameValidator, validate_domain_name,
+from ..validators import (DomainNameValidator, ListValidator,
+                          validate_domain_name, validate_list,
                           is_valid_email, is_valid_domain_name)
 
 
@@ -84,3 +85,33 @@ class DomainNameValidatorTestCase(TestCase):
         """
         for domain in self.valid_domains:
             self.assertEqual(validate_domain_name(domain), None)
+
+
+class ListValidatorTestCase(TestCase):
+    def setUp(self):
+        self.validator = ListValidator()
+
+    def test_raise_validation_error_falsy_value(self):
+        """
+        Tests that falsy values raise ValidationError.
+        """
+        with self.assertRaises(ValidationError):
+            self.validator(None)
+
+    def test_raise_validation_error_not_instance_of_list(self):
+        """
+        Tests that an anything that isnt an instance of list
+        raises ValidationError.
+        """
+        with self.assertRaises(ValidationError):
+            self.validator('')
+
+    def test_valid_value_should_return_none(self):
+        self.assertEqual(self.validator([1, 2, 3]), None)
+
+    def test_validate_list_should_be_a_shortcut(self):
+        """
+        Tests that an expected valid value returns None
+        with validate_list shortcut.
+        """
+        self.assertEqual(validate_list([1, 2, 3]), None)
