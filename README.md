@@ -1,12 +1,12 @@
-# Blimp Backend
+# Blimp Boards Backend
 
 ![wercker status](https://app.wercker.com/status/975e87e15b2890a96efc090fb2664d5e "wercker status")
 
 ## Install
 
 ```
-git clone git@github.com:GetBlimp/blimp-backend.git
-cd blimp-backend/
+git clone git@github.com:GetBlimp/boards-backend.git
+cd boards-backend/
 pip install -r requirements.txt
 ```
 
