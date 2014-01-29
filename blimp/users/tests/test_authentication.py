@@ -28,7 +28,7 @@ urlpatterns = patterns(
 
 
 class JSONWebTokenAuthenticationTests(TestCase):
-    urls = 'blimp.users.tests.authentication_tests'
+    urls = 'blimp.users.tests.test_authentication'
 
     def setUp(self):
         self.csrf_client = APIClient(enforce_csrf_checks=True)

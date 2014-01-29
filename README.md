@@ -5,26 +5,48 @@
 ## Install
 
 ```
-git clone git@github.com:GetBlimp/boards-backend.git
-cd boards-backend/
-pip install -r requirements.txt
+$ git clone git@github.com:GetBlimp/boards-backend.git
+$ cd boards-backend/
+$ pip install -r requirements.txt
 ```
 
 ## First time setup
 
 ```
-./manage.py syncdb --noinput
-./manage.py loaddata blimp/users/fixtures/users.json
+$ ./manage.py syncdb --noinput
+$ ./manage.py migrate
+$ ./manage.py loaddata blimp/users/fixtures/users.json
 ```
 
 ## Running web server
 
 ```
-./manage.py runserver_plus
+$ ./manage.py runserver_plus
 ```
 
 ## Running websockets server
 
 ```
-python ws.py --debug
+$ python ws.py --debug
+```
+
+## Running tests
+
+```
+$ ./manage.py test
+```
+
+## Running tests with tox
+
+```
+$ pip install tox
+$ tox
+```
+
+## Code coverage
+
+```
+$ pip install coverage
+$ coverage run --source='.' manage.py test
+$ coverage report --show-missing
 ```
