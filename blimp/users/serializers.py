@@ -39,7 +39,7 @@ class SignupSerializer(serializers.Serializer):
     password = fields.PasswordField(write_only=True)
     allow_signup = serializers.BooleanField()
     signup_domains = SignupDomainsField(required=False)
-    invite_emails = fields.CharacterSeparatedField(required=False)
+    invite_emails = fields.ListField(required=False)
     signup_request_token = serializers.CharField(write_only=True)
 
     def validate_signup_request_token(self, attrs, source):
@@ -102,10 +102,11 @@ class SignupSerializer(serializers.Serializer):
         return attrs
 
     def validate_signup_domains(self, attrs, source):
+        signup_domains = attrs.get('signup_domains')
         allow_signup = attrs.get('allow_signup')
 
-        if allow_signup:
-            self.fields[source].required = True
+        if allow_signup and not signup_domains:
+            raise serializers.ValidationError(self.error_messages['required'])
 
         return attrs
 

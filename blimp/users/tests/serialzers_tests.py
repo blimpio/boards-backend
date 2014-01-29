@@ -231,7 +231,7 @@ class SignupSerializerTestCase(TestCase):
         self.data.update({
             'allow_signup': True,
             'signup_domains': ['example.com'],
-            'invite_emails': '@example.com',
+            'invite_emails': ['@example.com'],
         })
 
         serializer = SignupSerializer(data=self.data)
@@ -295,7 +295,7 @@ class SignupSerializerTestCase(TestCase):
         self.data.update({
             'allow_signup': True,
             'signup_domains': ['example.com'],
-            'invite_emails': 'ppueblo@example.com,qpueblo@example.com',
+            'invite_emails': ['ppueblo@example.com', 'qpueblo@example.com'],
         })
 
         serializer = SignupSerializer(data=self.data)
