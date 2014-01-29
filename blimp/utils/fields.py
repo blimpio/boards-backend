@@ -43,6 +43,9 @@ class PasswordField(serializers.CharField):
 
 
 class ListField(serializers.WritableField):
+    type_name = 'ListField'
+    type_label = 'list'
+
     def validate(self, value_list):
         validate_list(value_list)
 
