@@ -45,7 +45,20 @@ class DomainNameValidator(object):
                 pass
             raise ValidationError(self.message, code=self.code)
 
+
+class ListValidator(object):
+    message = 'Invalid value.'
+
+    def __call__(self, value):
+        if not value:
+            raise ValidationError(self.message)
+
+        if not isinstance(value, list):
+            raise ValidationError(self.message)
+
+
 validate_domain_name = DomainNameValidator()
+validate_list = ListValidator()
 
 
 def is_valid_email(value):

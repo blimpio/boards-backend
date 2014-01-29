@@ -13,7 +13,7 @@ class ValidateSignupDomainsAPIViewTestCase(TestCase):
         returns expected data.
         """
         data = {
-            'signup_domains': 'example.com'
+            'signup_domains': ['example.com']
         }
 
         response = self.client.post(
@@ -48,7 +48,7 @@ class ValidateSignupDomainsAPIViewTestCase(TestCase):
         returns expected error.
         """
         data = {
-            'signup_domains': 'gmail.com'
+            'signup_domains': ['gmail.com']
         }
 
         response = self.client.post(

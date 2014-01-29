@@ -210,7 +210,11 @@ class SignupSerializerTestCase(TestCase):
         Tests that serializer should return error if signup
         domain is invalid.
         """
-        self.data.update({'allow_signup': True, 'signup_domains': 'gmail.com'})
+        self.data.update({
+            'allow_signup': True,
+            'signup_domains': ['gmail.com']
+        })
+
         serializer = SignupSerializer(data=self.data)
         serializer.is_valid()
         expected_error = {
@@ -226,7 +230,7 @@ class SignupSerializerTestCase(TestCase):
         """
         self.data.update({
             'allow_signup': True,
-            'signup_domains': 'example.com',
+            'signup_domains': ['example.com'],
             'invite_emails': '@example.com',
         })
 
@@ -290,7 +294,7 @@ class SignupSerializerTestCase(TestCase):
         """
         self.data.update({
             'allow_signup': True,
-            'signup_domains': 'example.com',
+            'signup_domains': ['example.com'],
             'invite_emails': 'ppueblo@example.com,qpueblo@example.com',
         })
 
@@ -316,7 +320,6 @@ class SignupSerializerTestCase(TestCase):
         }
 
         self.assertEqual(serializer.errors, expected_error)
-
 
 
 class ForgotPasswordSerializerTestCase(TestCase):

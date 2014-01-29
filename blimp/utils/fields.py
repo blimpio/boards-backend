@@ -1,4 +1,7 @@
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
+
+from .validators import validate_list
 
 
 class CharacterSeparatedField(serializers.WritableField):
@@ -37,3 +40,29 @@ class PasswordField(serializers.CharField):
             *args,
             **kwargs
         )
+
+
+class ListField(serializers.WritableField):
+    def validate(self, value_list):
+        validate_list(value_list)
+
+        for value in value_list:
+            super(ListField, self).validate(value)
+
+    def run_validators(self, value_list):
+        errors = []
+
+        for v in self.validators:
+            try:
+                for value in value_list:
+                    v(value)
+            except ValidationError as e:
+                if hasattr(e, 'code') and e.code in self.error_messages:
+                    message = self.error_messages[e.code]
+                    if e.params:
+                        message = message % e.params
+                    errors.append(message)
+                else:
+                    errors.extend(e.messages)
+        if errors:
+            raise ValidationError(errors)

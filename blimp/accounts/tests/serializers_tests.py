@@ -9,7 +9,7 @@ class ValidateSignupDomainsSerializerTestCase(TestCase):
         EmailDomain.objects.create(domain_name='example.com')
 
         self.data = {
-            'signup_domains': 'example-domain.com'
+            'signup_domains': ['example-domain.com']
         }
 
     def test_serializer_empty_data(self):
@@ -40,14 +40,14 @@ class ValidateSignupDomainsSerializerTestCase(TestCase):
         serializer = ValidateSignupDomainsSerializer(data=self.data)
         serializer.is_valid()
 
-        self.assertTrue('signup_domains' in serializer.object)
+        self.assertTrue('signup_domains' in serializer.data)
 
     def test_serializer_should_return_error_if_domain_name_is_invalid(self):
         """
         Tests that serializer should return error if domain name is
         blacklisted or used.
         """
-        self.data['signup_domains'] = 'gmail.com,example.com'
+        self.data['signup_domains'] = ['gmail.com', 'example.com']
 
         serializer = ValidateSignupDomainsSerializer(data=self.data)
         serializer.is_valid()
@@ -67,4 +67,4 @@ class ValidateSignupDomainsSerializerTestCase(TestCase):
             'signup_domains': ['example-domain.com']
         }
 
-        self.assertEqual(serializer.object, expected_data)
+        self.assertEqual(serializer.data, expected_data)

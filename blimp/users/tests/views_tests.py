@@ -96,7 +96,7 @@ class SignupAPIView(TestCase):
             'password': 'abc123',
             'account_name': 'Pueblo Co.',
             'allow_signup': True,
-            'signup_domains': 'example.com,example2.com',
+            'signup_domains': ['example.com', 'example2.com'],
             'invite_emails': 'pedro@example.com,sara@example2.com',
             'signup_request_token': self.signup_request.token
         }

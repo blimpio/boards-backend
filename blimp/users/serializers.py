@@ -101,6 +101,14 @@ class SignupSerializer(serializers.Serializer):
 
         return attrs
 
+    def validate_signup_domains(self, attrs, source):
+        allow_signup = attrs.get('allow_signup')
+
+        if allow_signup:
+            self.fields[source].required = True
+
+        return attrs
+
     def validate_invite_emails(self, attrs, source):
         invite_emails = set(attrs.get(source, []))
         allow_signup = attrs.get('allow_signup')
