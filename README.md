@@ -1,6 +1,6 @@
 # Blimp Boards Backend
 
-![wercker status](https://app.wercker.com/status/975e87e15b2890a96efc090fb2664d5e "wercker status")
+![wercker status](https://app.wercker.com/status/eee8e64a497f80d5367f9012fd2aff4a "wercker status")
 
 ## Install
 
