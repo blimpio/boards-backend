@@ -51,3 +51,6 @@ celery.db
 celerybeat-schedule.db
 celerybeat.pid
 celeryev.pid
+
+# PyCharm
+.idea/
