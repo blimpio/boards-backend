@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Account, AccountMember, EmailDomain
+from .models import Account, AccountCollaborator, EmailDomain
 
 
-admin.site.register([Account, AccountMember, EmailDomain])
+admin.site.register([Account, AccountCollaborator, EmailDomain])

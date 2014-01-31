@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from blimp.accounts.models import Account, AccountMember
+from blimp.accounts.models import Account, AccountCollaborator
 from blimp.invitations.models import SignupRequest, InvitedUser
 from blimp.utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..models import User
@@ -282,8 +282,8 @@ class SignupSerializerTestCase(TestCase):
         serializer.is_valid()
         user = User.objects.get(username=self.data['username'])
         expected_account = Account.objects.get(slug='pueblo-co')
-        expected_owner = AccountMember.objects.filter(
-            account=expected_account, user=user, role='owner')
+        expected_owner = AccountCollaborator.objects.filter(
+            account=expected_account, user=user, is_owner=True)
 
         self.assertEqual(expected_owner.count(), 1)
 

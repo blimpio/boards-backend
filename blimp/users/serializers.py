@@ -4,7 +4,7 @@ from rest_framework import serializers
 from blimp.utils import fields
 from blimp.utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from blimp.utils.validators import is_valid_email
-from blimp.accounts.models import Account, AccountMember
+from blimp.accounts.models import Account, AccountCollaborator
 from blimp.accounts.fields import SignupDomainsField
 from blimp.invitations.models import SignupRequest
 from .models import User
@@ -155,7 +155,7 @@ class SignupSerializer(serializers.Serializer):
         if allow_signup and signup_domains:
             account.add_email_domains(signup_domains)
 
-        AccountMember.objects.create_owner(account=account, user=user)
+        AccountCollaborator.objects.create_owner(account=account, user=user)
 
         for invite_email in invite_emails:
             user_data = {

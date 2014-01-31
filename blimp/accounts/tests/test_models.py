@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from blimp.users.models import User
 from blimp.invitations.models import InvitedUser
-from ..models import (Account, AccountMember, EmailDomain,
+from ..models import (Account, AccountCollaborator, EmailDomain,
                       get_company_upload_path)
 
 
@@ -66,7 +66,7 @@ class AccountTestCase(TestCase):
         self.assertEqual('myfile.jpg', segments[-1])
 
 
-class AccountMemberTestCase(TestCase):
+class AccountCollaboratorTestCase(TestCase):
     def setUp(self):
         self.username = 'jpueblo'
         self.password = 'abc123'
@@ -86,7 +86,7 @@ class AccountMemberTestCase(TestCase):
         Tests that manager method create_owner should create
         an AccountMember with the owner role.
         """
-        account_member = AccountMember.objects.create_owner(
+        account_member = AccountCollaborator.objects.create_owner(
             account=self.account, user=self.user)
 
-        self.assertEqual(account_member.role, 'owner')
+        self.assertTrue(account_member.is_owner)

@@ -3,7 +3,17 @@ import os
 import sys
 
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "blimp.settings")
+    ENVIRONMENT = os.getenv('ENVIRONMENT')
+
+    if ENVIRONMENT == 'STAGING':
+        settings = 'staging'
+    elif ENVIRONMENT == 'PRODUCTION':
+        settings = 'production'
+    else:
+        settings = 'development'
+
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE",
+                          "settings.%s" % settings)
 
     from django.core.management import execute_from_command_line
 

@@ -7,8 +7,8 @@ from django.template.defaultfilters import slugify
 from blimp.users.models import User
 from blimp.utils.slugify import unique_slugify
 from blimp.invitations.models import InvitedUser
-from .managers import AccountMemberManager
-from .constants import MEMBER_ROLES, COMPANY_RESERVED_KEYWORDS
+from .managers import AccountCollaboratorManager
+from .constants import COMPANY_RESERVED_KEYWORDS
 
 
 def get_company_upload_path(instance, filename):
@@ -59,12 +59,12 @@ class Account(models.Model):
             account=self, defaults=user_data, **user_data)
 
 
-class AccountMember(models.Model):
+class AccountCollaborator(models.Model):
     account = models.ForeignKey(Account)
     user = models.ForeignKey(User)
-    role = models.CharField(max_length=25, choices=MEMBER_ROLES)
+    is_owner = models.BooleanField(default=False)
 
-    objects = AccountMemberManager()
+    objects = AccountCollaboratorManager()
 
     def __unicode__(self):
         return self.user.get_full_name() or self.user.email
