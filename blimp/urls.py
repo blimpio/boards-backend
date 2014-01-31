@@ -15,5 +15,5 @@ urlpatterns = patterns(
     (r'', include('blimp.users.urls')),
 
     # Catch all URL
-    (r'^', TemplateView.as_view(template_name='index.html'))
+    (r'^.*/$', TemplateView.as_view(template_name='index.html'))
 )
