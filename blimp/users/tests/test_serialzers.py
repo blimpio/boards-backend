@@ -5,7 +5,9 @@ from blimp.invitations.models import SignupRequest, InvitedUser
 from blimp.utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..models import User
 from ..serializers import (ValidateUsernameSerializer, SignupSerializer,
-                           ForgotPasswordSerializer, ResetPasswordSerializer)
+                           ForgotPasswordSerializer, ResetPasswordSerializer,
+                           SignupInvitedUserSerializer,
+                           SigninInvitedUserSerializer)
 
 
 class ValidateUsernameSerializerTestCase(TestCase):
@@ -223,6 +225,24 @@ class SignupSerializerTestCase(TestCase):
 
         self.assertEqual(serializer.errors, expected_error)
 
+    def test_serializer_allow_signup_needs_signup_domains(self):
+        """
+        Tests that serializer should return error if allow_signup is True but
+        signup_domains is not set set.
+        """
+        self.data.update({
+            'allow_signup': True
+        })
+
+        serializer = SignupSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_error = {
+            'signup_domains': ['This field is required.']
+        }
+
+        self.assertEqual(serializer.errors, expected_error)
+
     def test_serializer_should_return_error_invalid_invite_email(self):
         """
         Tests that serializer should return error if invite
@@ -320,6 +340,202 @@ class SignupSerializerTestCase(TestCase):
         }
 
         self.assertEqual(serializer.errors, expected_error)
+
+
+class SignupInvitedUserSerializerTestCase(TestCase):
+    def setUp(self):
+        self.username = 'jpueblo'
+        self.password = 'abc123'
+        self.email = 'jpueblo@example.com'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            email='jpueblo@example.com',
+            password=self.password,
+            first_name='Juan',
+            last_name='Pueblo'
+        )
+
+        self.account = Account.objects.create(name='Acme')
+
+        self.invited_user = InvitedUser.objects.create(
+            first_name='Roberto', last_name='Pueblo',
+            email='rpueblo@example.com', account=self.account,
+            created_by=self.user
+        )
+
+        self.data = {
+            'full_name': 'Roberto Pueblo',
+            'email': 'rpueblo@example.com',
+            'username': 'rpueblo',
+            'password': 'abc123',
+            'invited_user_token': self.invited_user.token
+        }
+
+    def test_validate_invited_user_token_not_found(self):
+        """
+        Tests that serializer validates invalid invited_user_token.
+        """
+        self.data['invited_user_token'] = 'nonexistent'
+
+        serializer = SignupInvitedUserSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_data = {
+            'invited_user_token': ['No invited user found for token.']
+        }
+
+        self.assertEqual(serializer.errors, expected_data)
+
+    def test_validate_invited_user_token_email_does_not_match(self):
+        """
+        Tests that serializer validates invalid invited_user_token.
+        """
+        invited_user = InvitedUser.objects.create(
+            first_name='Roberto', last_name='Pueblo',
+            email='robertopueblo@example.com', account=self.account,
+            created_by=self.user
+        )
+
+        self.data['invited_user_token'] = invited_user.token
+
+        serializer = SignupInvitedUserSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_data = {
+            'invited_user_token': [
+                'Invited user email does not match signup email.'
+            ]
+        }
+
+        self.assertEqual(serializer.errors, expected_data)
+
+    def test_validate_should_accept_invited_user(self):
+        """
+        Tests that serializer accepts the invited_user.
+        """
+        serializer = SignupInvitedUserSerializer(data=self.data)
+        serializer.is_valid()
+
+        invited_users = InvitedUser.objects.all()
+
+        self.assertEqual(invited_users.count(), 0)
+
+    def test_validate_should_invite_users(self):
+        """
+        Tests that serializer should invite users.
+        """
+        self.data['invite_emails'] = ['ppueblo@example.com']
+        serializer = SignupInvitedUserSerializer(data=self.data)
+        serializer.is_valid()
+
+        invited_users = InvitedUser.objects.all()
+
+        self.assertEqual(invited_users.count(), 1)
+
+    def test_validate_should_return_token(self):
+        """
+        Tests that serializer should return token to signin.
+        """
+        serializer = SignupInvitedUserSerializer(data=self.data)
+        serializer.is_valid()
+
+        self.assertTrue('token' in serializer.object)
+
+
+class SigninInvitedUserSerializerTestCase(TestCase):
+    def setUp(self):
+        self.username = 'jpueblo'
+        self.password = 'abc123'
+        self.email = 'jpueblo@example.com'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            email='jpueblo@example.com',
+            password=self.password,
+            first_name='Juan',
+            last_name='Pueblo'
+        )
+
+        self.account = Account.objects.create(name='Acme')
+
+        self.invited_user = InvitedUser.objects.create(
+            first_name='Roberto', last_name='Pueblo',
+            email='rpueblo@example.com', account=self.account,
+            created_by=self.user
+        )
+
+        self.data = {
+            'username': self.username,
+            'password': self.password,
+            'invited_user_token': self.invited_user.token
+        }
+
+    def test_validate_invited_user_token_not_found(self):
+        """
+        Tests that serializer validates invalid invited_user_token.
+        """
+        self.data['invited_user_token'] = 'nonexistent'
+
+        serializer = SigninInvitedUserSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_data = {
+            'invited_user_token': ['No invited user found for token.']
+        }
+
+        self.assertEqual(serializer.errors, expected_data)
+
+    def test_validate_user_account_disabled(self):
+        """
+        Tests that serializer validates disabled user accounts.
+        """
+        self.user.is_active = False
+        self.user.save()
+
+        serializer = SigninInvitedUserSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_data = {
+            'non_field_errors': ['User account is disabled.']
+        }
+
+        self.assertEqual(serializer.errors, expected_data)
+
+    def test_validate_invalid_credentials(self):
+        """
+        Tests that serializer validates disabled user accounts.
+        """
+        self.data['password'] = 'wrongpassword'
+
+        serializer = SigninInvitedUserSerializer(data=self.data)
+        serializer.is_valid()
+
+        expected_data = {
+            'non_field_errors': ['Unable to login with provided credentials.']
+        }
+
+        self.assertEqual(serializer.errors, expected_data)
+
+    def test_validate_should_accept_invited_user(self):
+        """
+        Tests that serializer accepts the invited_user.
+        """
+        serializer = SigninInvitedUserSerializer(data=self.data)
+        serializer.is_valid()
+
+        invited_users = InvitedUser.objects.all()
+
+        self.assertEqual(invited_users.count(), 0)
+
+    def test_validate_should_return_token(self):
+        """
+        Tests that serializer should return token to signin.
+        """
+        serializer = SigninInvitedUserSerializer(data=self.data)
+        serializer.is_valid()
+
+        self.assertTrue('token' in serializer.object)
 
 
 class ForgotPasswordSerializerTestCase(TestCase):

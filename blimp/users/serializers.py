@@ -237,7 +237,7 @@ class SigninInvitedUserSerializer(serializers.Serializer):
     Serializer that handles signin endpoint data with an invited_user_token.
     """
     username = serializers.CharField()
-    password = serializers.CharField(write_only=True)
+    password = fields.PasswordField(write_only=True)
     invited_user_token = serializers.CharField(write_only=True)
 
     def validate_invited_user_token(self, attrs, source):
@@ -256,26 +256,22 @@ class SigninInvitedUserSerializer(serializers.Serializer):
         username = attrs.get('username')
         password = attrs.get('password')
 
-        if username and password:
-            user = authenticate(username=username, password=password)
+        user = authenticate(username=username, password=password)
 
-            if user:
-                if not user.is_active:
-                    msg = 'User account is disabled.'
-                    raise serializers.ValidationError(msg)
-
-                self.invited_user.accept(user)
-
-                payload = jwt_payload_handler(user)
-
-                return {
-                    'token': jwt_encode_handler(payload)
-                }
-            else:
-                msg = 'Unable to login with provided credentials.'
+        if user:
+            if not user.is_active:
+                msg = 'User account is disabled.'
                 raise serializers.ValidationError(msg)
+
+            self.invited_user.accept(user)
+
+            payload = jwt_payload_handler(user)
+
+            return {
+                'token': jwt_encode_handler(payload)
+            }
         else:
-            msg = 'Must include "username" and "password"'
+            msg = 'Unable to login with provided credentials.'
             raise serializers.ValidationError(msg)
 
 
