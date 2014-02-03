@@ -10,7 +10,7 @@ class ValidateSignupDomainsAPIView(generics.CreateAPIView):
     serializer_class = ValidateSignupDomainsSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.DATA)
+        serializer = self.get_serializer(data=request.DATA)
 
         if serializer.is_valid():
             return Response(serializer.object)

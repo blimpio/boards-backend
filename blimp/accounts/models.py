@@ -3,10 +3,10 @@ import uuid
 
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.db.models.loading import get_model
 
 from blimp.users.models import User
 from blimp.utils.slugify import unique_slugify
-from blimp.invitations.models import InvitedUser
 from .managers import AccountCollaboratorManager
 from .constants import COMPANY_RESERVED_KEYWORDS
 
@@ -20,7 +20,7 @@ def get_company_upload_path(instance, filename):
 class EmailDomain(models.Model):
     domain_name = models.CharField(max_length=255, unique=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.domain_name
 
 
@@ -32,7 +32,7 @@ class Account(models.Model):
     allow_signup = models.BooleanField(default=False)
     email_domains = models.ManyToManyField(EmailDomain, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
@@ -55,8 +55,14 @@ class Account(models.Model):
         Receives dictionary of InvitedUser fields
         and returns a tuple of InvitedUser, created.
         """
-        return InvitedUser.objects.get_or_create(
+        InvitedUser = get_model('invitations', 'InvitedUser')
+
+        invited_user, created = InvitedUser.objects.get_or_create(
             account=self, defaults=user_data, **user_data)
+
+        invited_user.send_invite()
+
+        return invited_user, created
 
 
 class AccountCollaborator(models.Model):
@@ -66,5 +72,5 @@ class AccountCollaborator(models.Model):
 
     objects = AccountCollaboratorManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.user.get_full_name() or self.user.email

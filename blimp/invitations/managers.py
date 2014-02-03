@@ -21,3 +21,22 @@ class SignupRequestManager(models.Manager):
                 pass
 
         return None
+
+
+class InvitedUserManager(models.Manager):
+    def get_from_token(self, token):
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY)
+        except:
+            return None
+
+        payload_type = payload.get('type')
+        payload_pk = payload.get('pk')
+
+        if payload_type == 'InvitedUser' and payload_pk:
+            try:
+                return self.get(pk=payload_pk)
+            except self.model.DoesNotExist:
+                pass
+
+        return None

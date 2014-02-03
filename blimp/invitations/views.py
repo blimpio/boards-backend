@@ -34,7 +34,7 @@ class ValidateSignupRequestAPIView(generics.CreateAPIView):
     permission_classes = ()
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.DATA)
+        serializer = self.get_serializer(data=request.DATA)
 
         if serializer.is_valid():
             return Response(serializer.data)

@@ -2,17 +2,20 @@ import jwt
 
 from django.db import models
 from django.conf import settings
+from django.core.mail import send_mail
+from django.db.models.loading import get_model
 
 from blimp.accounts.constants import MEMBER_ROLES
+from blimp.users.models import User
 from blimp.users.utils import get_gravatar_url
-from .managers import SignupRequestManager
+from .managers import SignupRequestManager, InvitedUserManager
 
 
 class SignupRequest(models.Model):
     email = models.EmailField(unique=True)
     objects = SignupRequestManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.email
 
     @property
@@ -30,8 +33,6 @@ class SignupRequest(models.Model):
         return jwt_token.decode('utf-8')
 
     def send_email(self):
-        from django.core.mail import send_mail
-
         message = '{}'.format(self.token)
 
         return send_mail(
@@ -53,14 +54,42 @@ class InvitedUser(models.Model):
     created_by = models.ForeignKey(
         'users.User', related_name='%(class)s_created_by')
 
-    def __unicode__(self):
-        return '{} invited to {}'.format(self.email, self.account)
+    objects = InvitedUserManager()
+
+    def __str__(self):
+        return self.email
+
+    @property
+    def token(self):
+        """
+        Returns a JSON Web Token
+        """
+        payload = {
+            'type': 'InvitedUser',
+            'pk': self.pk
+        }
+
+        jwt_token = jwt.encode(payload, settings.SECRET_KEY)
+
+        return jwt_token.decode('utf-8')
 
     def save(self, *args, **kwargs):
-        if not self.pk and self.user:
-            self.first_name = self.user.first_name
-            self.last_name = self.user.last_name
-            self.email = self.user.email
+        """
+        When saving a new InvitedUser, try to set first_name,
+        last_name, and email if a user is given. If no user is given,
+        try to find an existing user with matching email.
+        """
+        if not self.pk:
+            if not self.user:
+                try:
+                    self.user = User.objects.get(email=self.email)
+                except User.DoesNotExist:
+                    pass
+
+            if self.user:
+                self.first_name = self.user.first_name
+                self.last_name = self.user.last_name
+                self.email = self.user.email
 
         return super(InvitedUser, self).save(*args, **kwargs)
 
@@ -81,22 +110,34 @@ class InvitedUser(models.Model):
         pass
 
     def accept(self, user):
-        pass
-
-    @property
-    def token(self):
         """
-        Returns a JSON Web Token
+        - Create AccountCollaborator
+        - Delete invitation
         """
-        payload = {
-            'type': 'InvitedUser',
-            'id': self.pk
-        }
+        AccountCollaborator = get_model('accounts', 'AccountCollaborator')
 
-        jwt_token = jwt.encode(payload, settings.SECRET_KEY)
+        collaborator = AccountCollaborator.objects.create(
+            user=user, account=self.account)
 
-        return jwt_token.decode('utf-8')
+        self.delete()
 
-    @classmethod
-    def notify_pending_invitations(cls, user):
-        pass
+        return collaborator
+
+    def email_user(self, subject, message, from_email=None, **kwargs):
+        """
+        Sends an email to this User.
+        """
+        if self.user:
+            self.user.email_user(
+                subject, message, from_email=from_email, **kwargs)
+        else:
+            send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    def send_invite(self):
+        message = '{}'.format(self.token)
+
+        self.email_user(
+            'You were invited to join {}'.format(self.account),
+            message,
+            from_email='from@example.com',
+        )

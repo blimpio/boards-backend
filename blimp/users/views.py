@@ -1,20 +1,31 @@
 from django.http import Http404
 
-from rest_framework import generics, status
+from rest_framework import generics, status, renderers, parsers
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework_jwt.views import ObtainJSONWebToken
+from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
 from blimp.users.models import User
-from blimp.invitations.models import SignupRequest
-from .serializers import (ValidateUsernameSerializer, SignupSerializer,
-                          ForgotPasswordSerializer, ResetPasswordSerializer)
+from blimp.utils.shortcuts import redirect_with_params
+from blimp.invitations.models import SignupRequest, InvitedUser
+from . import serializers
 
 
-class SigninAPIView(ObtainJSONWebToken):
+class SigninAPIView(generics.CreateAPIView):
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = JSONWebTokenSerializer
+
+    def get_serializer_class(self):
+        if self.request.DATA.get('invited_user_token'):
+            return serializers.SigninInvitedUserSerializer
+        return super(SigninAPIView, self).get_serializer_class()
+
     def post(self, request):
-        serializer = self.serializer_class(data=request.DATA)
+        serializer = self.get_serializer(data=request.DATA)
 
         if serializer.is_valid():
             return Response(serializer.object)
@@ -27,10 +38,10 @@ class SigninAPIView(ObtainJSONWebToken):
 class ValidateUsernameAPIView(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
-    serializer_class = ValidateUsernameSerializer
+    serializer_class = serializers.ValidateUsernameSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.DATA)
+        serializer = self.get_serializer(data=request.DATA)
 
         if serializer.is_valid():
             return Response(serializer.data)
@@ -43,10 +54,15 @@ class ValidateUsernameAPIView(generics.CreateAPIView):
 class SignupAPIView(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
-    serializer_class = SignupSerializer
+    serializer_class = serializers.SignupSerializer
+
+    def get_serializer_class(self):
+        if self.request.DATA.get('invited_user_token'):
+            return serializers.SignupInvitedUserSerializer
+        return super(SignupAPIView, self).get_serializer_class()
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.DATA)
+        serializer = self.get_serializer(data=request.DATA)
 
         if serializer.is_valid():
             return Response(serializer.object)
@@ -59,10 +75,10 @@ class SignupAPIView(generics.CreateAPIView):
 class ForgotPasswordAPIView(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
-    serializer_class = ForgotPasswordSerializer
+    serializer_class = serializers.ForgotPasswordSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.DATA)
+        serializer = self.get_serializer(data=request.DATA)
 
         if serializer.is_valid():
             return Response(serializer.data)
@@ -75,10 +91,10 @@ class ForgotPasswordAPIView(generics.CreateAPIView):
 class ResetPasswordAPIView(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
-    serializer_class = ResetPasswordSerializer
+    serializer_class = serializers.ResetPasswordSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.DATA)
+        serializer = self.get_serializer(data=request.DATA)
 
         if serializer.is_valid():
             return Response(serializer.object)
@@ -88,6 +104,26 @@ class ResetPasswordAPIView(generics.CreateAPIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
+class SigninValidateTokenHTMLView(APIView):
+    authentication_classes = ()
+    permission_classes = ()
+    renderer_classes = (TemplateHTMLRenderer,)
+
+    def get(self, request, *args, **kwargs):
+        invite = request.QUERY_PARAMS.get('invite')
+
+        if invite:
+            invited_user = InvitedUser.objects.get_from_token(invite)
+
+            if not invited_user:
+                raise Http404
+
+            if not invited_user.user:
+                return redirect_with_params(request, 'auth-signup')
+
+        return Response(template_name='index.html')
+
+
 class SignupValidateTokenHTMLView(APIView):
     authentication_classes = ()
     permission_classes = ()
@@ -95,12 +131,22 @@ class SignupValidateTokenHTMLView(APIView):
 
     def get(self, request, *args, **kwargs):
         token = request.QUERY_PARAMS.get('token')
+        invite = request.QUERY_PARAMS.get('invite')
 
-        if token:
+        if token and not invite:
             signup_request = SignupRequest.objects.get_from_token(token)
 
             if not signup_request:
                 raise Http404
+
+        if invite:
+            invited_user = InvitedUser.objects.get_from_token(invite)
+
+            if not invited_user:
+                raise Http404
+
+            if invited_user.user:
+                return redirect_with_params(request, 'auth-signin')
 
         return Response(template_name='index.html')
 

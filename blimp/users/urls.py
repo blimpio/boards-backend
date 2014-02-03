@@ -19,6 +19,13 @@ urlpatterns = patterns(
     # Prefix
     '',
 
-    (r'signup/$', views.SignupValidateTokenHTMLView.as_view()),
+    url(r'signin/$',
+        views.SigninValidateTokenHTMLView.as_view(),
+        name='auth-signin'),
+
+    url(r'signup/$',
+        views.SignupValidateTokenHTMLView.as_view(),
+        name='auth-signup'),
+
     (r'reset_password/$', views.ResetPasswordHTMLView.as_view()),
 )
