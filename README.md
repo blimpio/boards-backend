@@ -48,5 +48,5 @@ $ tox
 ```
 $ pip install coverage
 $ coverage run --source='.' manage.py test
-$ coverage report --show-missing
+$ coverage report --show-missing --omit='*migrations*'
 ```
