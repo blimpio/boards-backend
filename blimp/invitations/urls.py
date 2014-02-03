@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from .views import SignupRequestCreateAPIView, ValidateSignupRequestAPIView
+from .views import SignupRequestCreateAPIView
 
 
 api_urlpatterns = patterns(
@@ -9,8 +9,4 @@ api_urlpatterns = patterns(
 
     url(r'auth/signup_request/$',
         SignupRequestCreateAPIView.as_view(), name='invite-request-create'),
-
-    url(r'auth/signup_request/validate/$',
-        ValidateSignupRequestAPIView.as_view(),
-        name='validate-invite-request'),
 )

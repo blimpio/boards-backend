@@ -2,8 +2,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 
 from .models import SignupRequest
-from .serializers import (ValidateSignupRequestSerializer,
-                          SignupRequestSerializer)
+from .serializers import SignupRequestSerializer
 
 
 class SignupRequestCreateAPIView(generics.CreateAPIView):
@@ -25,20 +24,3 @@ class SignupRequestCreateAPIView(generics.CreateAPIView):
 
     def post_save(self, obj, created=False):
         obj.send_email()
-
-
-class ValidateSignupRequestAPIView(generics.CreateAPIView):
-    model = SignupRequest
-    serializer_class = ValidateSignupRequestSerializer
-    authentication_classes = ()
-    permission_classes = ()
-
-    def post(self, request):
-        serializer = self.get_serializer(data=request.DATA)
-
-        if serializer.is_valid():
-            return Response(serializer.data)
-
-        return Response({
-            'error': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)

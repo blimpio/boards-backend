@@ -1,60 +1,40 @@
 from django.test import TestCase
 
-from ..models import SignupRequest
-from ..serializers import ValidateSignupRequestSerializer
+from ..serializers import SignupRequestSerializer
 
 
-class ValidateSignupRequestSerializerTestCase(TestCase):
+class SignupRequestSerializerTestCase(TestCase):
     def setUp(self):
         self.email = 'jpueblo@example.com'
 
-        self.signup_request = SignupRequest.objects.create(email=self.email)
-
         self.data = {
-            'token': self.signup_request.token
+            'email': self.email
         }
 
     def test_serializer_empty_data(self):
         """
-        Tests that serializer.data doesn't return any data.
+        Tests that serializer.object returns None if no data given.
         """
-        serializer = ValidateSignupRequestSerializer()
-        self.assertEqual(serializer.data, {})
+        serializer = SignupRequestSerializer()
+        self.assertEqual(serializer.object, None)
 
     def test_serializer_validation(self):
         """
         Tests serializer's expected validation errors.
         """
-        serializer = ValidateSignupRequestSerializer(data={})
+        serializer = SignupRequestSerializer(data={})
         serializer.is_valid()
         expected_errors = {
-            'token': ['This field is required.']
+            'email': ['This field is required.']
         }
 
         self.assertEqual(serializer.errors, expected_errors)
 
-    def test_serializer_no_signup_request_found(self):
+    def test_serializer_valid_data(self):
         """
-        Tests serializer's No Invite Request validation errors.
+        Tests serializer expected data if valid.
         """
-        self.data['token'] = 'abc'
-        serializer = ValidateSignupRequestSerializer(data=self.data)
-        serializer.is_valid()
-        expected_errors = {
-            'token': ['No Invite Request found.']
-        }
-
-        self.assertEqual(serializer.errors, expected_errors)
-
-    def test_serializer_should_return_signup_request(self):
-        """
-        Tests that serializer should return expected data when valid.
-        """
-        serializer = ValidateSignupRequestSerializer(data=self.data)
+        serializer = SignupRequestSerializer(data=self.data)
         serializer.is_valid()
 
-        expected_data = {
-            'email': self.email
-        }
-
-        self.assertEqual(serializer.data, expected_data)
+        self.assertEqual(serializer.data, self.data)
