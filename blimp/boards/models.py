@@ -40,6 +40,10 @@ class BoardCollaborator(BaseModel):
         return self.user if self.user else self.invited_user
 
     def save(self, force_insert=False, force_update=False, **kwargs):
+        """
+        Performs all steps involved in validating  whenever
+        a model object is saved, but not forced.
+        """
         if not (force_insert or force_update):
             self.full_clean()
 
@@ -47,6 +51,9 @@ class BoardCollaborator(BaseModel):
             force_insert, force_update, **kwargs)
 
     def clean(self):
+        """
+        Validates that either a user or an invited_user is set.
+        """
         if self.user and self.invited_user:
             raise ValidationError(
                 'Both user and invited_user cannot be set together.')
