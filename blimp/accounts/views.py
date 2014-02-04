@@ -23,7 +23,7 @@ class ValidateSignupDomainsAPIView(generics.CreateAPIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class AccountsForUserView(generics.ListAPIView):
+class AccountsForUserAPIView(generics.ListAPIView):
     """
     Get a list of accounts for the user in the request
     """
