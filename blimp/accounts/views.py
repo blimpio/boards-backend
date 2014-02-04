@@ -1,7 +1,10 @@
 from rest_framework import status, generics
 from rest_framework.response import Response
 
-from .serializers import ValidateSignupDomainsSerializer
+from .serializers import (ValidateSignupDomainsSerializer,
+                          AccountSerializer)
+
+from .models import AccountCollaborator
 
 
 class ValidateSignupDomainsAPIView(generics.CreateAPIView):
@@ -18,3 +21,17 @@ class ValidateSignupDomainsAPIView(generics.CreateAPIView):
         return Response({
             'error': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AccountsForUserView(generics.ListAPIView):
+    """
+    Get a list of accounts for the user in the request
+    """
+    serializer_class = AccountSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        acs = AccountCollaborator.objects.select_related(
+            'account').filter(user=user)
+
+        return [ac.account for ac in acs]

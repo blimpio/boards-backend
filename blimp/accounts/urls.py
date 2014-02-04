@@ -10,4 +10,7 @@ api_urlpatterns = patterns(
     url(r'auth/signup_domains/validate/$',
         views.ValidateSignupDomainsAPIView.as_view(),
         name='auth-signup-domains-validate'),
+
+    url(r'accounts/$', views.AccountsForUserView.as_view(),
+        name='accounts_for_user')
 )
