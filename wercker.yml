@@ -11,11 +11,6 @@ build:
           sudo pip install virtualenv
 
     - script:
-        name: install tox
-        code: |
-          sudo pip install tox
-
-    - script:
         name: run tests with tox
         code: |
           tox -v
