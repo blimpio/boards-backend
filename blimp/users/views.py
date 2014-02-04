@@ -1,6 +1,6 @@
 from django.http import Http404
 
-from rest_framework import generics, status, renderers, parsers
+from rest_framework import generics, status
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,8 +15,6 @@ from . import serializers
 class SigninAPIView(generics.CreateAPIView):
     throttle_classes = ()
     permission_classes = ()
-    parser_classes = (parsers.FormParser, parsers.JSONParser,)
-    renderer_classes = (renderers.JSONRenderer,)
     serializer_class = JSONWebTokenSerializer
 
     def get_serializer_class(self):
