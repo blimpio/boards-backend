@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models.loading import get_model
 
-from blimp.accounts.constants import MEMBER_ROLES
+from blimp.boards.constants import PERMISSION_CHOICES
 from blimp.users.models import User
 from blimp.users.utils import get_gravatar_url
 from .managers import SignupRequestManager, InvitedUserManager
@@ -50,9 +50,11 @@ class InvitedUser(models.Model):
     email = models.EmailField(blank=True)
     user = models.ForeignKey('users.User', null=True, blank=True)
     account = models.ForeignKey('accounts.Account')
-    role = models.CharField(max_length=25, choices=MEMBER_ROLES)
     created_by = models.ForeignKey(
         'users.User', related_name='%(class)s_created_by')
+
+    board_collaborators = models.ManyToManyField('boards.BoardCollaborator',
+                                                 blank=True, null=True)
 
     objects = InvitedUserManager()
 
@@ -112,12 +114,15 @@ class InvitedUser(models.Model):
     def accept(self, user):
         """
         - Create AccountCollaborator
+        - Set user to BoardCollaborators
         - Delete invitation
         """
         AccountCollaborator = get_model('accounts', 'AccountCollaborator')
 
         collaborator = AccountCollaborator.objects.create(
             user=user, account=self.account)
+
+        self.board_collaborators.all().update(user=user, invited_user=None)
 
         self.delete()
 

@@ -5,6 +5,7 @@ from django.conf import settings
 
 from blimp.users.models import User
 from blimp.accounts.models import Account, AccountCollaborator
+from blimp.boards.models import Board, BoardCollaborator
 from ..models import SignupRequest, InvitedUser
 
 
@@ -64,7 +65,7 @@ class InvitedUserTestCase(TestCase):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(InvitedUser._meta.fields), 8)
+        self.assertEqual(len(InvitedUser._meta.fields), 7)
 
     def test_save_should_set_additional_user_data_if_available(self):
         """
@@ -144,6 +145,27 @@ class InvitedUserTestCase(TestCase):
         invited_users = InvitedUser.objects.all()
 
         self.assertEqual(invited_users.count(), 0)
+
+    def test_accept_invitation_should_set_board_collaborators_user(self):
+        board = Board.objects.create(
+            name='Example Board',
+            created_by=self.user,
+            account=self.account
+        )
+
+        board_collaborator = BoardCollaborator.objects.create(
+            invited_user=self.invited_user,
+            board=board,
+            permission='read'
+        )
+
+        self.invited_user.board_collaborators.add(board_collaborator)
+
+        self.invited_user.accept(self.user)
+
+        board_collaborator = BoardCollaborator.objects.filter(user=self.user)
+
+        self.assertTrue(board_collaborator.exists())
 
     def test_notify_pending_invitations_class_method(self):
         """
