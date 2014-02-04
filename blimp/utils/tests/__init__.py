@@ -14,10 +14,12 @@ class AuthenticatedAPITestCase(TestCase):
         self.username = 'jpueblo'
         self.email = 'jpueblo@example.com'
         self.password = 'abc123'
-        self.user = User.objects.create_user(self.username, self.email, self.password)
+        self.user = User.objects.create_user(
+            self.username, self.email, self.password)
 
         payload = jwt_payload_handler(self.user)
         self.token = jwt_encode_handler(payload)
 
         self.client = APIClient()
-        self.client.credentials(HTTP_AUTHORIZATION='JWT {0}'.format(self.token))
+        self.client.credentials(
+            HTTP_AUTHORIZATION='JWT {0}'.format(self.token))
