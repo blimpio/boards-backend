@@ -43,7 +43,7 @@ class JSONWebTokenAuthenticationTests(TestCase):
         payload = jwt_payload_handler(self.user)
         token = jwt_encode_handler(payload)
 
-        self.user.token_version = uuid.uuid4()
+        self.user.reset_token_version()
         self.user.save()
 
         auth = 'JWT {0}'.format(token)

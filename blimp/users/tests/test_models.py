@@ -78,7 +78,7 @@ class UserModelTestCase(TestCase):
         changes the token_version.
         """
         password = str(self.user.password)
-        token_version = str(self.user.token_version)
+        token_version = self.user.token_version
 
         self.user.set_password('newpassword')
 

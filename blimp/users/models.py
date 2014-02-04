@@ -13,7 +13,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.signals import user_logged_in
 from django.utils import timezone
 from django.conf import settings
-from django_extensions.db.fields import UUIDField
 
 from .managers import UserManager
 
@@ -100,7 +99,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     timezone = models.CharField(max_length=255, default='UTC',
                                 choices=PRETTY_TIMEZONE_CHOICES)
 
-    token_version = UUIDField()
+    token_version = models.CharField(max_length=36, default=str(uuid.uuid4()))
 
     objects = UserManager()
 
@@ -122,7 +121,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         payload = {
             'type': 'PasswordReset',
             'id': self.pk,
-            'token_version': str(self.token_version),
+            'token_version': self.token_version,
         }
 
         jwt_token = jwt.encode(payload, settings.SECRET_KEY)
@@ -153,7 +152,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         Sets the user's password and changes token_version.
         """
         super(User, self).set_password(raw_password)
-        self.token_version = uuid.uuid4()
+        self.reset_token_version()
+
+    def reset_token_version(self):
+        """
+        Resets the user's token_version.
+        """
+        self.token_version = str(uuid.uuid4())
 
     def send_password_reset_email(self):
         message = '{}'.format(self.password_reset_token)

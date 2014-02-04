@@ -12,6 +12,6 @@ def jwt_payload_handler(user):
         'user_id': user.id,
         'email': user.email,
         'username': user.username,
-        'token_version': str(user.token_version),
+        'token_version': user.token_version,
         'exp': datetime.datetime.utcnow() + api_settings.JWT_EXPIRATION_DELTA
     }
