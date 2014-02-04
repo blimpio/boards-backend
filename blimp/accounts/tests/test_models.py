@@ -40,7 +40,6 @@ class AccountTestCase(TestCase):
     def test_invite_user_should_return_inviteduser_get_or_create_tuple(self):
         data = {
             'email': 'ppueblo@example.com',
-            'role': 'team_member',
             'created_by': self.user
         }
 

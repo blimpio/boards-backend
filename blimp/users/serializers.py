@@ -169,7 +169,6 @@ class SignupSerializer(serializers.Serializer):
         for invite_email in invite_emails:
             user_data = {
                 'email': invite_email,
-                'role': 'team_member',
                 'created_by': user
             }
 
