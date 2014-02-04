@@ -14,7 +14,7 @@ build:
     - script:
         name: install detox
         code: |
-          sudo pip2.7 install detox
+          sudo pip-2.7 install detox
 
     - script:
         name: run tests with detox
