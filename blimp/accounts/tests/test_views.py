@@ -2,6 +2,9 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from ...utils.tests import AuthenticatedAPITestCase
+from ...accounts.models import Account, AccountCollaborator
+
 
 class ValidateSignupDomainsAPIViewTestCase(TestCase):
     def setUp(self):
@@ -63,4 +66,35 @@ class ValidateSignupDomainsAPIViewTestCase(TestCase):
         }
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, expected_response)
+
+
+class AccountsForUserAPIViewTestCase(AuthenticatedAPITestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.account = Account.objects.create(name='Acme', slug='acme')
+        self.collaborator = AccountCollaborator.objects.create(
+            user=self.user, account=self.account)
+
+    def test_get_accounts_without_token_should_fail(self):
+        self.client = APIClient()
+        response = self.client.get('/api/accounts/')
+
+        expected_response = {
+            'error': 'Authentication credentials were not provided.',
+            'status_code': 401
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.data, expected_response)
+
+    def test_get_account_with_token_should_work(self):
+        response = self.client.get('/api/accounts/')
+
+        expected_response = [
+            {'id': 1, 'name': 'Acme', 'slug': 'acme', 'image_url': ''}
+        ]
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)
