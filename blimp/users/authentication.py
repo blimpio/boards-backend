@@ -2,12 +2,7 @@ from rest_framework import exceptions
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-try:
-    from django.contrib.auth import get_user_model
-except ImportError:  # Django < 1.5
-    from django.contrib.auth.models import User
-else:
-    User = get_user_model()
+from .models import User
 
 
 jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
