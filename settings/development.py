@@ -34,8 +34,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Django REST framework
 REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = (
-    'rest_framework.authentication.SessionAuthentication',
     'blimp.users.authentication.JWTAuthentication',
+    'rest_framework.authentication.SessionAuthentication',
 )
 
 REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
