@@ -71,7 +71,7 @@ class ValidateSignupDomainsAPIViewTestCase(TestCase):
 
 class AccountsForUserAPIViewTestCase(AuthenticatedAPITestCase):
     def setUp(self):
-        super().setUp()
+        super(AccountsForUserAPIViewTestCase, self).setUp()
 
         self.account = Account.objects.create(name='Acme', slug='acme')
         self.collaborator = AccountCollaborator.objects.create(
