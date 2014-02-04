@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.conf import settings
 
 from blimp.users.models import User
-from blimp.accounts.models import Account
+from blimp.accounts.models import Account, AccountCollaborator
 from ..models import SignupRequest, InvitedUser
 
 
@@ -60,6 +60,16 @@ class InvitedUserTestCase(TestCase):
         """
         self.assertEqual(self.invited_user.first_name, self.user.first_name)
 
+    def test_should_find_existing_user_with_given_email(self):
+        """
+        Tests that save() finds an existing user with a given email address
+        sets the user field and adds any user data in other fields.
+        """
+        invited_user = InvitedUser.objects.create(
+            email=self.user.email, account=self.account, created_by=self.user)
+
+        self.assertEqual(invited_user.first_name, self.user.first_name)
+
     def test_get_email_should_return_email(self):
         """
         Tests that get_email() returns the user's email.
@@ -103,11 +113,25 @@ class InvitedUserTestCase(TestCase):
         """
         pass
 
-    def test_accept_should_accept_invitation(self):
+    def test_accept_invitation_should_create_account_collaborator(self):
         """
-        TODO: Write test when method is implemented.
+        Tests that accepting invitation creates AccountCollaborator.
         """
-        pass
+        self.invited_user.accept(self.user)
+
+        collaborator = AccountCollaborator.objects.filter(user=self.user)
+
+        self.assertEqual(collaborator.count(), 1)
+
+    def test_accept_invitation_should_delete_invited_user(self):
+        """
+        Tests that accepting invitation deletes invited user.
+        """
+        self.invited_user.accept(self.user)
+
+        invited_users = InvitedUser.objects.all()
+
+        self.assertEqual(invited_users.count(), 0)
 
     def test_notify_pending_invitations_class_method(self):
         """
