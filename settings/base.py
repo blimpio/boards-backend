@@ -99,10 +99,6 @@ AUTHENTICATION_BACKENDS = (
 )
 
 
-# Email settings
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-
 # Django REST framework
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -111,6 +107,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'blimp.users.authentication.JWTAuthentication',
     ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
     'EXCEPTION_HANDLER': 'blimp.utils.exceptions.custom_exception_handler',
 }
 
@@ -118,11 +117,3 @@ JWT_AUTH = {
     'JWT_PAYLOAD_HANDLER': 'blimp.utils.jwt_handlers.jwt_payload_handler',
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=90)
 }
-
-
-# CORS Headers
-CORS_ORIGIN_WHITELIST = (
-    '127.0.0.1:8000',
-    'localhost:8000',
-    'localhost:3333',
-)
