@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 
-from blimp.utils.validators import validate_domain_name
+from ..utils.validators import validate_domain_name
 from .models import EmailDomain
 from .constants import BLACKLIST_SIGNUP_DOMAINS
 

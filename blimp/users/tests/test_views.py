@@ -2,9 +2,9 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from blimp.accounts.models import Account
-from blimp.invitations.models import SignupRequest, InvitedUser
-from blimp.utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
+from ...accounts.models import Account
+from ...invitations.models import SignupRequest, InvitedUser
+from ...utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..models import User
 
 

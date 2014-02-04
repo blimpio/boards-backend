@@ -2,12 +2,12 @@ from django.utils.encoding import smart_str
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 
-from blimp.utils import fields
-from blimp.utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
-from blimp.utils.validators import is_valid_email
-from blimp.accounts.models import Account, AccountCollaborator
-from blimp.accounts.fields import SignupDomainsField
-from blimp.invitations.models import SignupRequest, InvitedUser
+from ..utils import fields
+from ..utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
+from ..utils.validators import is_valid_email
+from ..accounts.models import Account, AccountCollaborator
+from ..accounts.fields import SignupDomainsField
+from ..invitations.models import SignupRequest, InvitedUser
 from .models import User
 
 

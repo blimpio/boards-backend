@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from blimp.accounts.models import EmailDomain
+from ...accounts.models import EmailDomain
 from ..serializers import ValidateSignupDomainsSerializer
 
 

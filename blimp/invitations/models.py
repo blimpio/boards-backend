@@ -5,8 +5,8 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models.loading import get_model
 
-from blimp.users.models import User
-from blimp.users.utils import get_gravatar_url
+from ..users.models import User
+from ..users.utils import get_gravatar_url
 from .managers import SignupRequestManager, InvitedUserManager
 
 

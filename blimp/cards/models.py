@@ -1,6 +1,6 @@
 from django.db import models
 
-from blimp.utils.models import BaseModel
+from ..utils.models import BaseModel
 
 
 class Card(BaseModel):

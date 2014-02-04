@@ -8,7 +8,7 @@ from rest_framework.compat import patterns
 from rest_framework.test import APIClient
 from rest_framework.views import APIView
 
-from blimp.utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
+from ...utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..models import User
 from ..authentication import JWTAuthentication
 

@@ -5,8 +5,8 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.db.models.loading import get_model
 
-from blimp.users.models import User
-from blimp.utils.slugify import unique_slugify
+from ..users.models import User
+from ..utils.slugify import unique_slugify
 from .managers import AccountCollaboratorManager
 from .constants import COMPANY_RESERVED_KEYWORDS
 

@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from blimp.users.models import User
-from blimp.invitations.models import InvitedUser
+from ...users.models import User
+from ...invitations.models import InvitedUser
 from ..models import (Account, AccountCollaborator, EmailDomain,
                       get_company_upload_path)
 

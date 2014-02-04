@@ -1,8 +1,6 @@
 import json
 
 from django.test import TestCase
-from django.core.urlresolvers import resolve
-from django.test.client import RequestFactory
 from rest_framework import permissions
 from rest_framework.compat import patterns
 from rest_framework.response import Response
@@ -10,9 +8,9 @@ from rest_framework.views import APIView
 from rest_framework.test import APIClient
 from wsrequest import WebSocketRequest
 
-from blimp.users.models import User
-from blimp.users.views import SigninAPIView
-from blimp.users.authentication import JWTAuthentication
+from ...users.models import User
+from ...users.views import SigninAPIView
+from ...users.authentication import JWTAuthentication
 
 
 class MockAPIView(APIView):

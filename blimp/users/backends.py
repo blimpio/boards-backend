@@ -1,6 +1,6 @@
 from django.contrib.auth.backends import ModelBackend
 
-from blimp.utils.validators import is_valid_email
+from ..utils.validators import is_valid_email
 from .models import User
 
 

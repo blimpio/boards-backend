@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
-from blimp.utils.models import BaseModel
+from ..utils.models import BaseModel
 from .constants import PERMISSION_CHOICES
 
 

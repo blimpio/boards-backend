@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from blimp.accounts.models import Account
+from ...accounts.models import Account
 from ..slugify import unique_slugify, _slug_strip
 
 

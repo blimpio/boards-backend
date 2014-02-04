@@ -3,7 +3,7 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 
-from blimp.utils.models import BaseModel
+from ..utils.models import BaseModel
 
 
 User = get_user_model()

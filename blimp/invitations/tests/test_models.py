@@ -3,9 +3,9 @@ import jwt
 from django.test import TestCase
 from django.conf import settings
 
-from blimp.users.models import User
-from blimp.accounts.models import Account, AccountCollaborator
-from blimp.boards.models import Board, BoardCollaborator
+from ...users.models import User
+from ...accounts.models import Account, AccountCollaborator
+from ...boards.models import Board, BoardCollaborator
 from ..models import SignupRequest, InvitedUser
 
 

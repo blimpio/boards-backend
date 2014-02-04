@@ -6,9 +6,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
-from blimp.users.models import User
-from blimp.utils.shortcuts import redirect_with_params
-from blimp.invitations.models import SignupRequest, InvitedUser
+from ..users.models import User
+from ..utils.shortcuts import redirect_with_params
+from ..invitations.models import SignupRequest, InvitedUser
 from . import serializers
 
 

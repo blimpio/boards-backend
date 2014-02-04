@@ -1,8 +1,8 @@
 from django.test import TestCase
 
-from blimp.accounts.models import Account, AccountCollaborator
-from blimp.invitations.models import SignupRequest, InvitedUser
-from blimp.utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
+from ...accounts.models import Account, AccountCollaborator
+from ...invitations.models import SignupRequest, InvitedUser
+from ...utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..models import User
 from ..serializers import (ValidateUsernameSerializer, SignupSerializer,
                            ForgotPasswordSerializer, ResetPasswordSerializer,
