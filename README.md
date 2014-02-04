@@ -33,7 +33,7 @@ $ python ws.py --debug
 ## Running tests
 
 ```
-$ ./manage.py test
+$ ./manage.py test --settings=settings.testing
 ```
 
 ## Running tests with tox
