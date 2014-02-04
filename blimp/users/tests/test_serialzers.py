@@ -341,6 +341,14 @@ class SignupSerializerTestCase(TestCase):
 
         self.assertEqual(serializer.errors, expected_error)
 
+    def test_serializer_validate_should_remove_signup_request(self):
+        serializer = SignupSerializer(data=self.data)
+        serializer.is_valid()
+
+        signup_request = SignupRequest.objects.filter(email='juan@example.com')
+
+        self.assertFalse(signup_request.exists())
+
 
 class SignupInvitedUserSerializerTestCase(TestCase):
     def setUp(self):

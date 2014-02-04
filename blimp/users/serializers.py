@@ -47,14 +47,14 @@ class SignupSerializer(serializers.Serializer):
         signup_request_token = attrs[source]
         email = attrs['email']
 
-        signup_request = SignupRequest.objects.get_from_token(
+        self.signup_request = SignupRequest.objects.get_from_token(
             signup_request_token)
 
-        if not signup_request:
+        if not self.signup_request:
             msg = 'No signup request found for token.'
             raise serializers.ValidationError(msg)
 
-        if signup_request.email != email:
+        if self.signup_request.email != email:
             msg = 'Signup request email does not match email.'
             raise serializers.ValidationError(msg)
 
@@ -185,6 +185,8 @@ class SignupSerializer(serializers.Serializer):
         self.create_account_owner(account, user)
 
         self.invite_users(account, user, attrs)
+
+        self.signup_request.delete()
 
         return {
             'token': self.generate_user_token(user)
