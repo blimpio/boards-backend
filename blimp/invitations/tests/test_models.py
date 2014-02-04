@@ -13,6 +13,12 @@ class SignupRequestTestCase(TestCase):
         self.signup_request = SignupRequest.objects.create(
             email='jpueblo@example.com')
 
+    def test_model_should_have_expected_number_of_fields(self):
+        """
+        Tests the expected number of fields in model.
+        """
+        self.assertEqual(len(SignupRequest._meta.fields), 2)
+
     def test_token_property(self):
         """
         Tests that the token property returns the expected JWT token.
@@ -53,6 +59,12 @@ class InvitedUserTestCase(TestCase):
 
         self.invited_user = InvitedUser.objects.create(
             user=self.user, account=self.account, created_by=self.user)
+
+    def test_model_should_have_expected_number_of_fields(self):
+        """
+        Tests the expected number of fields in model.
+        """
+        self.assertEqual(len(InvitedUser._meta.fields), 8)
 
     def test_save_should_set_additional_user_data_if_available(self):
         """

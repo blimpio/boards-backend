@@ -21,6 +21,12 @@ class AccountTestCase(TestCase):
 
         self.account = Account.objects.create(name='Acme')
 
+    def test_model_should_have_expected_number_of_fields(self):
+        """
+        Tests the expected number of fields in model.
+        """
+        self.assertEqual(len(Account._meta.fields), 5)
+
     def test_create_new_account_sets_unique_slug(self):
         account = Account.objects.create(name='Acme')
 
@@ -80,6 +86,12 @@ class AccountCollaboratorTestCase(TestCase):
         )
 
         self.account = Account.objects.create(name='Acme')
+
+    def test_model_should_have_expected_number_of_fields(self):
+        """
+        Tests the expected number of fields in model.
+        """
+        self.assertEqual(len(AccountCollaborator._meta.fields), 4)
 
     def test_manager_create_owner_should_create_member_with_owner_role(self):
         """

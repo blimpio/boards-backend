@@ -1,5 +1,3 @@
-import jwt
-
 from django.test import TestCase
 
 from ..models import User, get_user_upload_path
