@@ -2,12 +2,12 @@ from django.test import TestCase
 
 from ...accounts.models import Account, AccountCollaborator
 from ...invitations.models import SignupRequest, InvitedUser
-from ...utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
+from ...utils.tests import BaseTestCase
 from ..models import User
 from ..serializers import (ValidateUsernameSerializer, SignupSerializer,
                            ForgotPasswordSerializer, ResetPasswordSerializer,
                            SignupInvitedUserSerializer,
-                           SigninInvitedUserSerializer)
+                           SigninInvitedUserSerializer, UserSerializer)
 
 
 class ValidateUsernameSerializerTestCase(TestCase):
@@ -123,11 +123,8 @@ class SignupSerializerTestCase(TestCase):
         serializer.is_valid()
 
         user = User.objects.get(username='juan')
-        payload = jwt_payload_handler(user)
 
-        expected_data = {
-            'token': jwt_encode_handler(payload)
-        }
+        expected_data = UserSerializer(user).data
 
         self.assertEqual(serializer.object, expected_data)
 
@@ -723,3 +720,21 @@ class ResetPasswordSerializerTestCase(TestCase):
         }
 
         self.assertEqual(serializer.errors, expected_error)
+
+
+class UserSerializerTestCase(BaseTestCase):
+    def setUp(self):
+        self.create_user()
+
+    def test_serializer_returns_expected_data_for_object(self):
+        user_data = UserSerializer(self.user).data
+        data_keys = [key for key in user_data.keys()]
+
+        expected_keys = [
+            'username', 'first_name', 'last_name', 'email',
+            'date_joined', 'phone', 'job_title', 'avatar', 'gravatar_url',
+            'facebook_id', 'twitter_username', 'aim_username',
+            'windows_live_id', 'timezone', 'token'
+        ]
+
+        self.assertEqual(data_keys, expected_keys)

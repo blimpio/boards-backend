@@ -5,17 +5,28 @@ from ...users.models import User
 from ...utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 
 
-class AuthenticatedAPITestCase(TestCase):
+class BaseTestCase(TestCase):
+    def create_user(self):
+        self.username = 'jpueblo'
+        self.password = 'abc123'
+        self.email = 'jpueblo@example.com'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            email='jpueblo@example.com',
+            password=self.password,
+            first_name='Juan',
+            last_name='Pueblo'
+        )
+
+
+class AuthenticatedAPITestCase(BaseTestCase):
     """
     This test case class creates a basic user
     and does authentication for you using a JWT token
     """
     def setUp(self):
-        self.username = 'jpueblo'
-        self.email = 'jpueblo@example.com'
-        self.password = 'abc123'
-        self.user = User.objects.create_user(
-            self.username, self.email, self.password)
+        self.create_user()
 
         payload = jwt_payload_handler(self.user)
         self.token = jwt_encode_handler(payload)

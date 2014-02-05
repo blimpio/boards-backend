@@ -4,8 +4,8 @@ from rest_framework.test import APIClient
 
 from ...accounts.models import Account
 from ...invitations.models import SignupRequest, InvitedUser
-from ...utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..models import User
+from ..serializers import UserSerializer
 
 
 class ValidateUsernameAPIViewTestCase(TestCase):
@@ -106,11 +106,8 @@ class SignupAPIView(TestCase):
             '/api/auth/signup/', data, format='json')
 
         user = User.objects.get(username='juan')
-        payload = jwt_payload_handler(user)
 
-        expected_response = {
-            'token': jwt_encode_handler(payload)
-        }
+        expected_response = UserSerializer(user).data
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)
@@ -134,11 +131,8 @@ class SignupAPIView(TestCase):
             '/api/auth/signup/', data, format='json')
 
         user = User.objects.get(username='juan')
-        payload = jwt_payload_handler(user)
 
-        expected_response = {
-            'token': jwt_encode_handler(payload)
-        }
+        expected_response = UserSerializer(user).data
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)

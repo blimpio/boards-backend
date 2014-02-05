@@ -174,10 +174,6 @@ class SignupSerializer(serializers.Serializer):
 
             account.invite_user(user_data)
 
-    def generate_user_token(self, user):
-        payload = jwt_payload_handler(user)
-        return jwt_encode_handler(payload)
-
     def validate(self, attrs):
         user = self.create_user(attrs)
         account = self.create_account(attrs)
@@ -188,9 +184,7 @@ class SignupSerializer(serializers.Serializer):
 
         self.signup_request.delete()
 
-        return {
-            'token': self.generate_user_token(user)
-        }
+        return UserSerializer(user).data
 
 
 class SignupInvitedUserSerializer(SignupSerializer):
@@ -228,9 +222,7 @@ class SignupInvitedUserSerializer(SignupSerializer):
 
         self.invite_users(account, user, attrs)
 
-        return {
-            'token': self.generate_user_token(user)
-        }
+        return UserSerializer(user).data
 
 
 class SigninInvitedUserSerializer(serializers.Serializer):
@@ -266,11 +258,7 @@ class SigninInvitedUserSerializer(serializers.Serializer):
 
             self.invited_user.accept(user)
 
-            payload = jwt_payload_handler(user)
-
-            return {
-                'token': jwt_encode_handler(payload)
-            }
+            return UserSerializer(user).data
         else:
             msg = 'Unable to login with provided credentials.'
             raise serializers.ValidationError(msg)
@@ -331,3 +319,18 @@ class ResetPasswordSerializer(serializers.Serializer):
         return {
             'password_reset': True
         }
+
+
+class UserSerializer(serializers.ModelSerializer):
+    token = serializers.SerializerMethodField('get_auth_token')
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email',
+                  'date_joined', 'phone', 'job_title', 'avatar',
+                  'gravatar_url', 'facebook_id', 'twitter_username',
+                  'aim_username', 'windows_live_id', 'timezone', 'token')
+
+    def get_auth_token(self, user):
+        payload = jwt_payload_handler(user)
+        return jwt_encode_handler(payload)

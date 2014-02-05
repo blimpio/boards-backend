@@ -15,5 +15,6 @@ def get_api_urlpatterns(apps):
 urlpatterns = get_api_urlpatterns([
     'users',
     'accounts',
-    'invitations'
+    'invitations',
+    'boards',
 ])
