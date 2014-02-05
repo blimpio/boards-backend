@@ -6,7 +6,7 @@ from ...utils.tests import BaseTestCase
 from ..models import User
 from ..serializers import (ValidateUsernameSerializer, SignupSerializer,
                            ForgotPasswordSerializer, ResetPasswordSerializer,
-                           SignupInvitedUserSerializer,
+                           SignupInvitedUserSerializer, SigninSerializer,
                            SigninInvitedUserSerializer, UserSerializer)
 
 
@@ -446,6 +446,71 @@ class SignupInvitedUserSerializerTestCase(TestCase):
         serializer.is_valid()
 
         self.assertTrue('token' in serializer.object)
+
+
+class SigninSerializerTestCase(BaseTestCase):
+    def setUp(self):
+        self.create_user()
+
+        self.data = {
+            'username': self.username,
+            'password': self.password
+        }
+
+    def test_empty(self):
+        serializer = SigninSerializer()
+        expected = {
+            'username': ''
+        }
+
+        self.assertEqual(serializer.data, expected)
+
+    def test_create(self):
+        serializer = SigninSerializer(data=self.data)
+        is_valid = serializer.is_valid()
+
+        expected_response = UserSerializer(self.user).data
+
+        self.assertTrue(is_valid)
+        self.assertEqual(expected_response['username'], self.username)
+
+    def test_invalid_credentials(self):
+        self.data['password'] = 'wrongpassword'
+        serializer = SigninSerializer(data=self.data)
+        is_valid = serializer.is_valid()
+
+        expected_error = {
+            'non_field_errors': ['Unable to login with provided credentials.']
+        }
+
+        self.assertFalse(is_valid)
+        self.assertEqual(serializer.errors, expected_error)
+
+    def test_disabled_user(self):
+        self.user.is_active = False
+        self.user.save()
+
+        serializer = SigninSerializer(data=self.data)
+        is_valid = serializer.is_valid()
+
+        expected_error = {
+            'non_field_errors': ['User account is disabled.']
+        }
+
+        self.assertFalse(is_valid)
+        self.assertEqual(serializer.errors, expected_error)
+
+    def test_required_fields(self):
+        serializer = SigninSerializer(data={})
+        is_valid = serializer.is_valid()
+
+        expected_error = {
+            'username': ['This field is required.'],
+            'password': ['This field is required.']
+        }
+
+        self.assertFalse(is_valid)
+        self.assertEqual(serializer.errors, expected_error)
 
 
 class SigninInvitedUserSerializerTestCase(TestCase):

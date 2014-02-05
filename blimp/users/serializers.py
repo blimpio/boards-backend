@@ -225,13 +225,38 @@ class SignupInvitedUserSerializer(SignupSerializer):
         return UserSerializer(user).data
 
 
-class SigninInvitedUserSerializer(serializers.Serializer):
+class SigninSerializer(serializers.Serializer):
     """
-    Serializer that handles signin endpoint data with an invited_user_token.
+    Serializer that handles signin endpoint data.
     """
     username = serializers.CharField()
     password = fields.PasswordField(write_only=True)
+
+    def validate(self, attrs):
+        username = attrs.get('username')
+        password = attrs.get('password')
+
+        self.user = authenticate(username=username, password=password)
+
+        if self.user:
+            if not self.user.is_active:
+                msg = 'User account is disabled.'
+                raise serializers.ValidationError(msg)
+
+            return UserSerializer(self.user).data
+        else:
+            msg = 'Unable to login with provided credentials.'
+            raise serializers.ValidationError(msg)
+
+
+class SigninInvitedUserSerializer(SigninSerializer):
+    """
+    Serializer that handles signin endpoint data with an invited_user_token.
+    """
     invited_user_token = serializers.CharField(write_only=True)
+
+    class Meta:
+        fields = ('username', 'password', 'invited_user_token', )
 
     def validate_invited_user_token(self, attrs, source):
         invited_user_token = attrs[source]
@@ -246,22 +271,11 @@ class SigninInvitedUserSerializer(serializers.Serializer):
         return attrs
 
     def validate(self, attrs):
-        username = attrs.get('username')
-        password = attrs.get('password')
+        user_data = super(SigninInvitedUserSerializer, self).validate(attrs)
 
-        user = authenticate(username=username, password=password)
+        self.invited_user.accept(self.user)
 
-        if user:
-            if not user.is_active:
-                msg = 'User account is disabled.'
-                raise serializers.ValidationError(msg)
-
-            self.invited_user.accept(user)
-
-            return UserSerializer(user).data
-        else:
-            msg = 'Unable to login with provided credentials.'
-            raise serializers.ValidationError(msg)
+        return user_data
 
 
 class ForgotPasswordSerializer(serializers.Serializer):

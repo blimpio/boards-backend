@@ -4,7 +4,6 @@ from rest_framework import generics, status
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
 from ..users.models import User
 from ..utils.shortcuts import redirect_with_params
@@ -15,7 +14,7 @@ from . import serializers
 class SigninAPIView(generics.CreateAPIView):
     throttle_classes = ()
     permission_classes = ()
-    serializer_class = JSONWebTokenSerializer
+    serializer_class = serializers.SigninSerializer
 
     def get_serializer_class(self):
         if self.request.DATA.get('invited_user_token'):

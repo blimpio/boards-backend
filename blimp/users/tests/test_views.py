@@ -294,8 +294,8 @@ class SigninAPIEndpoint(TestCase):
         returns expected error.
         """
         data = {
-            'username': 'a',
-            'password': 'b'
+            'username': 'myusername',
+            'password': 'mypassword'
         }
 
         response = self.client.post('/api/auth/signin/', data, format='json')
