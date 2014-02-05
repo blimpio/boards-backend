@@ -16,7 +16,6 @@ class JWTAuthentication(JSONWebTokenAuthentication):
         try:
             user = User.objects.get(
                 pk=payload['user_id'],
-                email=payload['email'],
                 token_version=payload['token_version'],
                 is_active=True
             )

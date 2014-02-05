@@ -10,8 +10,6 @@ jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
 def jwt_payload_handler(user):
     return {
         'user_id': user.id,
-        'email': user.email,
-        'username': user.username,
         'token_version': user.token_version,
         'exp': datetime.datetime.utcnow() + api_settings.JWT_EXPIRATION_DELTA
     }
