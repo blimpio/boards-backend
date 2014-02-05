@@ -52,8 +52,9 @@ class Account(models.Model):
 
     def invite_user(self, user_data):
         """
-        Receives dictionary of InvitedUser fields
-        and returns a tuple of InvitedUser, created.
+        Returns a tuple (invited_user, created) after creating
+        an InvitedUser, if one does not yet exist for user_data,
+        and send the invited user email.
         """
         InvitedUser = get_model('invitations', 'InvitedUser')
 
@@ -63,6 +64,20 @@ class Account(models.Model):
         invited_user.send_invite()
 
         return invited_user, created
+
+    def is_user_collaborator(self, user, is_owner=None):
+        """
+        Returns `True` if a user is a collaborator on this
+        Account, `False` otherwise. Optionally checks if a user
+        is the account owner.
+        """
+        collaborators = AccountCollaborator.objects.filter(
+            account=self, user=user)
+
+        if is_owner is not None:
+            collaborators = collaborators.filter(is_owner=is_owner)
+
+        return collaborators.exists()
 
 
 class AccountCollaborator(models.Model):

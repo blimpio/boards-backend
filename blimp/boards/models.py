@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.core.exceptions import ValidationError
 
 from ..utils.models import BaseModel
@@ -27,6 +28,22 @@ class Board(BaseModel):
         """
         pass
 
+    def is_user_collaborator(self, user, permission=None):
+        """
+        Returns `True` if a user is a collaborator on this
+        Board, `False` otherwise. Optionally checks if a user
+        is a collaborator with a specific permission.
+        """
+        collaborators = BoardCollaborator.objects.filter(board=self, user=user)
+
+        if permission == 'read':
+            collaborators = collaborators.filter(
+                Q(permission='write') | Q(permission='read'))
+        elif permission == 'write':
+            collaborators = collaborators.filter(permission='write')
+
+        return collaborators.exists()
+
 
 class BoardCollaborator(BaseModel):
     board = models.ForeignKey('boards.Board')
@@ -37,7 +54,7 @@ class BoardCollaborator(BaseModel):
     permission = models.CharField(max_length=5, choices=PERMISSION_CHOICES)
 
     def __str__(self):
-        return self.user if self.user else self.invited_user
+        return str(self.user) if self.user else str(self.invited_user)
 
     def save(self, force_insert=False, force_update=False, **kwargs):
         """

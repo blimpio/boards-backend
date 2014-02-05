@@ -4,8 +4,6 @@ from rest_framework.response import Response
 from .serializers import (ValidateSignupDomainsSerializer,
                           AccountSerializer)
 
-from .models import AccountCollaborator
-
 
 class ValidateSignupDomainsAPIView(generics.CreateAPIView):
     authentication_classes = ()
@@ -30,8 +28,4 @@ class AccountsForUserAPIView(generics.ListAPIView):
     serializer_class = AccountSerializer
 
     def get_queryset(self):
-        user = self.request.user
-        acs = AccountCollaborator.objects.select_related(
-            'account').filter(user=user)
-
-        return [ac.account for ac in acs]
+        return self.request.user.accounts

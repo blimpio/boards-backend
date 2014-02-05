@@ -13,6 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.signals import user_logged_in
 from django.utils import timezone
 from django.conf import settings
+from django.db.models.loading import get_model
 
 from .managers import UserManager
 
@@ -127,6 +128,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         jwt_token = jwt.encode(payload, settings.SECRET_KEY)
 
         return jwt_token.decode('utf-8')
+
+    @property
+    def accounts(self):
+        """
+        Returns a list of all accounts where user is a collaborator.
+        """
+        AccountCollaborator = get_model('accounts', 'AccountCollaborator')
+
+        collaborators = AccountCollaborator.objects.select_related(
+            'account').filter(user=self)
+
+        return [collaborator.account for collaborator in collaborators]
 
     def get_full_name(self):
         """
