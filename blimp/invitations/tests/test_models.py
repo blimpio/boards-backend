@@ -57,6 +57,8 @@ class InvitedUserTestCase(TestCase):
         )
 
         self.account = Account.objects.create(name='Acme')
+        self.account_collaborator = AccountCollaborator.objects.create(
+            account=self.account, user=self.user, is_owner=True)
 
         self.invited_user = InvitedUser.objects.create(
             user=self.user, account=self.account, created_by=self.user)
@@ -134,7 +136,7 @@ class InvitedUserTestCase(TestCase):
 
         collaborator = AccountCollaborator.objects.filter(user=self.user)
 
-        self.assertEqual(collaborator.count(), 1)
+        self.assertEqual(collaborator.count(), 2)
 
     def test_accept_invitation_should_delete_invited_user(self):
         """
