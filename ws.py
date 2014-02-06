@@ -5,7 +5,16 @@ from tornado import web, ioloop
 from sockjs.tornado import SockJSRouter, SockJSConnection
 
 # Set Django Environment
-os.environ['DJANGO_SETTINGS_MODULE'] = 'blimp.settings'
+ENVIRONMENT = os.getenv('ENVIRONMENT')
+
+if ENVIRONMENT == 'STAGING':
+    settings = 'staging'
+elif ENVIRONMENT == 'PRODUCTION':
+    settings = 'production'
+else:
+    settings = 'development'
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.%s" % settings)
 
 from wsrequest import WebSocketRequest
 
