@@ -1,4 +1,7 @@
+READ_PERMISSION = 'read'
+WRITE_PERMISSION = 'write'
+
 PERMISSION_CHOICES = (
-    ('read', 'Read'),
-    ('write', 'Read and Write'),
+    (READ_PERMISSION, 'Read'),
+    (WRITE_PERMISSION, 'Read and Write'),
 )
