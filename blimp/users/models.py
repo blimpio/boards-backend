@@ -100,7 +100,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     timezone = models.CharField(max_length=255, default='UTC',
                                 choices=PRETTY_TIMEZONE_CHOICES)
 
-    token_version = models.CharField(max_length=36, default=str(uuid.uuid4()))
+    token_version = models.CharField(max_length=36, default=str(uuid.uuid4()),
+                                     unique=True, db_index=True)
 
     objects = UserManager()
 
