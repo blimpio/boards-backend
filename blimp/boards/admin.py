@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Board, BoardCollaborator
+from .models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
 class BoardAdmin(admin.ModelAdmin):
@@ -11,5 +11,10 @@ class BoardCollaboratorAdmin(admin.ModelAdmin):
     list_display = ('board', 'user', 'invited_user', 'permission', )
 
 
+class BoardCollaboratorRequestAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'email', 'user', 'board', )
+
+
 admin.site.register(Board, BoardAdmin)
 admin.site.register(BoardCollaborator, BoardCollaboratorAdmin)
+admin.site.register(BoardCollaboratorRequest, BoardCollaboratorRequestAdmin)

@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.core.exceptions import ValidationError
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.db.models.loading import get_model
 
 from ..utils.models import BaseModel
 from .constants import PERMISSION_CHOICES, READ_PERMISSION, WRITE_PERMISSION
@@ -93,3 +94,83 @@ class BoardCollaborator(BaseModel):
                 'Both user and invited_user cannot be set together.')
         elif not self.user and not self.invited_user:
             raise ValidationError('Either user or invited_user must be set.')
+
+
+class BoardCollaboratorRequest(BaseModel):
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    email = models.EmailField(blank=True)
+    user = models.ForeignKey('users.User', blank=True, null=True)
+    board = models.ForeignKey('boards.Board')
+    message = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.email
+
+    def save(self, force_insert=False, force_update=False, **kwargs):
+        """
+        When saving a BoardCollaboratorRequest, try to set first_name,
+        last_name, and email if a user is given. If no user is given,
+        try to find an existing user with matching email.
+        """
+        User = get_model('users', 'User')
+
+        if not self.user:
+            try:
+                self.user = User.objects.get(email=self.email)
+            except User.DoesNotExist:
+                pass
+
+        if self.user:
+            self.first_name = self.user.first_name
+            self.last_name = self.user.last_name
+            self.email = self.user.email
+
+        if not (force_insert or force_update):
+            self.full_clean()
+
+        return super(BoardCollaboratorRequest, self).save(
+            force_insert, force_update, **kwargs)
+
+    def clean(self):
+        """
+        Validates that either a user or an email is set.
+        """
+        if not self.user and not self.email:
+            raise ValidationError('Either user or email must be set.')
+
+    def accept(self):
+        """
+        - Creates an InvitedUser for this board
+        - Creates a BoardCollaborater for invited_user
+        - Sets it in the InvitedUser.board_collaborators
+        - send_invite()
+        """
+        InvitedUser = get_model('invitations', 'InvitedUser')
+
+        invited_user_data = {
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'email': self.email,
+            'user': self.user,
+            'account': self.board.account,
+            'created_by': self.board.account.owner,
+        }
+
+        invited_user = InvitedUser.objects.create(**invited_user_data)
+
+        board_collaborator = BoardCollaborator.objects.create(
+            board=self.board,
+            invited_user=invited_user,
+            permission=READ_PERMISSION
+        )
+
+        invited_user.board_collaborators.add(board_collaborator)
+
+        invited_user.send_invite()
+
+    def reject(self):
+        """
+        Deletes BoardCollaboratorRequest.
+        """
+        self.delete()
