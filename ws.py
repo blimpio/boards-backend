@@ -14,7 +14,8 @@ elif ENVIRONMENT == 'PRODUCTION':
 else:
     settings = 'development'
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.%s" % settings)
+os.environ.setdefault('DEBUG_TOOLBAR_PATCH_SETTINGS', 'False')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings.%s' % settings)
 
 from wsrequest import WebSocketRequest
 
@@ -25,7 +26,7 @@ class RESTAPIConnection(SockJSConnection):
 
     def on_message(self, data):
         response = WebSocketRequest(data).get_response()
-        self.send_json(response.data)
+        self.send(response.data)
 
     def send_json(self, obj):
         self.send(json.dumps(obj))

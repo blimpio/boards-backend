@@ -1,4 +1,8 @@
+import os
+
+from . import env_var
 from .base import *
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -18,6 +22,8 @@ INSTALLED_APPS += (
     'debug_toolbar',
 )
 
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = env_var('DEBUG_TOOLBAR_PATCH_SETTINGS', True)
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
