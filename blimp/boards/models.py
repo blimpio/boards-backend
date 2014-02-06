@@ -1,9 +1,11 @@
 from django.db import models
 from django.db.models import Q
 from django.core.exceptions import ValidationError
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 from ..utils.models import BaseModel
-from .constants import PERMISSION_CHOICES
+from .constants import PERMISSION_CHOICES, READ_PERMISSION, WRITE_PERMISSION
 
 
 class Board(BaseModel):
@@ -36,13 +38,25 @@ class Board(BaseModel):
         """
         collaborators = BoardCollaborator.objects.filter(board=self, user=user)
 
-        if permission == 'read':
+        if permission == READ_PERMISSION:
             collaborators = collaborators.filter(
-                Q(permission='write') | Q(permission='read'))
-        elif permission == 'write':
-            collaborators = collaborators.filter(permission='write')
+                Q(permission=WRITE_PERMISSION) | Q(permission=READ_PERMISSION))
+        elif permission == WRITE_PERMISSION:
+            collaborators = collaborators.filter(permission=WRITE_PERMISSION)
 
         return collaborators.exists()
+
+
+@receiver([post_save], sender=Board)
+def create_owner_collaborator(instance, created=False, **kwargs):
+    if created:
+        account_owner = instance.account.owner
+
+        BoardCollaborator.objects.create(
+            board=instance,
+            user=account_owner.user,
+            permission=WRITE_PERMISSION
+        )
 
 
 class BoardCollaborator(BaseModel):
