@@ -76,21 +76,20 @@ class InvitedUser(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        When saving a new InvitedUser, try to set first_name,
+        When saving a InvitedUser, try to set first_name,
         last_name, and email if a user is given. If no user is given,
         try to find an existing user with matching email.
         """
-        if not self.pk:
-            if not self.user:
-                try:
-                    self.user = User.objects.get(email=self.email)
-                except User.DoesNotExist:
-                    pass
+        if not self.user:
+            try:
+                self.user = User.objects.get(email=self.email)
+            except User.DoesNotExist:
+                pass
 
-            if self.user:
-                self.first_name = self.user.first_name
-                self.last_name = self.user.last_name
-                self.email = self.user.email
+        if self.user:
+            self.first_name = self.user.first_name
+            self.last_name = self.user.last_name
+            self.email = self.user.email
 
         return super(InvitedUser, self).save(*args, **kwargs)
 
