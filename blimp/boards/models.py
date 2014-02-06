@@ -107,7 +107,7 @@ class BoardCollaboratorRequest(BaseModel):
     def __str__(self):
         return self.email
 
-    def save(self, force_insert=False, force_update=False, **kwargs):
+    def save(self, *args, **kwargs):
         """
         When saving a BoardCollaboratorRequest, try to set first_name,
         last_name, and email if a user is given. If no user is given,
@@ -126,11 +126,9 @@ class BoardCollaboratorRequest(BaseModel):
             self.last_name = self.user.last_name
             self.email = self.user.email
 
-        if not (force_insert or force_update):
-            self.full_clean()
+        self.full_clean()
 
-        return super(BoardCollaboratorRequest, self).save(
-            force_insert, force_update, **kwargs)
+        return super(BoardCollaboratorRequest, self).save(*args, **kwargs)
 
     def clean(self):
         """
@@ -142,7 +140,7 @@ class BoardCollaboratorRequest(BaseModel):
     def accept(self):
         """
         - Creates an InvitedUser for this board
-        - Creates a BoardCollaborater for invited_user
+        - Creates a BoardCollaborator for invited_user
         - Sets it in the InvitedUser.board_collaborators
         - send_invite()
         """
@@ -154,7 +152,7 @@ class BoardCollaboratorRequest(BaseModel):
             'email': self.email,
             'user': self.user,
             'account': self.board.account,
-            'created_by': self.board.account.owner,
+            'created_by': self.board.account.owner.user,
         }
 
         invited_user = InvitedUser.objects.create(**invited_user_data)
