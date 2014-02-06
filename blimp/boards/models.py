@@ -49,6 +49,9 @@ class Board(BaseModel):
 
 @receiver([post_save], sender=Board)
 def create_owner_collaborator(instance, created=False, **kwargs):
+    """
+    Create BoardCollaborator for account owner after creating a Board.
+    """
     if created:
         account_owner = instance.account.owner
 
