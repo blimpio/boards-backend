@@ -26,7 +26,7 @@ class RESTAPIConnection(SockJSConnection):
 
     def on_message(self, data):
         response = WebSocketRequest(data).get_response()
-        self.send(response.data)
+        self.send(response.rendered_content)
 
     def send_json(self, obj):
         self.send(json.dumps(obj))
