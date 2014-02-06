@@ -35,6 +35,11 @@ class Account(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def owner(self):
+        return AccountCollaborator.objects.select_related(
+            'user').get(account=self, is_owner=True)
+
     def save(self, *args, **kwargs):
         if not self.slug:
             pre_slug = slugify(self.name)
