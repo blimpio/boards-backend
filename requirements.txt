@@ -1,4 +1,4 @@
-Django==1.6.1
+Django==1.6.2
 Pillow==2.3.0
 PyJWT==0.1.8
 South==0.8.4
