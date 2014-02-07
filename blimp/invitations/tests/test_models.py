@@ -60,8 +60,16 @@ class InvitedUserTestCase(TestCase):
         self.account_collaborator = AccountCollaborator.objects.create(
             account=self.account, user=self.user, is_owner=True)
 
+        self.user2 = User.objects.create_user(
+            username='bburke',
+            email='bburke@example.com',
+            password=self.password,
+            first_name='Bruce',
+            last_name='Burke'
+        )
+
         self.invited_user = InvitedUser.objects.create(
-            user=self.user, account=self.account, created_by=self.user)
+            user=self.user2, account=self.account, created_by=self.user)
 
     def test_model_should_have_expected_number_of_fields(self):
         """
@@ -73,7 +81,7 @@ class InvitedUserTestCase(TestCase):
         """
         Tests that save() adds any user data in other fields.
         """
-        self.assertEqual(self.invited_user.first_name, self.user.first_name)
+        self.assertEqual(self.invited_user.first_name, self.user2.first_name)
 
     def test_should_find_existing_user_with_given_email(self):
         """
@@ -81,22 +89,22 @@ class InvitedUserTestCase(TestCase):
         sets the user field and adds any user data in other fields.
         """
         invited_user = InvitedUser.objects.create(
-            email=self.user.email, account=self.account, created_by=self.user)
+            email=self.user2.email, account=self.account, created_by=self.user)
 
-        self.assertEqual(invited_user.first_name, self.user.first_name)
+        self.assertEqual(invited_user.first_name, self.user2.first_name)
 
     def test_get_email_should_return_email(self):
         """
         Tests that get_email() returns the user's email.
         """
-        self.assertEqual(self.invited_user.get_email(), self.user.email)
+        self.assertEqual(self.invited_user.get_email(), self.user2.email)
 
     def test_get_full_name_should_concatenate_names(self):
         """
         Tests that get_full_name returns the user's first name
         plus the last name, with a space in between.
         """
-        full_name = u'{} {}'.format(self.user.first_name, self.user.last_name)
+        full_name = u'{} {}'.format(self.user2.first_name, self.user2.last_name)
 
         self.assertEqual(self.invited_user.get_full_name(), full_name)
 
@@ -118,7 +126,7 @@ class InvitedUserTestCase(TestCase):
         Tests that get_gravatar_url() returns the user's gravatar URL.
         """
         expected_url = ('https://secure.gravatar.com/'
-                        'avatar/8964266c2b9182617beb65e50fc00031?d=retro')
+                        'avatar/be7fb46dbd6620092dcc039fef94da52?d=retro')
 
         self.assertEqual(self.invited_user.get_gravatar_url(), expected_url)
 
@@ -132,17 +140,17 @@ class InvitedUserTestCase(TestCase):
         """
         Tests that accepting invitation creates AccountCollaborator.
         """
-        self.invited_user.accept(self.user)
+        self.invited_user.accept(self.user2)
 
-        collaborator = AccountCollaborator.objects.filter(user=self.user)
+        collaborator = AccountCollaborator.objects.filter(user=self.user2)
 
-        self.assertEqual(collaborator.count(), 2)
+        self.assertEqual(collaborator.count(), 1)
 
     def test_accept_invitation_should_delete_invited_user(self):
         """
         Tests that accepting invitation deletes invited user.
         """
-        self.invited_user.accept(self.user)
+        self.invited_user.accept(self.user2)
 
         invited_users = InvitedUser.objects.all()
 
@@ -163,7 +171,7 @@ class InvitedUserTestCase(TestCase):
 
         self.invited_user.board_collaborators.add(board_collaborator)
 
-        self.invited_user.accept(self.user)
+        self.invited_user.accept(self.user2)
 
         board_collaborator = BoardCollaborator.objects.filter(user=self.user)
 
