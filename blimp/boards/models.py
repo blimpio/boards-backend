@@ -84,10 +84,9 @@ class BoardCollaborator(BaseModel):
     def save(self, force_insert=False, force_update=False, **kwargs):
         """
         Performs all steps involved in validating  whenever
-        a model object is saved, but not forced.
+        a model object is saved.
         """
-        if not (force_insert or force_update):
-            self.full_clean()
+        self.full_clean()
 
         return super(BoardCollaborator, self).save(
             force_insert, force_update, **kwargs)

@@ -2,6 +2,8 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 
 from ...users.models import User
+from ...accounts.models import Account, AccountCollaborator
+from ...boards.models import Board
 from ...utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 
 
@@ -18,6 +20,15 @@ class BaseTestCase(TestCase):
             first_name='Juan',
             last_name='Pueblo'
         )
+
+    def create_account(self):
+        self.account = Account.objects.create(name='Acme')
+        self.account_owner = AccountCollaborator.objects.create_owner(
+            account=self.account, user=self.user)
+
+    def create_board(self):
+        self.board = Board.objects.create(
+            name='The Board', account=self.account, created_by=self.user)
 
 
 class AuthenticatedAPITestCase(BaseTestCase):
