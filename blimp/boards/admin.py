@@ -12,7 +12,7 @@ class BoardCollaboratorAdmin(admin.ModelAdmin):
 
 
 class BoardCollaboratorRequestAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'user', 'board', )
+    list_display = ('email', 'user', 'first_name', 'last_name', 'board', )
 
 
 admin.site.register(Board, BoardAdmin)
