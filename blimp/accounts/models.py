@@ -92,5 +92,10 @@ class AccountCollaborator(models.Model):
 
     objects = AccountCollaboratorManager()
 
+    class Meta:
+        unique_together = (
+            ('account', 'user')
+        )
+
     def __str__(self):
         return self.user.get_full_name() or self.user.email
