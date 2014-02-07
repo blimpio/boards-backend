@@ -21,6 +21,5 @@ class BoardCollaboratorRequestPermission(permissions.IsAuthenticated):
         Return `True` if user is a collaborator with the
         corresponding permission on this board, `False` otherwise.
         """
-
         return obj.board.account.is_user_collaborator(
             request.user, is_owner=True)
