@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from ..accounts.permissions import AccountPermission
-from .models import Board
+from .models import Board, BoardCollaboratorRequest
 
 
 class BoardSerializer(serializers.ModelSerializer):
@@ -28,3 +28,11 @@ class BoardSerializer(serializers.ModelSerializer):
     def save_object(self, obj, **kwargs):
         obj.created_by = self.context['request'].user
         return super(BoardSerializer, self).save_object(obj, **kwargs)
+
+
+class BoardCollaboratorRequestSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        model = BoardCollaboratorRequest
+        fields = ('id', 'email', 'board', 'message', )

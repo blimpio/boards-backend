@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.db.models.loading import get_model
+from django.core.mail import send_mail
 
 from ..utils.models import BaseModel
 from .constants import PERMISSION_CHOICES, READ_PERMISSION, WRITE_PERMISSION
@@ -71,6 +72,12 @@ class BoardCollaborator(BaseModel):
 
     permission = models.CharField(max_length=5, choices=PERMISSION_CHOICES)
 
+    class Meta:
+        unique_together = (
+            ('board', 'user'),
+            ('board', 'invited_user'),
+        )
+
     def __str__(self):
         return str(self.user) if self.user else str(self.invited_user)
 
@@ -103,6 +110,12 @@ class BoardCollaboratorRequest(BaseModel):
     user = models.ForeignKey('users.User', blank=True, null=True)
     board = models.ForeignKey('boards.Board')
     message = models.TextField(blank=True)
+
+    class Meta:
+        unique_together = (
+            ('email', 'board'),
+            ('user', 'board'),
+        )
 
     def __str__(self):
         return self.email
@@ -142,7 +155,8 @@ class BoardCollaboratorRequest(BaseModel):
         - Creates an InvitedUser for this board
         - Creates a BoardCollaborator for invited_user
         - Sets it in the InvitedUser.board_collaborators
-        - send_invite()
+        - Sends invitation
+        - Deletes BoardCollaboratorRequest
         """
         InvitedUser = get_model('invitations', 'InvitedUser')
 
@@ -167,8 +181,21 @@ class BoardCollaboratorRequest(BaseModel):
 
         invited_user.send_invite()
 
+        self.delete()
+
     def reject(self):
         """
         Deletes BoardCollaboratorRequest.
         """
         self.delete()
+
+    def notify_account_owner(self):
+        message = '{} wants to join your board'.format(self.email)
+
+        return send_mail(
+            'Blimp Board Collaborator Request',
+            message,
+            'from@example.com',
+            [self.email],
+            fail_silently=False
+        )

@@ -13,3 +13,14 @@ class BoardPermission(permissions.IsAuthenticated):
             permission = 'write'
 
         return obj.is_user_collaborator(request.user, permission=permission)
+
+
+class BoardCollaboratorRequestPermission(permissions.IsAuthenticated):
+    def has_object_permission(self, request, view, obj):
+        """
+        Return `True` if user is a collaborator with the
+        corresponding permission on this board, `False` otherwise.
+        """
+
+        return obj.board.account.is_user_collaborator(
+            request.user, is_owner=True)
