@@ -23,6 +23,10 @@ class BoardPermissionTestCase(BaseTestCase):
         self.perm_class = BoardPermission()
 
     def test_should_return_true_for_authenticated_user(self):
+        """
+        Tests that `.has_permission` returns `True` for an
+        authenticated user.
+        """
         request = self.factory.post('/')
         request.user = self.user
 
@@ -33,6 +37,10 @@ class BoardPermissionTestCase(BaseTestCase):
         self.assertTrue(has_perm)
 
     def test_should_return_false_for_anonymous_user(self):
+        """
+        Tests that `.has_permission` returns `True` for an
+        unauthenticated user.
+        """
         request = self.factory.post('/')
         request.user = AnonymousUser()
 
@@ -43,6 +51,10 @@ class BoardPermissionTestCase(BaseTestCase):
         self.assertFalse(has_perm)
 
     def test_returns_true_for_user_with_write_perm(self):
+        """
+        Tests that `.has_object_permission` returns `True` for
+        a user with write permissions using an unsafe method.
+        """
         request = self.factory.post('/')
         request.user = self.user
 
@@ -54,6 +66,10 @@ class BoardPermissionTestCase(BaseTestCase):
         self.assertTrue(has_perm)
 
     def test_returns_false_for_user_without_write_perm(self):
+        """
+        Tests that `.has_object_permission` returns `False` for
+        a user with read permissions using an unsafe method.
+        """
         request = self.factory.post('/')
         request.user = self.user
 
@@ -68,6 +84,10 @@ class BoardPermissionTestCase(BaseTestCase):
         self.assertFalse(has_perm)
 
     def test_returns_true_for_user_with_read_perm(self):
+        """
+        Tests that `.has_object_permission` returns `True` for
+        a user with read permissions using a safe method.
+        """
         request = self.factory.get('/')
         request.user = self.user
 
@@ -82,6 +102,10 @@ class BoardPermissionTestCase(BaseTestCase):
         self.assertTrue(has_perm)
 
     def test_returns_true_for_user_with_write_perm_get_method(self):
+        """
+        Tests that `.has_object_permission` returns `True` for
+        a user with write permissions using a safe method.
+        """
         request = self.factory.get('/')
         request.user = self.user
 
@@ -106,6 +130,10 @@ class BoardCollaboratorRequestPermissionTestCase(BaseTestCase):
         self.perm_class = BoardCollaboratorRequestPermission()
 
     def test_should_return_true_for_authenticated_user(self):
+        """
+        Tests that `.has_permission` returns `True` for an
+        authenticated user.
+        """
         request = self.factory.post('/')
         request.user = self.user
 
@@ -116,6 +144,10 @@ class BoardCollaboratorRequestPermissionTestCase(BaseTestCase):
         self.assertTrue(has_perm)
 
     def test_should_return_false_for_anonymous_user(self):
+        """
+        Tests that `.has_permission` returns `True` for an
+        unauthenticated user.
+        """
         request = self.factory.post('/')
         request.user = AnonymousUser()
 
@@ -126,6 +158,10 @@ class BoardCollaboratorRequestPermissionTestCase(BaseTestCase):
         self.assertFalse(has_perm)
 
     def test_should_return_true_for_owner(self):
+        """
+        Tests that `.has_object_permission` returns `True`
+        for account owner.
+        """
         request = self.factory.get('/')
         request.user = self.user
 
@@ -140,6 +176,10 @@ class BoardCollaboratorRequestPermissionTestCase(BaseTestCase):
         self.assertTrue(has_perm)
 
     def test_should_return_false_for_user_that_is_not_owner(self):
+        """
+        Tests that `.has_object_permission` returns `True`
+        for a user that is not the account owner.
+        """
         request = self.factory.get('/')
         request.user = self.user
 
