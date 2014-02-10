@@ -1,4 +1,3 @@
-from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
@@ -11,12 +10,11 @@ from .permissions import BoardPermission, BoardCollaboratorRequestPermission
 class BoardViewSet(ModelViewSet):
     model = Board
     serializer_class = BoardSerializer
-    filter_backends = (filters.DjangoFilterBackend, )
     permission_classes = (BoardPermission, )
 
     def get_queryset(self):
         user = self.request.user
-        return Board.objects.filter(account__in=user.accounts)
+        return user.boards
 
 
 class BoardCollaboratorRequestViewSet(CreateListRetrieveViewSet):
@@ -42,7 +40,7 @@ class BoardCollaboratorRequestViewSet(CreateListRetrieveViewSet):
         return super(BoardCollaboratorRequestViewSet,
                      self).initialize_request(request, *args, **kwargs)
 
-    @action()
+    @action(methods=['PUT'])
     def accept(self, request, pk=None):
         object = self.get_object()
         serializer = self.get_serializer(object)
@@ -51,7 +49,7 @@ class BoardCollaboratorRequestViewSet(CreateListRetrieveViewSet):
 
         return Response(serializer.data)
 
-    @action()
+    @action(methods=['PUT'])
     def reject(self, request, pk=None):
         object = self.get_object()
         serializer = self.get_serializer(object)

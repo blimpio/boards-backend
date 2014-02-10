@@ -135,12 +135,26 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         Returns a list of all accounts where user is a collaborator.
         """
+        Account = get_model('accounts', 'Account')
         AccountCollaborator = get_model('accounts', 'AccountCollaborator')
 
-        collaborators = AccountCollaborator.objects.select_related(
-            'account').filter(user=self)
+        account_ids = AccountCollaborator.objects.filter(
+            user=self).values_list('account_id', flat=True)
 
-        return [collaborator.account for collaborator in collaborators]
+        return Account.objects.filter(pk__in=account_ids)
+
+    @property
+    def boards(self):
+        """
+        Returns a list of all boards where user is a collaborator.
+        """
+        Board = get_model('boards', 'Board')
+        BoardCollaborator = get_model('boards', 'BoardCollaborator')
+
+        board_ids = BoardCollaborator.objects.filter(
+            user=self).values_list('board_id', flat=True)
+
+        return Board.objects.filter(pk__in=board_ids)
 
     def get_full_name(self):
         """
