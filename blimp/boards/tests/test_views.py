@@ -2,7 +2,6 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from ...utils.tests import AuthenticatedAPITestCase
-from ...accounts.models import Account, AccountCollaborator
 from ..models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
@@ -224,6 +223,74 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': '',
             'thumbnail_lg_path': ''
         }
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+
+class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
+    def setUp(self):
+        super(BoardCollaboratorViewSetViewSetTestCase, self).setUp()
+
+        self.create_account()
+        self.create_board()
+
+        self.base_url = '/api/boards/collaborators/'
+
+    def test_viewset_should_require_authentication(self):
+        """
+        Tests that viewset requires authentication.
+        """
+        self.client = APIClient()
+        response = self.client.get(self.base_url)
+
+        expected_response = {
+            'error': 'Authentication credentials were not provided.',
+            'status_code': 401
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.data, expected_response)
+
+    def test_viewset_should_return_collaborators_user_can_access(self):
+        """
+        Tests that viewset returns board collaborators of
+        boards that the user can access.
+        """
+        response = self.client.get(self.base_url)
+
+        expected_response = [{
+            'id': self.board_collaborator.id,
+            'date_created': self.board_collaborator.date_created,
+            'date_modified': self.board_collaborator.date_modified,
+            'board': self.board.id,
+            'user': self.board_collaborator.user_id,
+            'invited_user': None,
+            'permission': self.board_collaborator.permission
+        }]
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+    def test_viewset_should_allow_filtering_by_board(self):
+        """
+        Tests that viewset returns board collaborators of
+        boards that the user can access.
+        """
+        Board.objects.create(
+            name='Another Board', account=self.account, created_by=self.user)
+
+        response = self.client.get('{}?board=1'.format(self.base_url))
+
+        expected_response = [{
+            'id': self.board_collaborator.id,
+            'date_created': self.board_collaborator.date_created,
+            'date_modified': self.board_collaborator.date_modified,
+            'board': self.board.id,
+            'user': self.board_collaborator.user_id,
+            'invited_user': None,
+            'permission': self.board_collaborator.permission
+        }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)
