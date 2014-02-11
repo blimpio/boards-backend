@@ -295,6 +295,43 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)
 
+    def test_viewset_shouldnt_return_collabs_to_user_with_no_access(self):
+        """
+        Tests that viewset doesn't returns collaborator
+        that the user can't access.
+        """
+        self.board_collaborator.delete()
+
+        response = self.client.get(self.base_url)
+        expected_response = []
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+    def test_viewset_should_check_permissions(self):
+        """
+        Tests that viewset checks for custom permissions.
+        """
+        self.account_owner.delete()
+        self.board_collaborator.delete()
+
+        data = {
+            'board': self.board.id,
+            'user': self.user.id,
+            'permission': "write"
+        }
+
+        response = self.client.put(
+            '{}{}/'.format(self.base_url, self.board.id), data, format='json')
+
+        expected_response = {
+            'status_code': 403,
+            'error': 'You do not have permission to perform this action.'
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data, expected_response)
+
 
 class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
     def setUp(self):
