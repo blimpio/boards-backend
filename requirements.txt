@@ -1,6 +1,6 @@
 Django==1.6.2
 Pillow==2.3.0
-PyJWT==0.1.8
+PyJWT==0.1.9
 South==0.8.4
 Unipath==1.0
 Werkzeug==0.9.4
