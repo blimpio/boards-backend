@@ -266,11 +266,19 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
 
         response = self.client.post(self.base_url, data, format='json')
 
+        request = BoardCollaboratorRequest.objects.get(
+            email=self.user.email, board=self.board)
+
         expected_response = {
-            'id': 1,
-            'email': 'jpueblo@example.com',
+            'id': request.id,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'email': self.user.email,
             'board': 1,
-            'message': ''
+            'message': '',
+            'user': self.user.id,
+            'date_created': request.date_created,
+            'date_modified': request.date_modified
         }
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -280,16 +288,21 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
         """
         Tests that list action requires auth and perms.
         """
-        BoardCollaboratorRequest.objects.create(
+        request = BoardCollaboratorRequest.objects.create(
             email=self.user.email, board=self.board)
 
         response = self.client.get(self.base_url)
 
         expected_response = [{
-            'id': 1,
-            'email': 'jpueblo@example.com',
+            'id': request.id,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'email': self.user.email,
             'board': 1,
-            'message': ''
+            'message': '',
+            'user': self.user.id,
+            'date_created': request.date_created,
+            'date_modified': request.date_modified
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -305,10 +318,15 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
         response = self.client.get('{}{}/'.format(self.base_url, request.id))
 
         expected_response = {
-            'id': 1,
-            'email': 'jpueblo@example.com',
+            'id': request.id,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'email': self.user.email,
             'board': 1,
-            'message': ''
+            'message': '',
+            'user': self.user.id,
+            'date_created': request.date_created,
+            'date_modified': request.date_modified
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -337,11 +355,17 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
             email=self.user.email, board=self.board)
 
         response = self.client.get('{}{}/'.format(self.base_url, request.id))
+
         expected_response = {
-            'id': 1,
-            'email': 'jpueblo@example.com',
+            'id': request.id,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'email': self.user.email,
             'board': 1,
-            'message': ''
+            'message': '',
+            'user': self.user.id,
+            'date_created': request.date_created,
+            'date_modified': request.date_modified
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -399,9 +423,14 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
 
         expected_response = {
             'id': None,
-            'email': 'jpueblo@example.com',
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'email': self.user.email,
             'board': 1,
-            'message': ''
+            'message': '',
+            'user': self.user.id,
+            'date_created': request.date_created,
+            'date_modified': request.date_modified
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -419,9 +448,14 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
 
         expected_response = {
             'id': None,
-            'email': 'jpueblo@example.com',
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'email': self.user.email,
             'board': 1,
-            'message': ''
+            'message': '',
+            'user': self.user.id,
+            'date_created': request.date_created,
+            'date_modified': request.date_modified
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

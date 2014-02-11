@@ -120,6 +120,9 @@ class BoardCollaboratorRequestSerializerTestCase(BaseTestCase):
 
         expected_data = {
             'email': '',
+            'first_name': '',
+            'last_name': '',
+            'user': None,
             'board': None,
             'message': ''
         }
@@ -150,9 +153,14 @@ class BoardCollaboratorRequestSerializerTestCase(BaseTestCase):
 
         expected_data = {
             'id': 1,
+            'first_name': '',
+            'last_name': '',
             'email': 'myemail@example.com',
+            'user': None,
             'board': 1,
-            'message': ''
+            'message': '',
+            'date_created': serializer.object.date_created,
+            'date_modified': serializer.object.date_modified,
         }
 
         self.assertEqual(serializer.data, expected_data)

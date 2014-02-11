@@ -1,10 +1,13 @@
+from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from ..utils.viewsets import ModelViewSet, CreateListRetrieveViewSet
-from .models import Board, BoardCollaboratorRequest
-from .serializers import BoardSerializer, BoardCollaboratorRequestSerializer
-from .permissions import BoardPermission, BoardCollaboratorRequestPermission
+from .models import Board, BoardCollaborator, BoardCollaboratorRequest
+from .serializers import (BoardSerializer, BoardCollaboratorSerializer,
+                          BoardCollaboratorRequestSerializer)
+from .permissions import (BoardPermission, BoardCollaboratorPermission,
+                          BoardCollaboratorRequestPermission)
 
 
 class BoardViewSet(ModelViewSet):
@@ -15,6 +18,18 @@ class BoardViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         return user.boards
+
+
+class BoardCollaboratorViewSet(ModelViewSet):
+    model = BoardCollaborator
+    serializer_class = BoardCollaboratorSerializer
+    permission_classes = (BoardCollaboratorPermission, )
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('board', )
+
+    def get_queryset(self):
+        user = self.request.user
+        return BoardCollaborator.objects.filter(board__in=user.boards)
 
 
 class BoardCollaboratorRequestViewSet(CreateListRetrieveViewSet):
