@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 from django.db.models.loading import get_model
 
 from ..users.models import User
+from ..utils.models import BaseModel
 from ..utils.slugify import unique_slugify
 from .managers import AccountCollaboratorManager
 from .constants import COMPANY_RESERVED_KEYWORDS
@@ -17,14 +18,14 @@ def get_company_upload_path(instance, filename):
         'uploads', 'companies', str(instance.pk), identifier, filename)
 
 
-class EmailDomain(models.Model):
+class EmailDomain(BaseModel):
     domain_name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.domain_name
 
 
-class Account(models.Model):
+class Account(BaseModel):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
     image_url = models.ImageField(
@@ -85,7 +86,7 @@ class Account(models.Model):
         return collaborators.exists()
 
 
-class AccountCollaborator(models.Model):
+class AccountCollaborator(BaseModel):
     account = models.ForeignKey(Account)
     user = models.ForeignKey(User)
     is_owner = models.BooleanField(default=False)
