@@ -17,4 +17,5 @@ urlpatterns = get_api_urlpatterns([
     'accounts',
     'invitations',
     'boards',
+    'cards',
 ])

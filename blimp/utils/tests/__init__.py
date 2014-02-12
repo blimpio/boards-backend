@@ -4,6 +4,7 @@ from rest_framework.test import APIClient
 from ...users.models import User
 from ...accounts.models import Account, AccountCollaborator
 from ...boards.models import Board, BoardCollaborator
+from ...cards.models import Card
 from ..jwt_handlers import jwt_payload_handler, jwt_encode_handler
 
 
@@ -32,6 +33,11 @@ class BaseTestCase(TestCase):
 
         self.board_collaborator = BoardCollaborator.objects.get(
             user=self.user, board=self.board)
+
+    def create_card(self):
+        self.card = Card.objects.create(
+            name='The Card', type='note', content='abc123',
+            board=self.board, created_by=self.user)
 
 
 class AuthenticatedAPITestCase(BaseTestCase):
