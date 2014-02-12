@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm
 
-from ..utils.admin import get_profile_fields
+from .utils import get_profile_fields
 from .models import User
 
 

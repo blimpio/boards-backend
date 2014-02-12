@@ -1,13 +1,14 @@
 from django.contrib import admin
 
+from ..utils.admin import BaseModelAdmin
 from .models import Account, AccountCollaborator, EmailDomain
 
 
-class AccountAdmin(admin.ModelAdmin):
+class AccountAdmin(BaseModelAdmin):
     list_display = ('name', 'slug', 'allow_signup', )
 
 
-class AccountCollaboratorAdmin(admin.ModelAdmin):
+class AccountCollaboratorAdmin(BaseModelAdmin):
     list_display = ('user', 'account', 'is_owner', )
 
 

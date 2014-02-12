@@ -1,6 +1,11 @@
 from django.contrib import admin
 
+from ..utils.admin import BaseModelAdmin
 from .models import Card
 
 
-admin.site.register(Card)
+class CardAdmin(BaseModelAdmin):
+    list_display = ('name', 'type', 'board', 'stack',
+                    'created_by', 'featured')
+
+admin.site.register(Card, CardAdmin)

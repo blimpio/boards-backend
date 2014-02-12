@@ -1,18 +1,10 @@
-def get_profile_fields(model_class, admin_class, exclude_fields=[]):
-    """
-    Returns a set of additional model fields that are not already in an
-    admin site's fieldsets.
-    """
-    fields = []
-    additional_fields = []
+from django.contrib import admin
 
-    exclude_fields.append('id')
 
-    for name, field_options in admin_class.fieldsets:
-        fields.extend(list(field_options['fields']))
+class BaseModelAdmin(admin.ModelAdmin):
 
-    for field in model_class._meta.fields:
-        if field.name not in fields and field.name not in exclude_fields:
-            additional_fields.append(field.name)
-
-    return set(additional_fields)
+    def get_list_display(self, request):
+        """
+        Appends BaseModel's fields to ModelAdmin list_display.
+        """
+        return self.list_display + ('date_created', 'date_modified')

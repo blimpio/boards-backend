@@ -1,17 +1,18 @@
 from django.contrib import admin
 
+from ..utils.admin import BaseModelAdmin
 from .models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
-class BoardAdmin(admin.ModelAdmin):
+class BoardAdmin(BaseModelAdmin):
     list_display = ('name', 'account', 'created_by', 'is_shared', )
 
 
-class BoardCollaboratorAdmin(admin.ModelAdmin):
+class BoardCollaboratorAdmin(BaseModelAdmin):
     list_display = ('board', 'user', 'invited_user', 'permission', )
 
 
-class BoardCollaboratorRequestAdmin(admin.ModelAdmin):
+class BoardCollaboratorRequestAdmin(BaseModelAdmin):
     list_display = ('email', 'user', 'first_name', 'last_name', 'board', )
 
 
