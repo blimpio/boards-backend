@@ -25,7 +25,7 @@ class AccountTestCase(TestCase):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(Account._meta.fields), 5)
+        self.assertEqual(len(Account._meta.fields), 7)
 
     def test_create_new_account_sets_unique_slug(self):
         account = Account.objects.create(name='Acme')
@@ -90,7 +90,7 @@ class AccountCollaboratorTestCase(TestCase):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(AccountCollaborator._meta.fields), 4)
+        self.assertEqual(len(AccountCollaborator._meta.fields), 6)
 
     def test_manager_create_owner_should_create_member_with_owner_role(self):
         """
