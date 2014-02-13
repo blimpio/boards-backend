@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from ..utils.models import BaseModel
 
@@ -22,7 +23,7 @@ class Card(BaseModel):
 
     featured = models.BooleanField(default=False)
     origin_url = models.URLField(blank=True)
-    content = models.TextField()
+    content = models.TextField(blank=True)
 
     is_shared = models.BooleanField(default=False)
 
@@ -35,3 +36,32 @@ class Card(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def save(self, force_insert=False, force_update=False, **kwargs):
+        """
+        Performs all steps involved in validating  whenever
+        a model object is saved.
+        """
+        self.full_clean()
+
+        return super(Card, self).save(force_insert, force_update, **kwargs)
+
+    def clean(self):
+        """
+        Validates when card is a stack, that card specific fields arent' set.
+        """
+        if self.type != 'stack':
+            if not self.content:
+                raise ValidationError('The `content` field is required.')
+
+            return None
+
+        disallowed_fields = [
+            'origin_url', 'content', 'thumbnail_sm_path',
+            'thumbnail_md_path', 'thumbnail_lg_path',
+            'file_size', 'file_extension']
+
+        for field in disallowed_fields:
+            if getattr(self, field):
+                msg = 'The `{}` field should not be set on a card stack.'
+                raise ValidationError(msg.format(field))
