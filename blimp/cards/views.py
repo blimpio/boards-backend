@@ -15,4 +15,4 @@ class CardViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Card.objects.filter(board__in=user.boards)
+        return user.cards.prefetch_related('cards')

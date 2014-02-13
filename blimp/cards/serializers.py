@@ -9,6 +9,15 @@ class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
 
+    def __init__(self, *args, **kwargs):
+        serializer = super(CardSerializer, self).__init__(*args, **kwargs)
+        request = self.context['request']
+
+        if request and request.user:
+            self.fields['cards'].queryset = request.user.cards
+
+        return serializer
+
     def validate_content(self, attrs, source):
         content = attrs.get(source)
         card_type = attrs.get('type')

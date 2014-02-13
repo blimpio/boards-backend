@@ -156,6 +156,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return Board.objects.filter(pk__in=board_ids)
 
+    @property
+    def cards(self):
+        """
+        Returns a list of all cards of boards where user is a collaborator.
+        """
+        Card = get_model('cards', 'Card')
+
+        return Card.objects.filter(board__in=self.boards)
+
     def get_full_name(self):
         """
         Returns the first_name plus the last_name, with a space in between.
