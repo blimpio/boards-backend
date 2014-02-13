@@ -10,13 +10,14 @@ class Card(BaseModel):
         ('text', 'Text'),
         ('file', 'File'),
         ('embed', 'Embeddable'),
+        ('stack', 'Stack'),
     )
 
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=5, choices=TYPE_CHOICES)
 
     board = models.ForeignKey('boards.Board')
-    stack = models.ForeignKey('stacks.Stack', null=True, blank=True)
+    cards = models.ManyToManyField('cards.Card', blank=True, null=True)
     created_by = models.ForeignKey('users.User')
 
     featured = models.BooleanField(default=False)

@@ -7,4 +7,4 @@ class CardTestCase(BaseTestCase):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(Card._meta.fields), 17)
+        self.assertEqual(len(Card._meta.fields), 16)

@@ -36,7 +36,6 @@ INSTALLED_APPS = (
     'blimp.invitations',
     'blimp.accounts',
     'blimp.boards',
-    'blimp.stacks',
     'blimp.cards',
     'blimp.comments',
 )
