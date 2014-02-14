@@ -9,14 +9,25 @@ class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
 
-    def __init__(self, *args, **kwargs):
-        serializer = super(CardSerializer, self).__init__(*args, **kwargs)
+    def validate_cards(self, attrs, source):
+        cards = attrs[source]
+        card_type = attrs.get('type')
+
+        if card_type != 'stack':
+            attrs[source] = []
+            return attrs
+
         request = self.context['request']
 
-        if request and request.user:
-            self.fields['cards'].queryset = request.user.cards
+        user_cards_ids = request.user.cards.values_list('id', flat=True)
 
-        return serializer
+        for card in cards:
+            if card.type == 'stack' or card == self.object \
+                    or card.id not in user_cards_ids:
+                msg = 'Invalid value.'
+                raise serializers.ValidationError(msg)
+
+        return attrs
 
     def validate_content(self, attrs, source):
         content = attrs.get(source)
