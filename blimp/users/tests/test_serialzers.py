@@ -799,7 +799,7 @@ class UserSerializerTestCase(BaseTestCase):
             'username', 'first_name', 'last_name', 'email',
             'date_joined', 'phone', 'job_title', 'avatar', 'gravatar_url',
             'facebook_id', 'twitter_username', 'aim_username',
-            'windows_live_id', 'timezone', 'token'
+            'windows_live_id', 'timezone', 'token', 'accounts'
         ]
 
         self.assertEqual(data_keys, expected_keys)

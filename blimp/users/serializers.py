@@ -7,6 +7,7 @@ from ..utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..utils.validators import is_valid_email
 from ..accounts.models import Account, AccountCollaborator
 from ..accounts.fields import SignupDomainsField
+from ..accounts.serializers import AccountSerializer
 from ..invitations.models import SignupRequest, InvitedUser
 from .models import User
 
@@ -337,13 +338,15 @@ class ResetPasswordSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
     token = serializers.SerializerMethodField('get_auth_token')
+    accounts = AccountSerializer(many=True, source='accounts')
 
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email',
                   'date_joined', 'phone', 'job_title', 'avatar',
                   'gravatar_url', 'facebook_id', 'twitter_username',
-                  'aim_username', 'windows_live_id', 'timezone', 'token')
+                  'aim_username', 'windows_live_id', 'timezone',
+                  'token', 'accounts')
 
     def get_auth_token(self, user):
         payload = jwt_payload_handler(user)
