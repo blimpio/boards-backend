@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
-from .validators import validate_list
+from .validators import validate_list, validate_domain_name
 
 
 class PasswordField(serializers.CharField):
@@ -18,6 +18,10 @@ class PasswordField(serializers.CharField):
             *args,
             **kwargs
         )
+
+
+class DomainNameField(serializers.CharField):
+    default_validators = [validate_domain_name]
 
 
 class ListField(serializers.WritableField):

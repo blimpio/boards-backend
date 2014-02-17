@@ -1,7 +1,8 @@
 from django.test import TestCase
 
-from ...accounts.models import EmailDomain
-from ..serializers import ValidateSignupDomainsSerializer
+from ...accounts.models import Account, EmailDomain
+from ..serializers import (ValidateSignupDomainsSerializer,
+                           CheckSignupDomainSerializer)
 
 
 class ValidateSignupDomainsSerializerTestCase(TestCase):
@@ -68,3 +69,89 @@ class ValidateSignupDomainsSerializerTestCase(TestCase):
         }
 
         self.assertEqual(serializer.data, expected_data)
+
+
+class CheckSignupDomainSerializerTestCase(TestCase):
+    def setUp(self):
+        self.account = Account.objects.create(name='Acme')
+
+    def test_serializer_empty_data(self):
+        """
+        Tests that serializer.data returns empty signup_domain.
+        """
+        serializer = CheckSignupDomainSerializer()
+
+        self.assertEqual(serializer.data, {'signup_domain': ''})
+
+    def test_serializer_validation(self):
+        """
+        Tests serializer's expected validation errors.
+        """
+        serializer = CheckSignupDomainSerializer(data={})
+        serializer.is_valid()
+
+        expected_errors = {
+            'signup_domain': ['This field is required.']
+        }
+
+        self.assertEqual(serializer.errors, expected_errors)
+
+    def test_serializer_validate_domain_name(self):
+        """
+        Tests serializer's expected validation errors.
+        """
+        data = {
+            'signup_domain': 'notadomain'
+        }
+        serializer = CheckSignupDomainSerializer(data=data)
+        serializer.is_valid()
+
+        expected_errors = {
+            'signup_domain': ['Invalid value.']
+        }
+
+        self.assertEqual(serializer.errors, expected_errors)
+
+    def test_validate_should_return_existing_account(self):
+        """
+        Tests serializer returns account for matching account.
+        """
+        domain = EmailDomain.objects.create(domain_name='example.com')
+        self.account.email_domains.add(domain)
+        self.account.allow_signup = True
+        self.account.save()
+
+        data = {
+            'signup_domain': 'example.com'
+        }
+        serializer = CheckSignupDomainSerializer(data=data)
+        serializer.is_valid()
+
+        expected_response = {
+            'id': self.account.id,
+            'name': 'Acme',
+            'slug': 'acme',
+            'image_url': ''
+        }
+
+        self.assertEqual(serializer.object, expected_response)
+
+    def test_validate_should_return_empty_object_if_no_account_foudn(self):
+        """
+        Tests serializer returns empty object if no
+        matching account was found.
+        """
+        domain = EmailDomain.objects.create(domain_name='example.com')
+        self.account.email_domains.add(domain)
+        self.account.allow_signup = True
+        self.account.save()
+
+        data = {
+            'signup_domain': 'abcexample.com'
+        }
+        serializer = CheckSignupDomainSerializer(data=data)
+        serializer.is_valid()
+
+        expected_response = {}
+
+        self.assertEqual(serializer.object, expected_response)
