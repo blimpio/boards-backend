@@ -1,6 +1,9 @@
-box: wercker/python
+box: flenter/multi-python
 build:
   steps:
+
+    - install-packages:
+        packages: libpq-dev python-dev
 
     - script:
         name: setup virtual environment
