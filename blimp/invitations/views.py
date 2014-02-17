@@ -26,7 +26,7 @@ class SignupRequestCreateAPIView(generics.CreateAPIView):
         obj.send_email()
 
 
-class InvitedUserCreateViewSet(generics.CreateAPIView):
+class InvitedUserCreateAPIView(generics.CreateAPIView):
     serializer_class = InvitedUserSerializer
     authentication_classes = ()
     permission_classes = ()
