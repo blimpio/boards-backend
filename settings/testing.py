@@ -1,3 +1,5 @@
+import os
+
 from .development import *
 
 
@@ -13,3 +15,15 @@ PASSWORD_HASHERS = (
 )
 
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('WERCKER_POSTGRESQL_DATABASE', 'boards'),
+        'USER': os.getenv('WERCKER_POSTGRESQL_USERNAME', os.getenv('USER')),
+        'PASSWORD': os.getenv('WERCKER_POSTGRESQL_PASSWORD', ''),
+        'HOST': os.getenv('WERCKER_POSTGRESQL_HOST', 'localhost'),
+        'PORT': os.getenv('WERCKER_POSTGRESQL_PORT', ''),
+    }
+}
