@@ -18,7 +18,7 @@ class SignupRequestTestCase(TestCase):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(SignupRequest._meta.fields), 2)
+        self.assertEqual(len(SignupRequest._meta.fields), 4)
 
     def test_token_property(self):
         """
@@ -75,7 +75,7 @@ class InvitedUserTestCase(TestCase):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(InvitedUser._meta.fields), 7)
+        self.assertEqual(len(InvitedUser._meta.fields), 9)
 
     def test_save_should_set_additional_user_data_if_available(self):
         """
@@ -88,10 +88,11 @@ class InvitedUserTestCase(TestCase):
         Tests that save() finds an existing user with a given email address
         sets the user field and adds any user data in other fields.
         """
-        invited_user = InvitedUser.objects.create(
-            email=self.user2.email, account=self.account, created_by=self.user)
 
-        self.assertEqual(invited_user.first_name, self.user2.first_name)
+        invited_user = InvitedUser.objects.create(
+            email=self.user.email, account=self.account, created_by=self.user)
+
+        self.assertEqual(invited_user.first_name, self.user.first_name)
 
     def test_get_email_should_return_email(self):
         """

@@ -22,6 +22,9 @@ class PasswordField(serializers.CharField):
 
 class DomainNameField(serializers.CharField):
     default_validators = [validate_domain_name]
+    default_error_messages = {
+        'invalid': 'Enter a valid domain name.',
+    }
 
 
 class ListField(serializers.WritableField):

@@ -107,7 +107,7 @@ class CheckSignupDomainSerializerTestCase(TestCase):
         serializer.is_valid()
 
         expected_errors = {
-            'signup_domain': ['Invalid value.']
+            'signup_domain': ['Enter a valid domain name.']
         }
 
         self.assertEqual(serializer.errors, expected_errors)
