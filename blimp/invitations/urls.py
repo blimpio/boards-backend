@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from .views import SignupRequestCreateAPIView
+from .views import SignupRequestCreateAPIView, InvitedUserCreateViewSet
 
 
 api_urlpatterns = patterns(
@@ -9,4 +9,7 @@ api_urlpatterns = patterns(
 
     url(r'auth/signup_request/$',
         SignupRequestCreateAPIView.as_view(), name='invite-request-create'),
+
+    url(r'auth/signup_request/invite/$',
+        InvitedUserCreateViewSet.as_view(), name='invited-user-create'),
 )

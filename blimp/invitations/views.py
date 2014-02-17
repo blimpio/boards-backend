@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 
 from .models import SignupRequest
-from .serializers import SignupRequestSerializer
+from .serializers import SignupRequestSerializer, InvitedUserSerializer
 
 
 class SignupRequestCreateAPIView(generics.CreateAPIView):
@@ -24,3 +24,19 @@ class SignupRequestCreateAPIView(generics.CreateAPIView):
 
     def post_save(self, obj, created=False):
         obj.send_email()
+
+
+class InvitedUserCreateViewSet(generics.CreateAPIView):
+    serializer_class = InvitedUserSerializer
+    authentication_classes = ()
+    permission_classes = ()
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.DATA)
+
+        if serializer.is_valid():
+            return Response(serializer.data)
+
+        return Response({
+            'error': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)

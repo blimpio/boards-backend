@@ -5,12 +5,13 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models.loading import get_model
 
+from ..utils.models import BaseModel
 from ..users.models import User
 from ..users.utils import get_gravatar_url
 from .managers import SignupRequestManager, InvitedUserManager
 
 
-class SignupRequest(models.Model):
+class SignupRequest(BaseModel):
     email = models.EmailField(unique=True)
     objects = SignupRequestManager()
 
@@ -43,7 +44,7 @@ class SignupRequest(models.Model):
         )
 
 
-class InvitedUser(models.Model):
+class InvitedUser(BaseModel):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     email = models.EmailField(blank=True)
@@ -56,6 +57,11 @@ class InvitedUser(models.Model):
                                                  blank=True, null=True)
 
     objects = InvitedUserManager()
+
+    class Meta:
+        unique_together = (
+            ('account', 'email')
+        )
 
     def __str__(self):
         return self.email
