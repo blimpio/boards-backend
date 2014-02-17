@@ -82,12 +82,16 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         """
         Tests that viewset checks for custom permissions.
         """
+        self.account_owner.delete()
         self.board_collaborator.permission = 'read'
         self.board_collaborator.save()
 
         data = {
             'name': 'New Board Name',
-            'account': self.account.id
+            'account': self.account.id,
+            'board': self.board.id,
+            'type': 'note',
+            'content': 'abc123'
         }
 
         response = self.client.put(
@@ -272,7 +276,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             name='Another Card', type='note', content='abc123',
             board=board, created_by=self.user)
 
-        response = self.client.get('{}?board=1'.format(self.base_url))
+        response = self.client.get('{}?board={}'.format(
+            self.base_url, self.board.id))
 
         expected_response = [{
             'created_by': self.card.created_by_id,

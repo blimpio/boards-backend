@@ -280,7 +280,8 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
         Board.objects.create(
             name='Another Board', account=self.account, created_by=self.user)
 
-        response = self.client.get('{}?board=1'.format(self.base_url))
+        response = self.client.get('{}?board={}'.format(
+            self.base_url, self.board.id))
 
         expected_response = [{
             'id': self.board_collaborator.id,
@@ -378,7 +379,7 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
             'email': self.user.email,
-            'board': 1,
+            'board': self.board.id,
             'message': '',
             'user': self.user.id,
             'date_created': request.date_created,
@@ -402,7 +403,7 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
             'email': self.user.email,
-            'board': 1,
+            'board': self.board.id,
             'message': '',
             'user': self.user.id,
             'date_created': request.date_created,
@@ -426,7 +427,7 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
             'email': self.user.email,
-            'board': 1,
+            'board': self.board.id,
             'message': '',
             'user': self.user.id,
             'date_created': request.date_created,
@@ -465,7 +466,7 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
             'email': self.user.email,
-            'board': 1,
+            'board': self.board.id,
             'message': '',
             'user': self.user.id,
             'date_created': request.date_created,
@@ -530,7 +531,7 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
             'email': self.user.email,
-            'board': 1,
+            'board': self.board.id,
             'message': '',
             'user': self.user.id,
             'date_created': request.date_created,
@@ -555,7 +556,7 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
             'email': self.user.email,
-            'board': 1,
+            'board': self.board.id,
             'message': '',
             'user': self.user.id,
             'date_created': request.date_created,

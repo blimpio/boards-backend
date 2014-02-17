@@ -92,9 +92,12 @@ class AccountsForUserAPIViewTestCase(AuthenticatedAPITestCase):
     def test_get_account_with_token_should_work(self):
         response = self.client.get('/api/accounts/')
 
-        expected_response = [
-            {'id': 1, 'name': 'Acme', 'slug': 'acme', 'image_url': ''}
-        ]
+        expected_response = [{
+            'id': self.account.id,
+            'name': 'Acme',
+            'slug': 'acme',
+            'image_url': ''
+        }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)

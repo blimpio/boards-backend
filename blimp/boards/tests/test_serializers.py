@@ -152,12 +152,12 @@ class BoardCollaboratorRequestSerializerTestCase(BaseTestCase):
         serializer.save()
 
         expected_data = {
-            'id': 1,
+            'id': serializer.object.id,
             'first_name': '',
             'last_name': '',
             'email': 'myemail@example.com',
             'user': None,
-            'board': 1,
+            'board': serializer.object.board_id,
             'message': '',
             'date_created': serializer.object.date_created,
             'date_modified': serializer.object.date_modified,
