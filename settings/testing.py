@@ -8,6 +8,8 @@ SOUTH_TESTS_MIGRATE = False
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
+DATABASES['default']['TEST_NAME'] = 'test_db'
+
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
