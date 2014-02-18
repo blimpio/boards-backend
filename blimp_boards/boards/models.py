@@ -67,7 +67,7 @@ def create_owner_collaborator(instance, created=False, **kwargs):
 class BoardCollaborator(BaseModel):
     board = models.ForeignKey('boards.Board')
     user = models.ForeignKey('users.User', blank=True, null=True)
-    invited_user = models.ForeignKey('invitations.Inviteduser',
+    invited_user = models.ForeignKey('invitations.InvitedUser',
                                      blank=True, null=True)
 
     permission = models.CharField(max_length=5, choices=PERMISSION_CHOICES)
