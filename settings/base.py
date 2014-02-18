@@ -31,13 +31,13 @@ INSTALLED_APPS = (
     'corsheaders',
     'rest_framework',
 
-    'blimp.utils',
-    'blimp.users',
-    'blimp.invitations',
-    'blimp.accounts',
-    'blimp.boards',
-    'blimp.cards',
-    'blimp.comments',
+    'blimp_boards.utils',
+    'blimp_boards.users',
+    'blimp_boards.accounts',
+    'blimp_boards.invitations',
+    'blimp_boards.boards',
+    'blimp_boards.cards',
+    'blimp_boards.comments',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -50,9 +50,9 @@ MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
 )
 
-ROOT_URLCONF = 'blimp.urls'
+ROOT_URLCONF = 'blimp_boards.urls'
 
-WSGI_APPLICATION = 'blimp.wsgi.application'
+WSGI_APPLICATION = 'blimp_boards.wsgi.application'
 
 
 # Database
@@ -93,7 +93,7 @@ AUTH_USER_MODEL = 'users.User'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'blimp.users.backends.EmailBackend',
+    'blimp_boards.users.backends.EmailBackend',
 )
 
 
@@ -103,15 +103,15 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'blimp.users.authentication.JWTAuthentication',
+        'blimp_boards.users.authentication.JWTAuthentication',
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),
-    'EXCEPTION_HANDLER': 'blimp.utils.exceptions.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'blimp_boards.utils.exceptions.custom_exception_handler',
 }
 
 JWT_AUTH = {
-    'JWT_PAYLOAD_HANDLER': 'blimp.utils.jwt_handlers.jwt_payload_handler',
+    'JWT_PAYLOAD_HANDLER': 'blimp_boards.utils.jwt_handlers.jwt_payload_handler',
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=90)
 }

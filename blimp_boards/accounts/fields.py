@@ -1,5 +1,4 @@
-from blimp.utils.fields import ListField
-
+from ..utils.fields import ListField
 from .validators import validate_signup_domain
 
 

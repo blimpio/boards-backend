@@ -6,7 +6,7 @@ def get_api_urlpatterns(apps):
     urls = []
 
     for app in apps:
-        dotted_path = 'blimp.{}.urls.api_urlpatterns'.format(app)
+        dotted_path = 'blimp_boards.{}.urls.api_urlpatterns'.format(app)
         urls.append((r'', include(import_by_path(dotted_path))))
 
     return patterns('', *urls)

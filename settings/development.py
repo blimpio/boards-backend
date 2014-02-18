@@ -41,7 +41,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Django REST framework
 REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = (
-    'blimp.users.authentication.JWTAuthentication',
+    'blimp_boards.users.authentication.JWTAuthentication',
     'rest_framework.authentication.SessionAuthentication',
 )
 
@@ -51,7 +51,7 @@ REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
 )
 
 JWT_AUTH = {
-    'JWT_PAYLOAD_HANDLER': 'blimp.utils.jwt_handlers.jwt_payload_handler',
+    'JWT_PAYLOAD_HANDLER': 'blimp_boards.utils.jwt_handlers.jwt_payload_handler',
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=90)
 }
 

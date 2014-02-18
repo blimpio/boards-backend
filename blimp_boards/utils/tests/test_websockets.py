@@ -40,7 +40,7 @@ urlpatterns = patterns(
 
 
 class WebSocketRequestTestCase(TestCase):
-    urls = 'blimp.utils.tests.test_websockets'
+    urls = 'blimp_boards.utils.tests.test_websockets'
 
     def test_authenticated_request_has_user(self):
         client = APIClient()

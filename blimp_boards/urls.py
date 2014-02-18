@@ -10,9 +10,9 @@ urlpatterns = patterns(
     '',
 
     (r'^admin/', include(admin.site.urls)),
-    (r'^api/', include('blimp.router')),
+    (r'^api/', include('blimp_boards.router')),
 
-    (r'', include('blimp.users.urls')),
+    (r'', include('blimp_boards.users.urls')),
 
     # Catch all URL
     (r'^.*/$', TemplateView.as_view(template_name='index.html'))

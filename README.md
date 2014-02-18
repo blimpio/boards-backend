@@ -15,7 +15,7 @@ $ pip install -r requirements.txt
 ```
 $ ./manage.py syncdb --noinput
 $ ./manage.py migrate
-$ ./manage.py loaddata blimp/users/fixtures/users.json
+$ ./manage.py loaddata blimp_boards/users/fixtures/users.json
 ```
 
 ## Running web server
