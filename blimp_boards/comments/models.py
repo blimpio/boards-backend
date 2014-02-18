@@ -15,8 +15,8 @@ class Comment(BaseModel):
     created_by = models.ForeignKey(User)
 
     content_type = models.ForeignKey(ContentType)
-    object_pk = models.PositiveIntegerField()
+    object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
 
     def __str__(self):
-        return "%s: %s..." % (self.name, self.content[:50])
+        return "{}...".format(self.content[:50])

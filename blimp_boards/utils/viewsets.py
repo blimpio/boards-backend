@@ -49,3 +49,14 @@ class CreateListRetrieveViewSet(CreateModelMixin,
     `.serializer_class` attributes.
     """
     pass
+
+
+class RetrieveUpdateDestroyViewSet(mixins.RetrieveModelMixin,
+                                   UpdateModelMixin,
+                                   mixins.DestroyModelMixin,
+                                   viewsets.GenericViewSet):
+    """
+    A viewset that provides default `retrieve()`, `update()`,
+    `partial_update()`, and `destroy()` actions.
+    """
+    pass

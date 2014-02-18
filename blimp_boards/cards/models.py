@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.db.models.loading import get_model
+from django.contrib.contenttypes import generic
 
 from ..utils.models import BaseModel
 
@@ -33,6 +35,8 @@ class Card(BaseModel):
 
     file_size = models.IntegerField(null=True, blank=True)
     file_extension = models.CharField(max_length=5, blank=True)
+
+    comments = generic.GenericRelation('comments.Comment')
 
     def __str__(self):
         return self.name
