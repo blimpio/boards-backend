@@ -4,8 +4,6 @@ from .development import *
 DEBUG = False
 TEMPLATE_DEBUG = False
 
-SOUTH_TESTS_MIGRATE = False
-
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 PASSWORD_HASHERS = (

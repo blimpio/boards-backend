@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("invitations", "0001_initial"),
+    )
+
     def forwards(self, orm):
         # Adding field 'BoardCollaborator.invited_user'
         db.add_column('boards_boardcollaborator', 'invited_user',
