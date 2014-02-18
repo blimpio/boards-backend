@@ -1,4 +1,8 @@
 box: flenter/multi-python
+
+services:
+  - wercker/postgresql
+
 build:
   steps:
 

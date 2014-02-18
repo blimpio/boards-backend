@@ -1,3 +1,5 @@
+import os
+
 from .development import *
 
 
@@ -8,7 +10,19 @@ SOUTH_TESTS_MIGRATE = False
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
-DATABASES['default']['TEST_NAME'] = 'test_db'
+WERCKER_POSTGRESQL_DATABASE = os.getenv('WERCKER_POSTGRESQL_DATABASE')
+
+if WERCKER_POSTGRESQL_DATABASE:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': WERCKER_POSTGRESQL_DATABASE,
+            'USER': os.getenv('WERCKER_POSTGRESQL_USERNAME'),
+            'PASSWORD': os.getenv('WERCKER_POSTGRESQL_PASSWORD'),
+            'HOST': os.getenv('WERCKER_POSTGRESQL_HOST'),
+            'PORT': os.getenv('WERCKER_POSTGRESQL_PORT'),
+        }
+    }
 
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
