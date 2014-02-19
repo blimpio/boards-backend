@@ -5,7 +5,6 @@ from ...users.models import User
 from ...accounts.models import Account, AccountCollaborator
 from ...boards.models import Board, BoardCollaborator
 from ...cards.models import Card
-from ..jwt_handlers import jwt_payload_handler, jwt_encode_handler
 
 
 class BaseTestCase(TestCase):
@@ -68,8 +67,7 @@ class AuthenticatedAPITestCase(BaseTestCase):
     def setUp(self):
         self.create_user()
 
-        payload = jwt_payload_handler(self.user)
-        self.token = jwt_encode_handler(payload)
+        self.token = self.user.token
 
         self.client = APIClient()
         self.client.credentials(

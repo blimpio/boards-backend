@@ -3,7 +3,6 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 
 from ..utils import fields
-from ..utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..utils.validators import is_valid_email
 from ..accounts.models import Account, AccountCollaborator
 from ..accounts.fields import SignupDomainsField
@@ -337,7 +336,7 @@ class ResetPasswordSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    token = serializers.SerializerMethodField('get_auth_token')
+    token = serializers.Field(source='token')
     accounts = AccountSerializer(many=True, source='accounts')
 
     class Meta:
@@ -347,7 +346,3 @@ class UserSerializer(serializers.ModelSerializer):
                   'gravatar_url', 'facebook_id', 'twitter_username',
                   'aim_username', 'windows_live_id', 'timezone',
                   'token', 'accounts')
-
-    def get_auth_token(self, user):
-        payload = jwt_payload_handler(user)
-        return jwt_encode_handler(payload)

@@ -6,7 +6,6 @@ from rest_framework.compat import patterns
 from rest_framework.test import APIClient
 from rest_framework.views import APIView
 
-from ...utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..models import User
 from ..authentication import JWTAuthentication
 
@@ -38,8 +37,7 @@ class JSONWebTokenAuthenticationTests(TestCase):
         """
         Tests that a token is invalidated if User.token_version changes.
         """
-        payload = jwt_payload_handler(self.user)
-        token = jwt_encode_handler(payload)
+        token = self.user.token
 
         self.user.reset_token_version()
         self.user.save()

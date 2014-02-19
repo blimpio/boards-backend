@@ -15,6 +15,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.db.models.loading import get_model
 
+from ..utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from .managers import UserManager
 
 
@@ -114,6 +115,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
+
+    @property
+    def token(self):
+        """
+        Returns a JSON Web Token used for Authentication.
+        """
+        payload = jwt_payload_handler(self)
+        return jwt_encode_handler(payload)
 
     @property
     def password_reset_token(self):
