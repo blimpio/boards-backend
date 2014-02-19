@@ -35,7 +35,13 @@ class CardViewSet(ModelViewSet):
 
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data)
+
+                headers = self.get_success_headers(serializer.data)
+
+                return Response(
+                    serializer.data,
+                    status=status.HTTP_201_CREATED,
+                    headers=headers)
             else:
                 return Response({
                     'error': serializer.errors

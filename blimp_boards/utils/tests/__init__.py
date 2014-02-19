@@ -9,6 +9,8 @@ from ..jwt_handlers import jwt_payload_handler, jwt_encode_handler
 
 
 class BaseTestCase(TestCase):
+    users = {}
+
     def create_user(self):
         self.username = 'jpueblo'
         self.password = 'abc123'
@@ -21,6 +23,24 @@ class BaseTestCase(TestCase):
             first_name='Juan',
             last_name='Pueblo'
         )
+
+        self.users[self.username] = self.user
+
+    def create_another_user(self, username='jsmith'):
+        password = 'abc123'
+        email = '{}@example.com'.format(username)
+
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            first_name=username[:1].upper(),
+            last_name=username[1:].upper()
+        )
+
+        self.users[username] = user
+
+        return user
 
     def create_account(self):
         self.account = Account.objects.create(name='Acme')

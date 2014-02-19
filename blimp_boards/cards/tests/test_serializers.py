@@ -1,7 +1,7 @@
 from rest_framework.test import APIRequestFactory
 
 from ...utils.tests import BaseTestCase
-from ..serializers import CardSerializer
+from ..serializers import CardSerializer, CardCommentSerializer
 from ..views import CardViewSet
 from ..models import Card
 
@@ -264,6 +264,72 @@ class CardSerializerTestCase(BaseTestCase):
             'thumbnail_lg_path': '',
             'file_size': None,
             'file_extension': ''
+        }
+
+        self.assertEqual(serializer.data, expected_data)
+
+
+class CardCommentSerializerTestCase(BaseTestCase):
+    def setUp(self):
+        self.serializer_class = CardCommentSerializer
+        self.data = {
+            'content': 'A comment'
+        }
+
+        self.factory = APIRequestFactory()
+
+    def test_serializer_empty_data(self):
+        """
+        Tests that serializer.data doesn't return any data.
+        """
+        serializer = self.serializer_class()
+        expected_data = {
+            'content': '',
+        }
+
+        self.assertEqual(serializer.data, expected_data)
+
+    def test_serializer_validation(self):
+        """
+        Tests serializer's expected validation errors.
+        """
+        serializer = self.serializer_class(data={})
+        serializer.is_valid()
+
+        expected_errors = {
+            'content': ['This field is required.']
+        }
+
+        self.assertEqual(serializer.errors, expected_errors)
+
+    def test_serializer_should_return_object_if_valid(self):
+        """
+        Tests that serializer should return object if valid.
+        """
+        self.create_user()
+        self.create_account()
+        self.create_board()
+        self.create_card()
+
+        request = self.factory.post('/')
+        request.user = self.user
+
+        context = {
+            'request': request,
+            'view': CardViewSet.as_view(),
+            'content_object': self.card
+        }
+
+        serializer = self.serializer_class(data=self.data, context=context)
+        serializer.is_valid()
+        serializer.save()
+
+        expected_data = {
+            'id': serializer.object.id,
+            'content': 'A comment',
+            'created_by': self.user.id,
+            'date_created': serializer.object.date_created,
+            'date_modified': serializer.object.date_modified
         }
 
         self.assertEqual(serializer.data, expected_data)

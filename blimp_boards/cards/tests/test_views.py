@@ -3,6 +3,7 @@ from rest_framework.test import APIClient
 
 from ...utils.tests import AuthenticatedAPITestCase
 from ...boards.models import Board
+from ...comments.models import Comment
 from ..models import Card
 
 
@@ -300,4 +301,49 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+    def test_viewset_comments_action_get(self):
+        """
+        Tests that viewset allows retrieving comments for specific card.
+        """
+        comment = Comment.objects.create(
+            content='A comment',
+            content_object=self.card,
+            created_by=self.user
+        )
+
+        response = self.client.get(
+            '{}{}/comments/'.format(self.base_url, self.card.id))
+
+        expected_response = [{
+            'id': comment.id,
+            'content': 'A comment',
+            'created_by': self.user.id,
+            'date_created': comment.date_created,
+            'date_modified': comment.date_modified
+        }]
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+    def test_viewset_comments_action_post(self):
+        data = {
+            'content': 'This is my comment.'
+        }
+
+        response = self.client.post(
+            '{}{}/comments/'.format(self.base_url, self.card.id), data)
+
+        comment = Comment.objects.get(pk=response.data['id'])
+
+        expected_response = {
+            'id': comment.id,
+            'content': 'This is my comment.',
+            'created_by': self.user.id,
+            'date_created': comment.date_created,
+            'date_modified': comment.date_modified
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data, expected_response)

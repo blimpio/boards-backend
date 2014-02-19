@@ -1,18 +1,14 @@
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth import get_user_model
 
 from ..utils.models import BaseModel
-
-
-User = get_user_model()
 
 
 class Comment(BaseModel):
     content = models.TextField()
 
-    created_by = models.ForeignKey(User)
+    created_by = models.ForeignKey('users.User')
 
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
