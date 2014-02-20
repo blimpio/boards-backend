@@ -33,7 +33,7 @@ DATABASES = {
         'NAME': 'boards',
         'USER': os.getenv('USER'),
         'PASSWORD': '',
-        'HOST': '',
+        'HOST': 'localhost',
         'PORT': '',
     }
 }
