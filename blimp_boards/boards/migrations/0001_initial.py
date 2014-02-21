@@ -97,19 +97,6 @@ class Migration(SchemaMigration):
             'domain_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'unique': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
-        'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '80', 'unique': 'True'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'blank': 'True', 'to': "orm['auth.Permission']"})
-        },
-        'auth.permission': {
-            'Meta': {'unique_together': "(('content_type', 'codename'),)", 'ordering': "('content_type__app_label', 'content_type__model', 'codename')", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
         'boards.board': {
             'Meta': {'ordering': "('-date_modified', '-date_created')", 'object_name': 'Board'},
             'account': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['accounts.Account']"}),
@@ -153,32 +140,25 @@ class Migration(SchemaMigration):
         },
         'users.user': {
             'Meta': {'object_name': 'User'},
-            'aim_username': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'avatar': ('django.db.models.fields.files.ImageField', [], {'max_length': '255', 'blank': 'True'}),
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '254', 'unique': 'True'}),
-            'facebook_id': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'aim_username': ('django.db.models.fields.CharField', [], {'blank': 'True', 'max_length': '255'}),
+            'avatar': ('django.db.models.fields.files.ImageField', [], {'blank': 'True', 'max_length': '255'}),
+            'date_created': ('django.db.models.fields.DateTimeField', [], {'blank': 'True', 'default': 'datetime.datetime.now'}),
+            'date_modified': ('django.db.models.fields.DateTimeField', [], {'blank': 'True', 'default': 'datetime.datetime.now'}),
+            'email': ('django.db.models.fields.EmailField', [], {'unique': 'True', 'max_length': '254'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'gravatar_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'blank': 'True', 'to': "orm['auth.Group']", 'related_name': "'user_set'"}),
-            'gtalk_username': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'gravatar_url': ('django.db.models.fields.URLField', [], {'blank': 'True', 'max_length': '200'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'job_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'last_ip': ('django.db.models.fields.IPAddressField', [], {'default': "'127.0.0.1'", 'max_length': '15', 'blank': 'True', 'null': 'True'}),
+            'job_title': ('django.db.models.fields.CharField', [], {'blank': 'True', 'max_length': '255'}),
+            'last_ip': ('django.db.models.fields.IPAddressField', [], {'blank': 'True', 'default': "'127.0.0.1'", 'max_length': '15', 'null': 'True'}),
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'phone': ('django.db.models.fields.CharField', [], {'max_length': '40', 'blank': 'True'}),
-            'skype_username': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'timezone': ('django.db.models.fields.CharField', [], {'default': "'UTC'", 'max_length': '255'}),
-            'token_version': ('django.db.models.fields.CharField', [], {'default': "'1107edd0-682e-43ee-ad43-a4cae268b8c3'", 'max_length': '36', 'unique': 'True', 'db_index': 'True'}),
-            'twitter_username': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'blank': 'True', 'to': "orm['auth.Permission']", 'related_name': "'user_set'"}),
-            'username': ('django.db.models.fields.CharField', [], {'max_length': '30', 'unique': 'True'}),
-            'windows_live_id': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
+            'token_version': ('django.db.models.fields.CharField', [], {'unique': 'True', 'default': "'96a9b464-d940-4f16-a3ca-b474744ee307'", 'max_length': '36', 'db_index': 'True'}),
+            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'}),
         }
     }
 
