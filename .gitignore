@@ -54,3 +54,6 @@ celeryev.pid
 
 # PyCharm
 .idea/
+
+# Static
+staticfiles
