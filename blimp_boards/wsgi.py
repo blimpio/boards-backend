@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 """
 
 import os
+import newrelic.agent
 
 
 ENVIRONMENT = os.getenv('ENVIRONMENT')
@@ -23,4 +24,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE",
                       "settings.%s" % settings)
 
 from django.core.wsgi import get_wsgi_application
+
 application = get_wsgi_application()
+application = newrelic.agent.WSGIApplicationWrapper(application)
