@@ -8,7 +8,19 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 """
 
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "blimp_boards.settings")
+
+
+ENVIRONMENT = os.getenv('ENVIRONMENT')
+
+if ENVIRONMENT == 'STAGING':
+    settings = 'staging'
+elif ENVIRONMENT == 'PRODUCTION':
+    settings = 'production'
+else:
+    settings = 'development'
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE",
+                      "settings.%s" % settings)
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
