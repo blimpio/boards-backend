@@ -8,6 +8,11 @@ from .base import *
 DEBUG = env_var('DEBUG', False)
 TEMPLATE_DEBUG = env_var('TEMPLATE_DEBUG', False)
 
+# Installed Apps
+INSTALLED_APPS += (
+    'djrill',
+)
+
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -20,7 +25,8 @@ DATABASES = {
 }
 
 # Email settings
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
+MANDRILL_API_KEY = os.getenv('MANDRILL_API_KEY')
 
 
 # Static asset settings
