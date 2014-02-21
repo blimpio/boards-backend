@@ -18,10 +18,16 @@ class ValidateUsernameSerializer(serializers.Serializer):
     username = serializers.CharField()
 
     def validate_username(self, attrs, source):
-        username = attrs[source]
+        username = attrs[source].lower()
 
-        if User.objects.filter(username__iexact=username).exists():
-            msg = 'Username is already taken.'
+        if is_valid_email(username):
+            msg = 'Invalid username.'
+            raise serializers.ValidationError(msg)
+
+        user_exists = User.objects.filter(username=username).exists()
+
+        if user_exists:
+            msg = 'Username already exists.'
             raise serializers.ValidationError(msg)
 
         return attrs
@@ -327,8 +333,7 @@ class ResetPasswordSerializer(serializers.Serializer):
         return attrs
 
     def validate(self, attrs):
-        self.user.set_password(attrs['password'])
-        self.user.save()
+        self.user.change_password(attrs['password'])
 
         return {
             'password_reset': True
@@ -336,13 +341,106 @@ class ResetPasswordSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializers used for User objects.
+    """
     token = serializers.Field(source='token')
     accounts = AccountSerializer(many=True, source='accounts')
 
     class Meta:
         model = User
+        read_only_fields = ('date_joined', )
         fields = ('username', 'first_name', 'last_name', 'email',
-                  'date_joined', 'phone', 'job_title', 'avatar',
-                  'gravatar_url', 'facebook_id', 'twitter_username',
-                  'aim_username', 'windows_live_id', 'timezone',
-                  'token', 'accounts')
+                  'job_title', 'avatar', 'gravatar_url',
+                  'timezone', 'token', 'accounts')
+
+
+class UserSettingsSerializer(UserSerializer):
+    """
+    Serializer that handles user settings endpoint.
+    """
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email',
+                  'job_title', 'avatar', 'gravatar_url',
+                  'timezone', 'token')
+
+    def validate_email(self, attrs, source):
+        email = attrs[source].lower()
+        request = self.context['request']
+
+        users = User.objects.filter(
+            email__iexact=email).exclude(pk=request.user.id)
+
+        if users.exists():
+            msg = 'Email already exists.'
+            raise serializers.ValidationError(msg)
+
+        return attrs
+
+    def validate_username(self, attrs, source):
+        username = attrs[source].lower()
+        request = self.context['request']
+
+        if is_valid_email(username):
+            msg = 'Invalid username.'
+            raise serializers.ValidationError(msg)
+
+        users = User.objects.filter(
+            username=username).exclude(pk=request.user.id)
+
+        if users.exists():
+            msg = 'Username already exists.'
+            raise serializers.ValidationError(msg)
+
+        return attrs
+
+    def validate_password(self, attrs, source):
+        password = attrs[source]
+
+        if password:
+            attrs['password'] = smart_str(password)
+
+        return attrs
+
+
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    """
+    Serializer that handles change pagssword in user settings endpoint.
+    """
+    current_password = serializers.CharField(write_only=True)
+    password1 = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('current_password', 'password1', 'password2')
+
+    def validate_current_password(self, attrs, source):
+        password = attrs[source]
+        user = self.object
+
+        if user and not user.check_password(password):
+            msg = 'Current password is invalid.'
+            raise serializers.ValidationError(msg)
+
+        return attrs
+
+    def validate_password2(self, attrs, source):
+        password_confirmation = attrs[source]
+        password = attrs['password1']
+
+        if password_confirmation != password:
+            msg = "Password doesn't match the confirmation."
+            raise serializers.ValidationError(msg)
+
+        attrs[source] = smart_str(password_confirmation)
+
+        return attrs
+
+    def restore_object(self, attrs, instance=None):
+        if instance is not None:
+            instance.change_password(attrs.get('password2'))
+            return instance
+
+        return User()

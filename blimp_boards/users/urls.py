@@ -1,9 +1,16 @@
 from django.conf.urls import patterns, url
+from rest_framework.routers import DefaultRouter
 
 from . import views
 
 
-api_urlpatterns = patterns(
+router = DefaultRouter()
+
+router.register(r'users', views.UserViewSet)
+
+api_urlpatterns = router.urls
+
+api_urlpatterns += patterns(
     # Prefix
     '',
 

@@ -60,3 +60,13 @@ class RetrieveUpdateDestroyViewSet(mixins.RetrieveModelMixin,
     `partial_update()`, and `destroy()` actions.
     """
     pass
+
+
+class RetrieveUpdateViewSet(mixins.RetrieveModelMixin,
+                            UpdateModelMixin,
+                            viewsets.GenericViewSet):
+    """
+    A viewset that provides default `retrieve()`, `update()`,
+    and `partial_update()` actions.
+    """
+    pass

@@ -1,13 +1,15 @@
 from django.http import Http404
 
 from rest_framework import generics, status
+from rest_framework.decorators import action
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from ..users.models import User
+from ..utils.viewsets import RetrieveUpdateViewSet
 from ..utils.shortcuts import redirect_with_params
 from ..invitations.models import SignupRequest, InvitedUser
+from .models import User
 from . import serializers
 
 
@@ -83,6 +85,34 @@ class ForgotPasswordAPIView(generics.CreateAPIView):
         return Response({
             'error': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserViewSet(RetrieveUpdateViewSet):
+    model = User
+    serializer_class = serializers.UserSettingsSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return User.objects.filter(pk=user.id)
+
+    def get_object(self):
+        pk = self.kwargs.get(self.pk_url_kwarg, None)
+
+        if pk == 'me':
+            self.kwargs['pk'] = self.request.user.id
+
+        return super(UserViewSet, self).get_object()
+
+    @action(serializer_class=serializers.ChangePasswordSerializer)
+    def change_password(self, request, pk=None):
+        serializer_class = serializers.ChangePasswordSerializer
+        serializer = serializer_class(data=request.DATA, instance=request.user)
+
+        if serializer.is_valid():
+            data = serializers.UserSettingsSerializer(serializer.object).data
+            return Response(data)
+
+        return Response(serializer.errors, status=400)
 
 
 class ResetPasswordAPIView(generics.CreateAPIView):

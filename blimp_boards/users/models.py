@@ -200,6 +200,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         super(User, self).set_password(raw_password)
         self.reset_token_version()
 
+    def change_password(self, raw_password):
+        """
+        Sets the user's password and changes token_version.
+        """
+        self.set_password(raw_password)
+        self.reset_token_version()
+        self.save()
+
     def reset_token_version(self):
         """
         Resets the user's token_version.

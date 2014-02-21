@@ -53,7 +53,7 @@ class ValidateUsernameAPIViewTestCase(TestCase):
 
         expected_response = {
             'error': {
-                'username': ['Username is already taken.']
+                'username': ['Username already exists.']
             }
         }
 

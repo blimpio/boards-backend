@@ -66,7 +66,7 @@ class ValidateUsernameSerializerTestCase(TestCase):
         serializer.is_valid()
 
         expected_errors = {
-            'username': ['Username is already taken.']
+            'username': ['Username already exists.']
         }
 
         self.assertEqual(serializer.errors, expected_errors)
