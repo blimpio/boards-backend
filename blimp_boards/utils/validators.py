@@ -3,6 +3,8 @@ import re
 from django.core.validators import validate_email
 from django.utils.encoding import force_text
 from django.core.exceptions import ValidationError
+from django.core import validators
+from django.utils.translation import ugettext_lazy as _
 
 
 class DomainNameValidator(object):
@@ -59,6 +61,12 @@ class ListValidator(object):
 
 validate_domain_name = DomainNameValidator()
 validate_list = ListValidator()
+
+username_validator = validators.RegexValidator(
+    re.compile('^[\w.@+-]+$'),
+    _('Enter a valid username.'),
+    'invalid'
+)
 
 
 def is_valid_email(value):

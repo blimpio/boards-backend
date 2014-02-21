@@ -1,21 +1,20 @@
-import re
 import pytz
 import uuid
 import os
 import datetime
 import jwt
 
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser
 from django.core.mail import send_mail
-from django.core import validators
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.signals import user_logged_in
-from django.utils import timezone
 from django.conf import settings
 from django.db.models.loading import get_model
 
 from ..utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
+from ..utils.validators import username_validator
+from ..utils.models import BaseModel
 from .managers import UserManager
 
 
@@ -36,7 +35,7 @@ def get_user_upload_path(instance, filename):
         'uploads', 'users', instance.email, identifier, filename)
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(BaseModel, AbstractBaseUser):
     PRETTY_TIMEZONE_CHOICES = [('', '--- Select ---')]
 
     for tz in pytz.common_timezones:
@@ -50,12 +49,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         '@/./+/-/_ characters'
     )
 
-    username_validator = validators.RegexValidator(
-        re.compile('^[\w.@+-]+$'),
-        _('Enter a valid username.'),
-        'invalid'
-    )
-
     is_staff_help_text = _(
         'Designates whether the user can log into this admin site.'
     )
@@ -64,6 +57,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         'Designates whether this user should be treated as '
         'active. Unselect this instead of deleting accounts.'
     )
+
+    is_superuser_help_text = _('Designates that this user has all '
+                               'permissions without explicitly '
+                               'assigning them.')
 
     username = models.CharField(
         _('username'), max_length=30, unique=True,
@@ -77,32 +74,25 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), max_length=254, unique=True)
 
     is_staff = models.BooleanField(
-        _('staff status'), default=False, help_text=is_staff_help_text
-    )
+        _('staff status'), default=False, help_text=is_staff_help_text)
+
+    is_superuser = models.BooleanField(
+        _('superuser status'), default=False, help_text=is_superuser_help_text)
 
     is_active = models.BooleanField(
-        _('active'), default=True, help_text=is_active_help_text
-    )
+        _('active'), default=True, help_text=is_active_help_text)
 
-    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
-
-    phone = models.CharField(max_length=40, blank=True)
     job_title = models.CharField(max_length=255, blank=True)
     avatar = models.ImageField(upload_to=get_user_upload_path,
                                blank=True, max_length=255)
-    gravatar_url = models.URLField(blank=True)
-    facebook_id = models.CharField(max_length=255, blank=True)
-    twitter_username = models.CharField(max_length=255, blank=True)
-    skype_username = models.CharField(max_length=255, blank=True)
-    aim_username = models.CharField(max_length=255, blank=True)
-    gtalk_username = models.CharField(max_length=255, blank=True)
-    windows_live_id = models.CharField(max_length=255, blank=True)
-    last_ip = models.IPAddressField(blank=True, null=True, default='127.0.0.1')
-    timezone = models.CharField(max_length=255, default='UTC',
-                                choices=PRETTY_TIMEZONE_CHOICES)
 
-    token_version = models.CharField(max_length=36, default=str(uuid.uuid4()),
-                                     unique=True, db_index=True)
+    gravatar_url = models.URLField(blank=True)
+    last_ip = models.IPAddressField(blank=True, null=True, default='127.0.0.1')
+    timezone = models.CharField(
+        max_length=255, default='UTC', choices=PRETTY_TIMEZONE_CHOICES)
+
+    token_version = models.CharField(
+        max_length=36, default=str(uuid.uuid4()), unique=True, db_index=True)
 
     objects = UserManager()
 
@@ -115,6 +105,31 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
+
+    def has_perm(self, perm, obj=None):
+        """
+        Returns True if user is an active superuser.
+        """
+        if self.is_active and self.is_superuser:
+            return True
+
+    def has_perms(self, perm_list, obj=None):
+        """
+        Returns True if the user has each of the specified permissions. If
+        object is passed, it checks if the user has all required perms
+        for this object.
+        """
+        for perm in perm_list:
+            if not self.has_perm(perm, obj):
+                return False
+        return True
+
+    def has_module_perms(self, app_label):
+        """
+        Returns True if user is an active superuser.
+        """
+        if self.is_active and self.is_superuser:
+            return True
 
     @property
     def token(self):

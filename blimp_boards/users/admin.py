@@ -2,8 +2,8 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.utils.translation import ugettext_lazy as _
 
-from .utils import get_profile_fields
 from .models import User
 
 
@@ -32,11 +32,24 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
-
+    filter_horizontal = ()
     readonly_fields = ('token_version',)
+    list_filter = ('is_staff', 'is_superuser', 'is_active',)
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
 
-    fieldsets = UserAdmin.fieldsets + (
-        ('Profile', {'fields': get_profile_fields(User, UserAdmin)}),
+        (_('Personal info'), {
+            'fields': ('first_name', 'last_name', 'email')
+        }),
+
+        (_('Permissions'), {
+            'fields': ('is_active', 'is_staff', 'is_superuser')
+        }),
+
+        (_('Additional data'), {
+            'fields': ('job_title', 'avatar', 'gravatar_url', 'last_ip',
+                       'timezone', 'token_version', 'last_login')
+        }),
     )
 
 

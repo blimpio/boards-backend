@@ -349,10 +349,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        read_only_fields = ('date_joined', )
         fields = ('username', 'first_name', 'last_name', 'email',
                   'job_title', 'avatar', 'gravatar_url',
-                  'timezone', 'token', 'accounts')
+                  'timezone', 'date_created', 'date_modified',
+                  'token', 'accounts',)
 
 
 class UserSettingsSerializer(UserSerializer):
@@ -363,7 +363,7 @@ class UserSettingsSerializer(UserSerializer):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email',
                   'job_title', 'avatar', 'gravatar_url',
-                  'timezone', 'token')
+                  'timezone', 'date_created', 'date_modified', 'token',)
 
     def validate_email(self, attrs, source):
         email = attrs[source].lower()

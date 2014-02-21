@@ -20,7 +20,7 @@ class UserModelTestCase(TestCase):
         """
         Tests the expected number of fields in custom User model.
         """
-        expected_fields = 24
+        expected_fields = 18
         self.assertEqual(len(self.user._meta.fields), expected_fields)
 
     def test_get_full_name_should_concatenate_names(self):
