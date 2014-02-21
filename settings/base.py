@@ -29,6 +29,7 @@ INSTALLED_APPS = (
     'south',
     'corsheaders',
     'rest_framework',
+    'django_extensions',
 
     'blimp_boards.utils',
     'blimp_boards.users',

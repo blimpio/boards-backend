@@ -18,7 +18,6 @@ TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS += (
-    'django_extensions',
     'debug_toolbar',
 )
 
