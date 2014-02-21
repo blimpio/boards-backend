@@ -19,7 +19,6 @@ DATABASES = {
     'default': dj_database_url.config()
 }
 
-
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -45,3 +44,21 @@ JWT_AUTH = {
 
 # CORS Headers
 CORS_ORIGIN_ALLOW_ALL = True
+
+
+# Logging
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+        }
+    }
+}
