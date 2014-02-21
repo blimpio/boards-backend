@@ -87,24 +87,19 @@ class ForgotPasswordAPIView(generics.CreateAPIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserViewSet(RetrieveUpdateViewSet):
+class UserSettingsAPIView(generics.RetrieveUpdateAPIView):
     model = User
     serializer_class = serializers.UserSettingsSerializer
 
-    def get_queryset(self):
-        user = self.request.user
-        return User.objects.filter(pk=user.id)
-
     def get_object(self):
-        pk = self.kwargs.get(self.pk_url_kwarg, None)
+        return self.request.user
 
-        if pk == 'me':
-            self.kwargs['pk'] = self.request.user.id
 
-        return super(UserViewSet, self).get_object()
+class ChangePasswordAPIView(generics.CreateAPIView):
+    model = User
+    serializer_class = serializers.ChangePasswordSerializer
 
-    @action(serializer_class=serializers.ChangePasswordSerializer)
-    def change_password(self, request, pk=None):
+    def post(self, request):
         serializer_class = serializers.ChangePasswordSerializer
         serializer = serializer_class(data=request.DATA, instance=request.user)
 
