@@ -84,7 +84,7 @@ STATIC_URL = '/static/'
 
 # Templates
 TEMPLATE_DIRS = (
-    os.path.normpath(os.path.join(BASE_DIR, 'templates')),
+    os.path.join(BASE_DIR, 'templates'),
 )
 
 
