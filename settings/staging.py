@@ -23,6 +23,11 @@ DATABASES = {
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
+# Static asset settings
+STATIC_ROOT = 'staticfiles'
+STATIC_URL = '/static/'
+
+
 # Debug Toolbar
 DEBUG_TOOLBAR_PATCH_SETTINGS = env_var('DEBUG_TOOLBAR_PATCH_SETTINGS', True)
 
