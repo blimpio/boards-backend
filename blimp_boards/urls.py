@@ -2,8 +2,10 @@ from django.conf.urls import patterns, include
 from django.views.generic import TemplateView
 from django.contrib import admin
 
+
 admin.autodiscover()
 
+index_view = TemplateView.as_view(template_name='index.html')
 
 urlpatterns = patterns(
     # Prefix
@@ -15,5 +17,5 @@ urlpatterns = patterns(
     (r'', include('blimp_boards.users.urls')),
 
     # Catch all URL
-    (r'^.*/$', TemplateView.as_view(template_name='index.html'))
+    (r'^($|.*/$)', index_view),
 )
