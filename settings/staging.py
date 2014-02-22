@@ -43,10 +43,12 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = env_var('DEBUG_TOOLBAR_PATCH_SETTINGS', True)
 # Django REST framework
 REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = (
     'blimp_boards.users.authentication.JWTAuthentication',
+    'rest_framework.authentication.SessionAuthentication',
 )
 
 REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
     'rest_framework.renderers.JSONRenderer',
+    'rest_framework.renderers.BrowsableAPIRenderer',
 )
 
 JWT_AUTH = {
