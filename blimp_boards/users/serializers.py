@@ -367,10 +367,10 @@ class UserSettingsSerializer(UserSerializer):
 
     def validate_email(self, attrs, source):
         email = attrs[source].lower()
-        request = self.context['request']
+        user = self.object
 
         users = User.objects.filter(
-            email__iexact=email).exclude(pk=request.user.id)
+            email__iexact=email).exclude(pk=user.id)
 
         if users.exists():
             msg = 'Email already exists.'
@@ -380,26 +380,18 @@ class UserSettingsSerializer(UserSerializer):
 
     def validate_username(self, attrs, source):
         username = attrs[source].lower()
-        request = self.context['request']
+        user = self.object
 
         if is_valid_email(username):
             msg = 'Invalid username.'
             raise serializers.ValidationError(msg)
 
         users = User.objects.filter(
-            username=username).exclude(pk=request.user.id)
+            username=username).exclude(pk=user.id)
 
         if users.exists():
             msg = 'Username already exists.'
             raise serializers.ValidationError(msg)
-
-        return attrs
-
-    def validate_password(self, attrs, source):
-        password = attrs[source]
-
-        if password:
-            attrs['password'] = smart_str(password)
 
         return attrs
 
@@ -408,9 +400,9 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
     """
     Serializer that handles change pagssword in user settings endpoint.
     """
-    current_password = serializers.CharField(write_only=True)
-    password1 = serializers.CharField(write_only=True)
-    password2 = serializers.CharField(write_only=True)
+    current_password = fields.PasswordField(write_only=True)
+    password1 = fields.PasswordField(write_only=True)
+    password2 = fields.PasswordField(write_only=True)
 
     class Meta:
         model = User

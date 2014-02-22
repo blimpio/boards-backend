@@ -7,7 +7,8 @@ from ..models import User
 from ..serializers import (ValidateUsernameSerializer, SignupSerializer,
                            ForgotPasswordSerializer, ResetPasswordSerializer,
                            SignupInvitedUserSerializer, SigninSerializer,
-                           SigninInvitedUserSerializer, UserSerializer)
+                           SigninInvitedUserSerializer, UserSerializer,
+                           UserSettingsSerializer, ChangePasswordSerializer)
 
 
 class ValidateUsernameSerializerTestCase(TestCase):
@@ -801,3 +802,258 @@ class UserSerializerTestCase(BaseTestCase):
             'date_created', 'date_modified', 'token', 'accounts']
 
         self.assertEqual(data_keys, expected_keys)
+
+
+class UserSettingsSerializerTestCase(BaseTestCase):
+    def setUp(self):
+        self.serializer_class = UserSettingsSerializer
+
+    def test_serializer_empty_data(self):
+        """
+        Tests that serializer.data doesn't return any data.
+        """
+        serializer = self.serializer_class()
+        expected_data = {
+            'username': '',
+            'first_name': '',
+            'last_name': '',
+            'email': '',
+            'job_title': '',
+            'avatar': '',
+            'gravatar_url': '',
+            'timezone': ''
+        }
+
+        self.assertEqual(serializer.data, expected_data)
+
+    def test_serializer_validation(self):
+        """
+        Tests serializer's expected validation errors.
+        """
+        serializer = self.serializer_class(data={})
+        serializer.is_valid()
+
+        expected_errors = {
+            'last_name': ['This field is required.'],
+            'username': ['This field is required.'],
+            'email': ['This field is required.'],
+            'first_name': ['This field is required.']
+        }
+
+        self.assertEqual(serializer.errors, expected_errors)
+
+    def test_serializer_with_user_instance(self):
+        """
+        Tests serializer's expected data with user instance.
+        """
+        self.create_user()
+
+        serializer = self.serializer_class(instance=self.user)
+        serializer.is_valid()
+
+        expected_data = {
+            'username': self.user.username,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'email': self.user.email,
+            'job_title': '',
+            'avatar': '',
+            'gravatar_url': '',
+            'timezone': 'UTC',
+            'date_created': self.user.date_created,
+            'date_modified': self.user.date_modified,
+            'token': self.user.token
+        }
+
+        self.assertEqual(serializer.data, expected_data)
+
+    def test_serializer_should_validate_unique_email(self):
+        """
+        Tests serializer should validate email.
+        """
+        self.create_user()
+        self.create_another_user()
+
+        data = {
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'username': self.user.username,
+            'email': 'jsmith@example.com'
+        }
+
+        serializer = self.serializer_class(data=data, instance=self.user)
+        serializer.is_valid()
+
+        expected_error = {
+            'email': ['Email already exists.']
+        }
+
+        self.assertEqual(serializer.errors, expected_error)
+
+    def test_serializer_should_validate_unique_username(self):
+        """
+        Tests serializer should validate username.
+        """
+        self.create_user()
+        self.create_another_user()
+
+        data = {
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'username': 'jsmith',
+            'email': self.user.email
+        }
+
+        serializer = self.serializer_class(data=data, instance=self.user)
+        serializer.is_valid()
+
+        expected_error = {
+            'username': ['Username already exists.']
+        }
+
+        self.assertEqual(serializer.errors, expected_error)
+
+    def test_serializer_should_validate_username(self):
+        """
+        Tests serializer should validate username.
+        """
+        self.create_user()
+        self.create_another_user()
+
+        data = {
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'username': self.user.email,
+            'email': self.user.email
+        }
+
+        serializer = self.serializer_class(data=data, instance=self.user)
+        serializer.is_valid()
+
+        expected_error = {
+            'username': ['Invalid username.']
+        }
+
+        self.assertEqual(serializer.errors, expected_error)
+
+    def test_serializer_save_should_update_user(self):
+        """
+        Tests serializer save should update user.
+        """
+        self.create_user()
+        self.create_another_user()
+
+        data = {
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'username': self.user.username,
+            'email': self.user.email,
+            'job_title': 'CEO'
+        }
+
+        serializer = self.serializer_class(data=data, instance=self.user)
+        serializer.is_valid()
+        serializer.save()
+
+        expected_data = {
+            'username': self.user.username,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'email': self.user.email,
+            'job_title': self.user.job_title,
+            'avatar': '',
+            'gravatar_url': '',
+            'timezone': 'UTC',
+            'date_created': self.user.date_created,
+            'date_modified': self.user.date_modified,
+            'token': self.user.token
+        }
+
+        self.assertEqual(serializer.data, expected_data)
+
+
+class ChangePasswordSerializerTestCase(BaseTestCase):
+    def setUp(self):
+        self.serializer_class = ChangePasswordSerializer
+
+    def test_serializer_empty_data(self):
+        """
+        Tests that serializer.data doesn't return any data.
+        """
+        serializer = self.serializer_class()
+
+        self.assertEqual(serializer.data, {})
+
+    def test_serializer_validation(self):
+        """
+        Tests serializer's expected validation errors.
+        """
+        serializer = self.serializer_class(data={})
+        serializer.is_valid()
+
+        expected_errors = {
+            'current_password': ['This field is required.'],
+            'password1': ['This field is required.'],
+            'password2': ['This field is required.']
+        }
+
+        self.assertEqual(serializer.errors, expected_errors)
+
+    def test_serializer_should_validate_current_password(self):
+        """
+        Tests serializer should validate current password.
+        """
+        self.create_user()
+
+        data = {
+            'current_password': 'abc12345',
+            'password1': 'abc1234',
+            'password2': 'abc1234'
+        }
+
+        serializer = self.serializer_class(data=data, instance=self.user)
+        serializer.is_valid()
+
+        expected_error = {
+            'current_password': ['Current password is invalid.']
+            }
+
+        self.assertEqual(serializer.errors, expected_error)
+
+    def test_serializer_should_validate_passwords_match(self):
+        """
+        Tests serializer should validate if passwords match.
+        """
+        self.create_user()
+
+        data = {
+            'current_password': self.password,
+            'password1': 'abc1234',
+            'password2': 'abc12345'
+        }
+
+        serializer = self.serializer_class(data=data, instance=self.user)
+        serializer.is_valid()
+
+        expected_error = {
+            'password2': ["Password doesn't match the confirmation."]
+        }
+
+        self.assertEqual(serializer.errors, expected_error)
+
+    def test_serializer_should_change_password(self):
+        """
+        Tests serializer should change password.
+        """
+        self.create_user()
+
+        data = {
+            'current_password': self.password,
+            'password1': 'abc12345',
+            'password2': 'abc12345'
+        }
+
+        serializer = self.serializer_class(data=data, instance=self.user)
+        serializer.is_valid()
+
+        self.assertTrue(serializer.object.check_password('abc12345'))
