@@ -42,14 +42,7 @@ class Account(BaseModel):
             'user').get(account=self, is_owner=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            pre_slug = slugify(self.name)
-            if not self.pk or pre_slug != self.slug:
-                if pre_slug in COMPANY_RESERVED_KEYWORDS:
-                    pre_slug = '%s1' % pre_slug
-                else:
-                    pre_slug = self.name
-                unique_slugify(self, pre_slug)
+        self.slugify(COMPANY_RESERVED_KEYWORDS)
         return super(Account, self).save()
 
     def add_email_domains(self, email_domains):

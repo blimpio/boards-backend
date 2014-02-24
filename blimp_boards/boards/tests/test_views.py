@@ -40,6 +40,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,
             'name': 'The Board',
+            'slug': 'the-board',
             'account': self.board.account_id,
             'is_shared': False,
             'thumbnail_sm_path': '',
@@ -98,6 +99,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,
             'name': 'The Board',
+            'slug': 'the-board',
             'account': self.board.account_id,
             'is_shared': False,
             'thumbnail_sm_path': '',
@@ -147,6 +149,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'date_created': board.date_created,
             'date_modified': board.date_modified,
             'name': 'New Board Name',
+            'slug': 'new-board-name',
             'account': board.account_id,
             'is_shared': False,
             'thumbnail_sm_path': '',
@@ -163,6 +166,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         """
         data = {
             'name': 'New Board Name',
+            'slug': 'the-board',
             'account': self.account.id
         }
 
@@ -177,6 +181,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,
             'name': 'New Board Name',
+            'slug': 'the-board',
             'account': self.board.account_id,
             'is_shared': False,
             'thumbnail_sm_path': '',
@@ -203,6 +208,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         """
         data = {
             'name': 'New Board Name',
+            'slug': 'the-board',
             'account': self.account.id
         }
 
@@ -217,6 +223,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,
             'name': 'New Board Name',
+            'slug': 'the-board',
             'account': self.board.account_id,
             'is_shared': False,
             'thumbnail_sm_path': '',

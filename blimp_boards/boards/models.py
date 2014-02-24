@@ -7,11 +7,13 @@ from django.db.models.loading import get_model
 from django.core.mail import send_mail
 
 from ..utils.models import BaseModel
-from .constants import PERMISSION_CHOICES, READ_PERMISSION, WRITE_PERMISSION
+from .constants import (BOARD_RESERVED_KEYWORDS, PERMISSION_CHOICES,
+                        READ_PERMISSION, WRITE_PERMISSION)
 
 
 class Board(BaseModel):
     name = models.CharField(max_length=255)
+    slug = models.SlugField()
 
     account = models.ForeignKey('accounts.Account')
     created_by = models.ForeignKey('users.User')
@@ -24,6 +26,10 @@ class Board(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.slugify(BOARD_RESERVED_KEYWORDS)
+        return super(Board, self).save()
 
     def get_thumbnail_url(self, size='sm'):
         """

@@ -44,7 +44,7 @@ class BoardSerializerTestCase(BaseTestCase):
 
         expected_errors = {
             'account': ['This field is required.'],
-            'name': ['This field is required.']
+            'name': ['This field is required.'],
         }
 
         self.assertEqual(serializer.errors, expected_errors)
@@ -90,6 +90,7 @@ class BoardSerializerTestCase(BaseTestCase):
             'date_created': serializer.object.date_created,
             'date_modified': serializer.object.date_modified,
             'name': self.data['name'],
+            'slug': serializer.object.slug,
             'account': self.account.id,
             'is_shared': False,
             'thumbnail_sm_path': '',

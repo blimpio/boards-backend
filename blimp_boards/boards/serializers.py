@@ -9,6 +9,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
+        read_only_fields = ('slug', )
 
     def validate_account(self, attrs, source):
         account = attrs[source]
