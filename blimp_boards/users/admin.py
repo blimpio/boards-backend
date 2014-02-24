@@ -47,7 +47,7 @@ class CustomUserAdmin(UserAdmin):
         }),
 
         (_('Additional data'), {
-            'fields': ('job_title', 'avatar', 'gravatar_url', 'last_ip',
+            'fields': ('job_title', 'avatar_path', 'gravatar_url', 'last_ip',
                        'timezone', 'token_version', 'last_login')
         }),
     )

@@ -83,8 +83,7 @@ class User(BaseModel, AbstractBaseUser):
         _('active'), default=True, help_text=is_active_help_text)
 
     job_title = models.CharField(max_length=255, blank=True)
-    avatar = models.ImageField(upload_to=get_user_upload_path,
-                               blank=True, max_length=255)
+    avatar_path = models.TextField(blank=True)
 
     gravatar_url = models.URLField(blank=True)
     last_ip = models.IPAddressField(blank=True, null=True, default='127.0.0.1')

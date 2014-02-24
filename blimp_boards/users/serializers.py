@@ -350,19 +350,21 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email',
-                  'job_title', 'avatar', 'gravatar_url',
+                  'job_title', 'avatar_path', 'gravatar_url',
                   'timezone', 'date_created', 'date_modified',
                   'token', 'accounts',)
 
 
-class UserSettingsSerializer(UserSerializer):
+class UserSettingsSerializer(serializers.ModelSerializer):
     """
     Serializer that handles user settings endpoint.
     """
+    token = serializers.Field(source='token')
+
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email',
-                  'job_title', 'avatar', 'gravatar_url',
+                  'job_title', 'avatar_path', 'gravatar_url',
                   'timezone', 'date_created', 'date_modified', 'token',)
 
     def validate_email(self, attrs, source):
