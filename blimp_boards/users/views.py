@@ -1,12 +1,10 @@
 from django.http import Http404
 
 from rest_framework import generics, status
-from rest_framework.decorators import action
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from ..utils.viewsets import RetrieveUpdateViewSet
 from ..utils.shortcuts import redirect_with_params
 from ..invitations.models import SignupRequest, InvitedUser
 from .models import User
@@ -107,7 +105,9 @@ class ChangePasswordAPIView(generics.CreateAPIView):
             data = serializers.UserSettingsSerializer(serializer.object).data
             return Response(data)
 
-        return Response(serializer.errors, status=400)
+        return Response({
+            'error': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ResetPasswordAPIView(generics.CreateAPIView):

@@ -2,6 +2,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from ...utils.tests import AuthenticatedAPITestCase
 from ...accounts.models import Account
 from ...invitations.models import SignupRequest, InvitedUser
 from ..models import User
@@ -653,3 +654,137 @@ class ResetPasswordHTMLView(TestCase):
         """
         response = self.client.get(self.url, {'token': 'abc'})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class UserSettingsAPIViewTestCase(AuthenticatedAPITestCase):
+    def setUp(self):
+        super(UserSettingsAPIViewTestCase, self).setUp()
+
+        self.url = '/api/users/me/'
+
+    def test_get_for_loggedin_user(self):
+        """
+        Tests that endpoint returns expected response for logged in user.
+        """
+        response = self.client.get(self.url)
+        expected_response = {
+            'username': self.username,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'email': self.email,
+            'job_title': '',
+            'avatar_path': '',
+            'gravatar_url': '',
+            'timezone': 'UTC',
+            'date_created': self.user.date_created,
+            'date_modified': self.user.date_modified,
+            'token': self.user.token
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+    def test_get_for_loggedout_user(self):
+        """
+        Tests that endpoint only works for logged in users.
+        """
+        self.client = APIClient()
+        response = self.client.get(self.url)
+        expected_response = {}
+
+        expected_response = {
+            'error': 'Authentication credentials were not provided.',
+            'status_code': 401
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.data, expected_response)
+
+    def test_update_should_update_logged_in_user(self):
+        """
+        Tests that endpoint can be used to update logged in user's data.
+        """
+        data = {
+            'email': 'anotheremail@example.com'
+        }
+
+        response = self.client.patch(self.url, data)
+
+        self.user = User.objects.get(username=self.username)
+
+        expected_response = {
+            'username': self.username,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'email': 'anotheremail@example.com',
+            'job_title': '',
+            'avatar_path': '',
+            'gravatar_url': '',
+            'timezone': 'UTC',
+            'date_created': self.user.date_created,
+            'date_modified': self.user.date_modified,
+            'token': self.user.token
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+
+class ChangePasswordAPIViewTestCase(AuthenticatedAPITestCase):
+    def setUp(self):
+        super(ChangePasswordAPIViewTestCase, self).setUp()
+
+        self.url = '/api/users/me/change_password/'
+
+    def test_post_for_loggedin_user_invalid_current_password(self):
+        """
+        Tests that endpoint checks for user's current password.
+        """
+        data = {
+            'current_password': 'notmypassword',
+            'password1': 'abc123',
+            'password2': 'abc123'
+        }
+
+        response = self.client.post(self.url, data)
+
+        expected_response = {
+            'error': {
+                'current_password': ['Current password is invalid.']
+            }
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, expected_response)
+
+    def test_post_for_loggedin_user_valid_current_password(self):
+        """
+        Tests that endpoint changes user's password.
+        """
+        data = {
+            'current_password': self.password,
+            'password1': 'mynewpassword',
+            'password2': 'mynewpassword'
+        }
+
+        response = self.client.post(self.url, data)
+
+        self.user = User.objects.get(username=self.username)
+
+        expected_response = {
+            'username': self.username,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'email': self.user.email,
+            'job_title': '',
+            'avatar_path': '',
+            'gravatar_url': '',
+            'timezone': 'UTC',
+            'date_created': self.user.date_created,
+            'date_modified': self.user.date_modified,
+            'token': self.user.token
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+        self.assertTrue(self.user.check_password('mynewpassword'))
