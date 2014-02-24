@@ -10,6 +10,13 @@ SOUTH_TESTS_MIGRATE = False
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'testing_db.sqlite3'),
+    }
+}
+
 WERCKER_POSTGRESQL_DATABASE = os.getenv('WERCKER_POSTGRESQL_DATABASE')
 
 if WERCKER_POSTGRESQL_DATABASE:
