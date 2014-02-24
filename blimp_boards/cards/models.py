@@ -1,9 +1,9 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.db.models.loading import get_model
 from django.contrib.contenttypes import generic
 
 from ..utils.models import BaseModel
+from .constants import CARD_RESERVED_KEYWORDS
 
 
 class Card(BaseModel):
@@ -17,6 +17,7 @@ class Card(BaseModel):
     )
 
     name = models.CharField(max_length=255)
+    slug = models.SlugField()
     type = models.CharField(max_length=5, choices=TYPE_CHOICES)
 
     board = models.ForeignKey('boards.Board')
@@ -44,8 +45,10 @@ class Card(BaseModel):
     def save(self, force_insert=False, force_update=False, **kwargs):
         """
         Performs all steps involved in validating  whenever
-        a model object is saved.
+        a model object is saved as well as handling unique slug.
         """
+        self.slugify(CARD_RESERVED_KEYWORDS)
+
         self.full_clean()
 
         return super(Card, self).save(force_insert, force_update, **kwargs)

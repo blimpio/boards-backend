@@ -9,6 +9,7 @@ class CardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Card
+        read_only_fields = ('slug', )
 
     def validate_cards(self, attrs, source):
         cards = attrs[source]
