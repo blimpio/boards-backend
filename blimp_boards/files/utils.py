@@ -53,7 +53,7 @@ def generate_signed_policy(policy, secret_key):
 def generate_file_key(name=None, user=None):
     """
     Returns a string name for the S3 object that will
-    store the uploaded file’s data.
+    store the uploaded file's data.
 
     TODO: Generate correct key depending on what object the file belongs.
     """
