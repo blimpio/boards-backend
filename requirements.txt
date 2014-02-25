@@ -16,6 +16,7 @@ gunicorn==18.0
 newrelic==2.14.0.11
 psycopg2==2.5.2
 py==1.4.20
+pycrypto==2.6.1
 pystache==0.5.3
 pytz==2013.9
 redis==2.9.1
