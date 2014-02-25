@@ -6,6 +6,9 @@ from .models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 class BoardAdmin(BaseModelAdmin):
     list_display = ('name', 'account', 'created_by', 'is_shared', )
+    prepopulated_fields = {
+        'slug': ('name', )
+    }
 
 
 class BoardCollaboratorAdmin(BaseModelAdmin):
