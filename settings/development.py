@@ -67,6 +67,10 @@ CORS_ORIGIN_WHITELIST = (
 )
 
 
+# Announce
+ANNOUNCE_TEST_MODE = True
+
+
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': False,

@@ -4,6 +4,7 @@ from django.contrib.contenttypes import generic
 
 from ..utils.models import BaseModel
 from ..utils.decorators import autoconnect
+from ..utils.fields import ReservedKeywordsAutoSlugField
 from .constants import CARD_RESERVED_KEYWORDS
 
 
@@ -19,8 +20,10 @@ class Card(BaseModel):
     )
 
     name = models.CharField(max_length=255)
-    slug = models.SlugField()
     type = models.CharField(max_length=5, choices=TYPE_CHOICES)
+    slug = ReservedKeywordsAutoSlugField(
+        editable=True, blank=True, populate_from='name',
+        unique_with='board', reserved_keywords=CARD_RESERVED_KEYWORDS)
 
     board = models.ForeignKey('boards.Board')
     cards = models.ManyToManyField('cards.Card', blank=True, null=True)
@@ -56,16 +59,12 @@ class Card(BaseModel):
         from .serializers import CardSerializer
         return CardSerializer(self)
 
-    def save(self, force_insert=False, force_update=False, **kwargs):
+    def pre_save(self, *args, **kwargs):
         """
-        Performs all steps involved in validating  whenever
-        a model object is saved as well as handling unique slug.
+        Performs all steps involved in validating before
+        model object is saved.
         """
-        self.slugify(CARD_RESERVED_KEYWORDS)
-
         self.full_clean()
-
-        return super(Card, self).save(force_insert, force_update, **kwargs)
 
     def clean(self):
         """

@@ -7,8 +7,9 @@ from django.db.models.loading import get_model
 from ..users.models import User
 from ..utils.models import BaseModel
 from ..utils.decorators import autoconnect
+from ..utils.fields import ReservedKeywordsAutoSlugField
 from .managers import AccountCollaboratorManager
-from .constants import COMPANY_RESERVED_KEYWORDS
+from .constants import ACCOUNT_RESERVED_KEYWORDS
 
 
 def get_company_upload_path(instance, filename):
@@ -27,7 +28,10 @@ class EmailDomain(BaseModel):
 @autoconnect
 class Account(BaseModel):
     name = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = ReservedKeywordsAutoSlugField(
+        populate_from='name', unique=True, editable=True,
+        reserved_keywords=ACCOUNT_RESERVED_KEYWORDS)
+
     allow_signup = models.BooleanField(default=False)
     email_domains = models.ManyToManyField(EmailDomain, blank=True, null=True)
 
@@ -50,10 +54,6 @@ class Account(BaseModel):
     def owner(self):
         return AccountCollaborator.objects.select_related(
             'user').get(account=self, is_owner=True)
-
-    def save(self, *args, **kwargs):
-        self.slugify(COMPANY_RESERVED_KEYWORDS)
-        return super(Account, self).save()
 
     def add_email_domains(self, email_domains):
         for domain in email_domains:

@@ -30,7 +30,7 @@ class AccountTestCase(TestCase):
     def test_create_new_account_sets_unique_slug(self):
         account = Account.objects.create(name='Acme')
 
-        self.assertEqual(account.slug, 'acme-1')
+        self.assertEqual(account.slug, 'acme-2')
 
     def test_add_email_domains_should_create_email_domains(self):
         self.account.add_email_domains(['example.com', 'acme.com'])

@@ -6,9 +6,6 @@ from .models import Account, AccountCollaborator, EmailDomain
 
 class AccountAdmin(BaseModelAdmin):
     list_display = ('name', 'slug', 'allow_signup', )
-    prepopulated_fields = {
-        'slug': ('name', )
-    }
 
 
 class AccountCollaboratorAdmin(BaseModelAdmin):

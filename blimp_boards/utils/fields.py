@@ -1,7 +1,10 @@
 from django.db import models
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError
+
 from rest_framework import serializers
+from autoslug import AutoSlugField
+from autoslug.settings import slugify as default_slugify
 
 from .validators import validate_list, validate_domain_name
 
@@ -97,3 +100,20 @@ class DateTimeModifiedField(DateTimeCreatedField):
         value = now()
         setattr(model, self.attname, value)
         return value
+
+
+class ReservedKeywordsAutoSlugField(AutoSlugField):
+    def __init__(self, *args, **kwargs):
+        reserved_keywords = kwargs.pop('reserved_keywords')
+
+        super(ReservedKeywordsAutoSlugField, self).__init__(*args, **kwargs)
+
+        def custom_slugify(value):
+            pre_slug = default_slugify(value)
+
+            if pre_slug in reserved_keywords:
+                pre_slug = '{}1'.format(pre_slug)
+
+            return pre_slug
+
+        self.slugify = custom_slugify

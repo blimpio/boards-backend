@@ -7,6 +7,7 @@ from django.db.models.loading import get_model
 from django.core.mail import send_mail
 
 from ..utils.models import BaseModel
+from ..utils.fields import ReservedKeywordsAutoSlugField
 from ..utils.decorators import autoconnect
 from .constants import (BOARD_RESERVED_KEYWORDS, PERMISSION_CHOICES,
                         READ_PERMISSION, WRITE_PERMISSION)
@@ -15,7 +16,9 @@ from .constants import (BOARD_RESERVED_KEYWORDS, PERMISSION_CHOICES,
 @autoconnect
 class Board(BaseModel):
     name = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = ReservedKeywordsAutoSlugField(
+        populate_from='name', unique_with='account', editable=True,
+        reserved_keywords=BOARD_RESERVED_KEYWORDS)
 
     account = models.ForeignKey('accounts.Account')
     created_by = models.ForeignKey('users.User')
@@ -40,10 +43,6 @@ class Board(BaseModel):
     def serializer(self):
         from .serializers import BoardSerializer
         return BoardSerializer(self)
-
-    def save(self, *args, **kwargs):
-        self.slugify(BOARD_RESERVED_KEYWORDS)
-        return super(Board, self).save()
 
     def get_thumbnail_url(self, size='sm'):
         """
