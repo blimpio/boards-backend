@@ -4,28 +4,27 @@ from . import env_var
 from .base import *
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
+# Development Secret Key
 SECRET_KEY = 'bb!onz3e2hc1l-192ug40g@ykf^3@e4rtl!t9(i)d7n#oeo^!r'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# Debug Mode
 DEBUG = True
-
 TEMPLATE_DEBUG = True
 
+# Allow all hosts in development
 ALLOWED_HOSTS = []
 
+# Development-only installed apps
 INSTALLED_APPS += (
     'debug_toolbar',
 )
 
+# Middleware Classes
+MIDDLEWARE_CLASSES = (
+    'blimp_boards.utils.middleware.QueryCountDebugMiddleware',
+) + MIDDLEWARE_CLASSES
 
-DEBUG_TOOLBAR_PATCH_SETTINGS = env_var('DEBUG_TOOLBAR_PATCH_SETTINGS', True)
-
-# Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+# Database Settings
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -37,10 +36,11 @@ DATABASES = {
     }
 }
 
-
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = env_var('DEBUG_TOOLBAR_PATCH_SETTINGS', True)
 
 # Django REST framework
 REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = (
@@ -58,7 +58,6 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=90)
 }
 
-
 # CORS Headers
 CORS_ORIGIN_WHITELIST = (
     '127.0.0.1:8000',
@@ -66,9 +65,8 @@ CORS_ORIGIN_WHITELIST = (
     'localhost:3333',
 )
 
-
 # Announce
-ANNOUNCE_TEST_MODE = True
+ANNOUNCE_TEST_MODE = False
 
 
 # LOGGING = {
