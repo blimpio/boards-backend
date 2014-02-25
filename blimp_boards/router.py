@@ -19,4 +19,5 @@ urlpatterns = get_api_urlpatterns([
     'boards',
     'cards',
     'comments',
+    'files',
 ])

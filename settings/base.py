@@ -108,14 +108,23 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),
-    'EXCEPTION_HANDLER': 'blimp_boards.utils.exceptions.custom_exception_handler',
+    'EXCEPTION_HANDLER':
+    'blimp_boards.utils.exceptions.custom_exception_handler',
 }
 
 JWT_AUTH = {
-    'JWT_PAYLOAD_HANDLER': 'blimp_boards.utils.jwt_handlers.jwt_payload_handler',
+    'JWT_PAYLOAD_HANDLER':
+    'blimp_boards.utils.jwt_handlers.jwt_payload_handler',
+
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=90)
 }
 
 
 # Announce
 ANNOUNCE_TEST_MODE = False
+
+
+# AWS
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
