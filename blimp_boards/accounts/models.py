@@ -28,8 +28,6 @@ class EmailDomain(BaseModel):
 class Account(BaseModel):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
-    image_url = models.ImageField(
-        upload_to=get_company_upload_path, blank=True)
     allow_signup = models.BooleanField(default=False)
     email_domains = models.ManyToManyField(EmailDomain, blank=True, null=True)
 

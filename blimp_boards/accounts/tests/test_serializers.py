@@ -131,7 +131,6 @@ class CheckSignupDomainSerializerTestCase(TestCase):
             'id': self.account.id,
             'name': 'Acme',
             'slug': 'acme',
-            'image_url': '',
             'date_created': self.account.date_created,
             'date_modified': self.account.date_modified
         }

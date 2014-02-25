@@ -18,8 +18,7 @@ class AccountSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Account
-        fields = ('id', 'name', 'slug', 'image_url',
-                  'date_created', 'date_modified')
+        fields = ('id', 'name', 'slug', 'date_created', 'date_modified')
 
 
 class CheckSignupDomainSerializer(serializers.Serializer):
