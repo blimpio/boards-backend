@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from ..utils.viewsets import ModelViewSet
+from ..utils.response import ErrorResponse
 from .models import Card
 from .serializers import CardSerializer, CardCommentSerializer
 from .permissions import CardPermission
@@ -43,9 +44,7 @@ class CardViewSet(ModelViewSet):
                     status=status.HTTP_201_CREATED,
                     headers=headers)
             else:
-                return Response({
-                    'error': serializer.errors
-                }, status=status.HTTP_400_BAD_REQUEST)
+                return ErrorResponse(serializer.errors)
         else:
             comments = card.comments.all()
             serializer = CardCommentSerializer(comments, many=True)

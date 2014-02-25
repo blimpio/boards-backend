@@ -1,6 +1,7 @@
-from rest_framework import status, generics
+from rest_framework import generics
 from rest_framework.response import Response
 
+from ..utils.response import ErrorResponse
 from .serializers import (ValidateSignupDomainsSerializer,
                           AccountSerializer, CheckSignupDomainSerializer)
 
@@ -19,9 +20,7 @@ class ValidateSignupDomainsAPIView(generics.CreateAPIView):
         if serializer.is_valid():
             return Response(serializer.object)
 
-        return Response({
-            'error': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return ErrorResponse(serializer.errors)
 
 
 class CheckSignupDomainAPIView(generics.CreateAPIView):
@@ -38,9 +37,7 @@ class CheckSignupDomainAPIView(generics.CreateAPIView):
         if serializer.is_valid():
             return Response(serializer.object)
 
-        return Response({
-            'error': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return ErrorResponse(serializer.errors)
 
 
 class AccountsForUserAPIView(generics.ListAPIView):

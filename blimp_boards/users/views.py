@@ -1,11 +1,12 @@
 from django.http import Http404
 
-from rest_framework import generics, status
+from rest_framework import generics
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from ..utils.shortcuts import redirect_with_params
+from ..utils.response import ErrorResponse
 from ..invitations.models import SignupRequest, InvitedUser
 from .models import User
 from . import serializers
@@ -27,9 +28,7 @@ class SigninAPIView(generics.CreateAPIView):
         if serializer.is_valid():
             return Response(serializer.object)
 
-        return Response({
-            'error': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return ErrorResponse(serializer.errors)
 
 
 class ValidateUsernameAPIView(generics.CreateAPIView):
@@ -43,9 +42,7 @@ class ValidateUsernameAPIView(generics.CreateAPIView):
         if serializer.is_valid():
             return Response(serializer.data)
 
-        return Response({
-            'error': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return ErrorResponse(serializer.errors)
 
 
 class SignupAPIView(generics.CreateAPIView):
@@ -64,9 +61,7 @@ class SignupAPIView(generics.CreateAPIView):
         if serializer.is_valid():
             return Response(serializer.object)
 
-        return Response({
-            'error': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return ErrorResponse(serializer.errors)
 
 
 class ForgotPasswordAPIView(generics.CreateAPIView):
@@ -80,9 +75,7 @@ class ForgotPasswordAPIView(generics.CreateAPIView):
         if serializer.is_valid():
             return Response(serializer.data)
 
-        return Response({
-            'error': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return ErrorResponse(serializer.errors)
 
 
 class UserSettingsAPIView(generics.RetrieveUpdateAPIView):
@@ -105,9 +98,7 @@ class ChangePasswordAPIView(generics.CreateAPIView):
             data = serializers.UserSettingsSerializer(serializer.object).data
             return Response(data)
 
-        return Response({
-            'error': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return ErrorResponse(serializer.errors)
 
 
 class ResetPasswordAPIView(generics.CreateAPIView):
@@ -121,9 +112,7 @@ class ResetPasswordAPIView(generics.CreateAPIView):
         if serializer.is_valid():
             return Response(serializer.object)
 
-        return Response({
-            'error': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return ErrorResponse(serializer.errors)
 
 
 class SigninValidateTokenHTMLView(APIView):

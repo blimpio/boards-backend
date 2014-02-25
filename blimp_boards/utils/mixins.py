@@ -1,6 +1,6 @@
-from rest_framework import status
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
-from rest_framework.response import Response
+
+from .response import ErrorResponse
 
 
 class CreateModelMixin(CreateModelMixin):
@@ -15,9 +15,7 @@ class CreateModelMixin(CreateModelMixin):
             return super(CreateModelMixin, self).create(
                 request, *args, **kwargs)
 
-        return Response({
-            'error': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return ErrorResponse(serializer.errors)
 
 
 class UpdateModelMixin(UpdateModelMixin):
@@ -35,4 +33,4 @@ class UpdateModelMixin(UpdateModelMixin):
             return super(UpdateModelMixin, self).update(
                 request, *args, **kwargs)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return ErrorResponse(serializer.errors)
