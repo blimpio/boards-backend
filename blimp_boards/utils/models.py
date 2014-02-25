@@ -1,49 +1,21 @@
 from django.db import models
-from django.utils.timezone import now
+from django.conf import settings
 from django.template.defaultfilters import slugify
+from django.utils.encoding import smart_text
+
+from announce import Announce
+from rest_framework.renderers import JSONRenderer
+from rest_framework import serializers
 
 from .slugify import unique_slugify
+from .fields import DateTimeCreatedField, DateTimeModifiedField
 
 
-class DateTimeCreatedField(models.DateTimeField):
-    """
-    DateTimeField that by default, sets editable=False,
-    blank=True, default=now.
-    """
-
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('editable', False)
-        kwargs.setdefault('blank', True)
-        kwargs.setdefault('default', now)
-        super(DateTimeCreatedField, self).__init__(*args, **kwargs)
-
-    def get_internal_type(self):
-        return "DateTimeField"
-
-    def south_field_triple(self):
-        """
-        Returns a suitable description of this field for South.
-        """
-        from south.modelsinspector import introspector
-
-        field_class = "django.db.models.fields.DateTimeField"
-        args, kwargs = introspector(self)
-
-        return (field_class, args, kwargs)
+models.options.DEFAULT_NAMES += ('announce', )
 
 
-class DateTimeModifiedField(DateTimeCreatedField):
-    """
-    DateTimeField that by default, sets editable=False,
-    blank=True, default=datetime.now.
-
-    Sets value to now() on each save of the model.
-    """
-
-    def pre_save(self, model, add):
-        value = now()
-        setattr(model, self.attname, value)
-        return value
+def json_renderer(data):
+    return smart_text(JSONRenderer().render(data))
 
 
 class BaseModel(models.Model):
@@ -69,3 +41,57 @@ class BaseModel(models.Model):
                 else:
                     pre_slug = self.name
                 unique_slugify(self, pre_slug)
+
+    def to_dict(self):
+        """
+        Returns a dictionary representation of the model using
+        REST framework's model serializers. Uses a specified serializer
+        on the model or defaults to a generic ModelSerializer.
+        """
+        try:
+            serializer = self.serializer
+        except:
+            class ModelSerializer(serializers.ModelSerializer):
+                class Meta:
+                    model = self.__class__
+
+            serializer = ModelSerializer(self)
+
+        return serializer.data
+
+    def announce(self, method):
+        """
+        Announces to SocketIO Redis store that a model has changed.
+        Includes the model name as a data_type, method, and a serialized
+        representation of the model instance.
+        """
+        room = self.announce_room
+
+        data = {
+            'data_type': self.__class__.__name__.lower(),
+            'method': method,
+            'data': self.to_dict()
+        }
+
+        announce = Announce(
+            json_dumps=json_renderer,
+            _test_mode=settings.ANNOUNCE_TEST_MODE)
+
+        announce.emit('message', data, room=room)
+
+    def post_save(self, created, **kwargs):
+        """
+        If model's Meta class has `announce = True`, announces
+        when a model instance is created or updated.
+        """
+        if self._meta.announce:
+            method = 'create' if created else 'update'
+            self.announce(method)
+
+    def post_delete(self, **kwargs):
+        """
+        If model's Meta class has `announce = True`, announces
+        when a model instance deleted.
+        """
+        if self._meta.announce:
+            self.announce('delete')

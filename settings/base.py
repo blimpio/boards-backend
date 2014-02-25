@@ -115,3 +115,7 @@ JWT_AUTH = {
     'JWT_PAYLOAD_HANDLER': 'blimp_boards.utils.jwt_handlers.jwt_payload_handler',
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=90)
 }
+
+
+# Announce
+ANNOUNCE_TEST_MODE = False

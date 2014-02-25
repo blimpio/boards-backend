@@ -7,10 +7,12 @@ from django.db.models.loading import get_model
 from django.core.mail import send_mail
 
 from ..utils.models import BaseModel
+from ..utils.decorators import autoconnect
 from .constants import (BOARD_RESERVED_KEYWORDS, PERMISSION_CHOICES,
                         READ_PERMISSION, WRITE_PERMISSION)
 
 
+@autoconnect
 class Board(BaseModel):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
@@ -24,8 +26,20 @@ class Board(BaseModel):
     thumbnail_md_path = models.TextField(blank=True)
     thumbnail_lg_path = models.TextField(blank=True)
 
+    class Meta:
+        announce = True
+
     def __str__(self):
         return self.name
+
+    @property
+    def announce_room(self):
+        return 'a{}'.format(self.account_id)
+
+    @property
+    def serializer(self):
+        from .serializers import BoardSerializer
+        return BoardSerializer(self)
 
     def save(self, *args, **kwargs):
         self.slugify(BOARD_RESERVED_KEYWORDS)

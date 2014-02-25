@@ -3,9 +3,11 @@ from django.core.exceptions import ValidationError
 from django.contrib.contenttypes import generic
 
 from ..utils.models import BaseModel
+from ..utils.decorators import autoconnect
 from .constants import CARD_RESERVED_KEYWORDS
 
 
+@autoconnect
 class Card(BaseModel):
     TYPE_CHOICES = (
         ('note', 'Note'),
@@ -39,8 +41,20 @@ class Card(BaseModel):
 
     comments = generic.GenericRelation('comments.Comment')
 
+    class Meta:
+        announce = True
+
     def __str__(self):
         return self.name
+
+    @property
+    def announce_room(self):
+        return 'a{}'.format(self.board.account_id)
+
+    @property
+    def serializer(self):
+        from .serializers import CardSerializer
+        return CardSerializer(self)
 
     def save(self, force_insert=False, force_update=False, **kwargs):
         """

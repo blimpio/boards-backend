@@ -2,12 +2,11 @@ import os
 import uuid
 
 from django.db import models
-from django.template.defaultfilters import slugify
 from django.db.models.loading import get_model
 
 from ..users.models import User
 from ..utils.models import BaseModel
-from ..utils.slugify import unique_slugify
+from ..utils.decorators import autoconnect
 from .managers import AccountCollaboratorManager
 from .constants import COMPANY_RESERVED_KEYWORDS
 
@@ -25,14 +24,27 @@ class EmailDomain(BaseModel):
         return self.domain_name
 
 
+@autoconnect
 class Account(BaseModel):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
     allow_signup = models.BooleanField(default=False)
     email_domains = models.ManyToManyField(EmailDomain, blank=True, null=True)
 
+    class Meta:
+        announce = True
+
     def __str__(self):
         return self.name
+
+    @property
+    def announce_room(self):
+        return 'a{}'.format(self.id)
+
+    @property
+    def serializer(self):
+        from .serializers import AccountSerializer
+        return AccountSerializer(self)
 
     @property
     def owner(self):

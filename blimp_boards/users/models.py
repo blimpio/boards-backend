@@ -15,6 +15,7 @@ from django.db.models.loading import get_model
 from ..utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..utils.validators import username_validator
 from ..utils.models import BaseModel
+from ..utils.decorators import autoconnect
 from .managers import UserManager
 
 
@@ -35,6 +36,7 @@ def get_user_upload_path(instance, filename):
         'uploads', 'users', instance.email, identifier, filename)
 
 
+@autoconnect
 class User(BaseModel, AbstractBaseUser):
     PRETTY_TIMEZONE_CHOICES = [('', '--- Select ---')]
 
@@ -101,9 +103,19 @@ class User(BaseModel, AbstractBaseUser):
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
+        announce = True
 
     def __str__(self):
         return self.username
+
+    @property
+    def announce_room(self):
+        return 'u{}'.format(self.id)
+
+    @property
+    def serializer(self):
+        from .serializers import UserSettingsSerializer
+        return UserSettingsSerializer(self)
 
     def has_perm(self, perm, obj=None):
         """
