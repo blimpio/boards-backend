@@ -37,7 +37,7 @@ def generate_policy(bucket, mime_type, file_size):
     return base64.b64encode(smart_bytes(json_policy))
 
 
-def generate_signed_policy(policy, secret_key):
+def generate_signature(policy, secret_key):
     """
     Returns a Base64-encoded signature value that authorizes
     the form and proves that only you could have created it.

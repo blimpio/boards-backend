@@ -3,7 +3,7 @@ from django.utils.encoding import smart_text
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .utils import generate_policy, generate_signed_policy, generate_file_key
+from .utils import generate_policy, generate_signature, generate_file_key
 
 
 class SignS3FileUploadAPIView(APIView):
@@ -20,7 +20,7 @@ class SignS3FileUploadAPIView(APIView):
         file_size = request.QUERY_PARAMS.get('size')
 
         policy = generate_policy(bucket, mime_type, file_size)
-        signature = generate_signed_policy(policy, secret_key)
+        signature = generate_signature(policy, secret_key)
 
         key = generate_file_key(name=file_name, user=request.user)
 
