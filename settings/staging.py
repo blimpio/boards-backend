@@ -36,9 +36,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-# Debug Toolbar
-DEBUG_TOOLBAR_PATCH_SETTINGS = env_var('DEBUG_TOOLBAR_PATCH_SETTINGS', True)
-
 
 # Django REST framework
 REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = (
@@ -55,10 +52,6 @@ JWT_AUTH = {
     'JWT_PAYLOAD_HANDLER': 'blimp_boards.utils.jwt_handlers.jwt_payload_handler',
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=90)
 }
-
-
-# CORS Headers
-CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Logging

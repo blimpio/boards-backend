@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html class="no-js">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Blimp</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
-
-    </head>
-    <body>
-        index.html
-    </body>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Beautifully Easy Project Management">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blimp | Beautifully Easy Project Management</title>
+    <script>window.brunch = window.brunch || {};</script>
+    <link rel="stylesheet" href="{{settings.BOARDS_WEB_STATIC_URL}}/css/app.css">
+  </head>
+  <body>
+    <div id="application"></div>
+    <script>
+      window.APPLICATION_HTTP_URL = '{{settings.APPLICATION_URL}}';
+    </script>
+    <script src="{{settings.BOARDS_WEB_STATIC_URL}}/js/app.js" onload="require('application');"></script>
+  </body>
 </html>

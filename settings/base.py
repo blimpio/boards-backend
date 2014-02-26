@@ -1,6 +1,10 @@
 import os
 import datetime
 
+
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'DEVELOPMENT')
+PROTOCOL = 'https' if ENVIRONMENT != 'DEVELOPMENT' else 'http'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -27,7 +31,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'south',
-    'corsheaders',
     'rest_framework',
     'django_extensions',
 
@@ -40,6 +43,7 @@ INSTALLED_APPS = (
     'blimp_boards.comments',
 )
 
+# Middlewares
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -47,7 +51,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'blimp_boards.urls'
@@ -85,6 +88,18 @@ STATIC_URL = '/static/'
 # Templates
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    # 'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages',
+    'blimp_boards.utils.context_processors.app_settings',
 )
 
 

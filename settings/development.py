@@ -1,8 +1,11 @@
 import os
 
-from . import env_var
 from .base import *
 
+
+# Application settings
+DOMAIN = 'localhost:8000'
+APPLICATION_URL = '{}://{}'.format(PROTOCOL, DOMAIN)
 
 # Development Secret Key
 SECRET_KEY = 'bb!onz3e2hc1l-192ug40g@ykf^3@e4rtl!t9(i)d7n#oeo^!r'
@@ -19,7 +22,7 @@ INSTALLED_APPS += (
     'debug_toolbar',
 )
 
-# Middleware Classes
+# Middlewares
 MIDDLEWARE_CLASSES = (
     'blimp_boards.utils.middleware.QueryCountDebugMiddleware',
 ) + MIDDLEWARE_CLASSES
@@ -40,8 +43,6 @@ DATABASES = {
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
-DEBUG_TOOLBAR_PATCH_SETTINGS = env_var('DEBUG_TOOLBAR_PATCH_SETTINGS', True)
-
 # Django REST framework
 REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = (
     'blimp_boards.users.authentication.JWTAuthentication',
@@ -53,35 +54,9 @@ REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
     'rest_framework.renderers.BrowsableAPIRenderer',
 )
 
-JWT_AUTH = {
-    'JWT_PAYLOAD_HANDLER': 'blimp_boards.utils.jwt_handlers.jwt_payload_handler',
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=90)
-}
-
-# CORS Headers
-CORS_ORIGIN_WHITELIST = (
-    '127.0.0.1:8000',
-    'localhost:8000',
-    'localhost:3333',
-)
 
 # Announce
-ANNOUNCE_TEST_MODE = False
+ANNOUNCE_TEST_MODE = True
 
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'level': 'DEBUG',
-#             'class': 'logging.StreamHandler',
-#         }
-#     },
-#     'loggers': {
-#         'django.db.backends': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#         },
-#     }
-# }
+# boards-web
+BOARDS_WEB_STATIC_URL = 'http://localhost:3333'
