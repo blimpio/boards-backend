@@ -9,8 +9,7 @@ from django.core.mail import send_mail
 from ..utils.models import BaseModel
 from ..utils.fields import ReservedKeywordsAutoSlugField
 from ..utils.decorators import autoconnect
-from .constants import (BOARD_RESERVED_KEYWORDS, PERMISSION_CHOICES,
-                        READ_PERMISSION, WRITE_PERMISSION)
+from .constants import BOARD_RESERVED_KEYWORDS
 
 
 @autoconnect
@@ -58,12 +57,14 @@ class Board(BaseModel):
         is a collaborator with a specific permission.
         """
         collaborators = BoardCollaborator.objects.filter(board=self, user=user)
+        read_permission = BoardCollaborator.READ_PERMISSION
+        write_permission = BoardCollaborator.WRITE_PERMISSION
 
-        if permission == READ_PERMISSION:
+        if permission == read_permission:
             collaborators = collaborators.filter(
-                Q(permission=WRITE_PERMISSION) | Q(permission=READ_PERMISSION))
-        elif permission == WRITE_PERMISSION:
-            collaborators = collaborators.filter(permission=WRITE_PERMISSION)
+                Q(permission=write_permission) | Q(permission=read_permission))
+        elif permission == write_permission:
+            collaborators = collaborators.filter(permission=write_permission)
 
         return collaborators.exists()
 
@@ -79,11 +80,19 @@ def create_owner_collaborator(instance, created=False, **kwargs):
         BoardCollaborator.objects.create(
             board=instance,
             user=account_owner.user,
-            permission=WRITE_PERMISSION
+            permission=BoardCollaborator.WRITE_PERMISSION
         )
 
 
 class BoardCollaborator(BaseModel):
+    READ_PERMISSION = 'read'
+    WRITE_PERMISSION = 'write'
+
+    PERMISSION_CHOICES = (
+        (READ_PERMISSION, 'Read'),
+        (WRITE_PERMISSION, 'Read and Write'),
+    )
+
     board = models.ForeignKey('boards.Board')
     user = models.ForeignKey('users.User', blank=True, null=True)
     invited_user = models.ForeignKey('invitations.InvitedUser',
@@ -192,7 +201,7 @@ class BoardCollaboratorRequest(BaseModel):
         board_collaborator = BoardCollaborator.objects.create(
             board=self.board,
             invited_user=invited_user,
-            permission=READ_PERMISSION
+            permission=BoardCollaborator.READ_PERMISSION
         )
 
         invited_user.board_collaborators.add(board_collaborator)
