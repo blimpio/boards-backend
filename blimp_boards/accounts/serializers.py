@@ -18,7 +18,8 @@ class AccountSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Account
-        fields = ('id', 'name', 'slug', 'date_created', 'date_modified')
+        fields = ('id', 'name', 'slug', 'disqus_shortname',
+                  'date_created', 'date_modified')
 
 
 class CheckSignupDomainSerializer(serializers.Serializer):

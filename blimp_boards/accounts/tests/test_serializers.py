@@ -131,6 +131,7 @@ class CheckSignupDomainSerializerTestCase(TestCase):
             'id': self.account.id,
             'name': 'Acme',
             'slug': 'acme',
+            'disqus_shortname': '',
             'date_created': self.account.date_created,
             'date_modified': self.account.date_modified
         }
