@@ -1,6 +1,10 @@
+from django.shortcuts import get_object_or_404
+
 from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.views import APIView
 
 from ..utils.viewsets import ModelViewSet, CreateListRetrieveViewSet
 from .models import Board, BoardCollaborator, BoardCollaboratorRequest
@@ -76,3 +80,25 @@ class BoardCollaboratorRequestViewSet(CreateListRetrieveViewSet):
     def post_save(self, obj, created=False):
         if created:
             obj.notify_account_owner()
+
+
+class BoardHTMLView(APIView):
+    authentication_classes = ()
+    permission_classes = ()
+    renderer_classes = (TemplateHTMLRenderer,)
+
+    def get(self, request, *args, **kwargs):
+        account_slug = kwargs['account_slug']
+        board_slug = kwargs['board_slug']
+
+        board = get_object_or_404(
+            Board.objects.values_list('id', 'is_shared'),
+            account__slug=account_slug,
+            slug=board_slug)
+
+        data = {
+            'board_id': board[0],
+            'board_is_shared': board[1]
+        }
+
+        return Response(data, template_name='index.html')

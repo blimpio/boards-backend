@@ -11,9 +11,15 @@
   </head>
   <body>
     <div id="application"></div>
+    {% if board_is_shared %}
     <script>
-      window.APPLICATION_HTTP_URL = '{{settings.APPLICATION_URL}}';
+      window.App = {
+        PUBLIC_BOARD: {
+          id: {{ board_id }}
+        }
+      };
     </script>
+    {% endif %}
     <script src="{{settings.BOARDS_WEB_STATIC_URL}}/js/app.js" onload="require('application');"></script>
   </body>
 </html>

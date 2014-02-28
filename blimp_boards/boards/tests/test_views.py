@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from ...utils.tests import AuthenticatedAPITestCase
+from ...utils.tests import BaseTestCase, AuthenticatedAPITestCase
 from ..models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
@@ -572,3 +572,40 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)
+
+
+class BoardHTMLViewTestCase(AuthenticatedAPITestCase):
+    def setUp(self):
+        super(BoardHTMLViewTestCase, self).setUp()
+
+        self.create_account()
+        self.create_board()
+
+        self.url = '/{}/{}/'.format(self.account.slug, self.board.slug)
+
+    def test_view_should_render_html_template(self):
+        """
+        Tests that view renders our expected template.
+        """
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'index.html')
+
+    def test_view_should_raise_404_invalid_board(self):
+        """
+        Tests that view raises 404 for invalid tokens.
+        """
+        response = self.client.get('/account/board/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_view_should_include_javascript_object(self):
+        """
+        Tests that view contains the JS object window.App.PUBLIC_BOARD.id
+        """
+        self.board.is_shared = True
+        self.board.save()
+
+        response = self.client.get(self.url)
+
+        self.assertContains(response, 'window.App')
+        self.assertContains(response, 'PUBLIC_BOARD:')
+        self.assertContains(response, 'id: {}'.format(self.board.id))
