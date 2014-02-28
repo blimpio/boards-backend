@@ -12,10 +12,7 @@ from .constants import CARD_RESERVED_KEYWORDS
 class Card(BaseModel):
     TYPE_CHOICES = (
         ('note', 'Note'),
-        ('link', 'Link'),
-        ('text', 'Text'),
         ('file', 'File'),
-        ('embed', 'Embeddable'),
         ('stack', 'Stack'),
     )
 
