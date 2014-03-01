@@ -1,3 +1,5 @@
+import logging
+
 from django.db import models
 from django.conf import settings
 from django.utils.encoding import smart_text
@@ -8,6 +10,8 @@ from rest_framework import serializers
 
 from .fields import DateTimeCreatedField, DateTimeModifiedField
 
+
+logger = logging.getLogger(__name__)
 
 models.options.DEFAULT_NAMES += ('announce', )
 
@@ -65,7 +69,10 @@ class BaseModel(models.Model):
             json_dumps=json_renderer,
             _test_mode=settings.ANNOUNCE_TEST_MODE)
 
-        announce.emit('message', data, room=room)
+        try:
+            announce.emit('message', data, room=room)
+        except Exception as e:
+            logging.exception(e)
 
     def post_save(self, created, **kwargs):
         """
