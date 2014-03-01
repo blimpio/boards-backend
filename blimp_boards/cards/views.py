@@ -24,12 +24,12 @@ class CardViewSet(ModelViewSet):
             user = self.request.user
             return user.cards.prefetch_related('cards')
 
-        cards = Card.objects.all(board__is_shared=True)
+        cards = Card.objects.filter(board__is_shared=True)
 
         if board:
             return cards.filter(board_id=board)
 
-        return cards
+        return cards.prefetch_related('cards')
 
     @action(methods=['GET', 'POST'], serializer_class=CardCommentSerializer)
     def comments(self, request, pk=None):

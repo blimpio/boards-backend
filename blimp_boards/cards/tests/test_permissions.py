@@ -41,10 +41,27 @@ class CardPermissionTestCase(BaseTestCase):
 
     def test_should_return_false_for_anonymous_user(self):
         """
-        Tests that `.has_permission` returns `True` for an
+        Tests that `.has_permission` returns `False` for an
         unauthenticated user.
         """
-        request = Request(self.factory.get('/', format='json'))
+        request = Request(self.factory.post('/', format='json'))
+        request.parsers = (JSONParser(), )
+        request.user = AnonymousUser()
+
+        view = mock_view(request)
+        view.action = 'create'
+
+        has_perm = self.perm_class.has_permission(request, view)
+
+        self.assertFalse(has_perm)
+
+    def test_should_return_true_for_anonymous_user_listing_with_board(self):
+        """
+        Tests that `.has_permission` returns `True` for an
+        unauthenticated user listing cards for a specific board.
+        """
+        url = '/?board={}'.format(self.board.id)
+        request = Request(self.factory.get(url, format='json'))
         request.parsers = (JSONParser(), )
         request.user = AnonymousUser()
 
@@ -53,7 +70,7 @@ class CardPermissionTestCase(BaseTestCase):
 
         has_perm = self.perm_class.has_permission(request, view)
 
-        self.assertFalse(has_perm)
+        self.assertTrue(has_perm)
 
     def test_returns_true_for_user_with_write_perm(self):
         """

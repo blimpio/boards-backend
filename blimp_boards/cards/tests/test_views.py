@@ -353,3 +353,39 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data, expected_response)
+
+    def test_viewset_should_allow_anonymous_user_to_list_cards(self):
+        """
+        Tests that viewset should allow anonymous users to list cards
+        with board query parameter, and board is shared.
+        """
+        self.board.is_shared = True
+        self.board.save()
+
+        self.client = APIClient()
+        response = self.client.get('{}?board={}'.format(
+            self.base_url, self.board.id))
+
+        expected_response = [{
+            'created_by': self.card.created_by_id,
+            'id': self.card.id,
+            'date_created': self.card.date_created,
+            'date_modified': self.card.date_modified,
+            'name': self.card.name,
+            'slug': self.card.slug,
+            'type': self.card.type,
+            'board': self.card.board_id,
+            'cards': [],
+            'featured': False,
+            'origin_url': '',
+            'content': self.card.content,
+            'is_shared': False,
+            'thumbnail_sm_path': '',
+            'thumbnail_md_path': '',
+            'thumbnail_lg_path': '',
+            'file_size': None,
+            'file_extension': ''
+        }]
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)

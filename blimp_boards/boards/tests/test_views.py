@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from ...utils.tests import BaseTestCase, AuthenticatedAPITestCase
+from ...utils.tests import AuthenticatedAPITestCase
 from ..models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
@@ -232,6 +232,62 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+    def test_viewset_anonymous_user_retrieve_shared_board(self):
+        """
+        Tests that viewset allows anonymous user to retrieve shared board.
+        """
+        self.board.is_shared = True
+        self.board.save()
+
+        self.client = APIClient()
+        response = self.client.get(
+            '{}{}/'.format(self.base_url, self.board.id))
+
+        expected_response = {
+            'created_by': self.board.created_by_id,
+            'id': self.board.id,
+            'date_created': self.board.date_created,
+            'date_modified': self.board.date_modified,
+            'name': 'The Board',
+            'slug': 'the-board',
+            'account': self.board.account_id,
+            'is_shared': True,
+            'thumbnail_sm_path': '',
+            'thumbnail_md_path': '',
+            'thumbnail_lg_path': ''
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+    def test_viewset_requires_authentication_to_modify_shared_board(self):
+        """
+        Tests that viewset should only allow anonymous users
+        to retrieve shared boards.
+        """
+        self.board.is_shared = True
+        self.board.save()
+
+        data = {
+            'name': 'New Board Name',
+            'slug': 'the-board',
+            'account': self.account.id
+        }
+
+        self.client = APIClient()
+        response = self.client.patch(
+            '{}{}/'.format(self.base_url, self.board.id), data, format='json')
+
+        self.board = Board.objects.get(pk=self.board.id)
+
+        expected_response = {
+            'error': 'Authentication credentials were not provided.',
+            'status_code': 401
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data, expected_response)
 
 

@@ -8,7 +8,10 @@ class CardPermission(permissions.BasePermission):
         """
         Returns `True` if the user is a board collaborator with
         write permissions trying to create. Returns `True` if
-        user is the account owner.
+        user is the account owner. Returns `False` if user is not
+        authenticated and method is not safe. Returns `True if user
+        is not authenticated and view action is `list` and `board`
+        query parameter is set, `False` if it's not set.
         """
         is_authenticated = request.user and request.user.is_authenticated()
         is_safe = request.method in permissions.SAFE_METHODS

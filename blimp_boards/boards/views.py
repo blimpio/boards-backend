@@ -24,8 +24,8 @@ class BoardViewSet(ModelViewSet):
 
         if user.is_authenticated():
             return user.boards
-        else:
-            return Board.objects.filter(is_shared=True)
+
+        return Board.objects.filter(is_shared=True)
 
 
 class BoardCollaboratorViewSet(ModelViewSet):

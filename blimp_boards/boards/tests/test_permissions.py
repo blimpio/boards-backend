@@ -70,6 +70,21 @@ class BoardPermissionTestCase(BaseTestCase):
 
         self.assertFalse(has_perm)
 
+    def test_should_return_true_for_anonymous_user_viewing_shared_board(self):
+        """
+        Tests that `.has_permission` returns `True` for an
+        unauthenticated user retrieving a board.
+        """
+        request = self.factory.get('/')
+        request.user = AnonymousUser()
+
+        view = mock_view(request)
+        view.action = 'retrieve'
+
+        has_perm = self.perm_class.has_permission(request, view)
+
+        self.assertTrue(has_perm)
+
     def test_returns_true_for_user_with_write_perm(self):
         """
         Tests that `.has_object_permission` returns `True` for
@@ -131,6 +146,24 @@ class BoardPermissionTestCase(BaseTestCase):
 
         self.board_collaborator.permission = 'write'
         self.board_collaborator.save()
+
+        view = mock_view(request)
+
+        has_perm = self.perm_class.has_object_permission(
+            request, view, self.board)
+
+        self.assertTrue(has_perm)
+
+    def test_returns_true_for_anonymous_and_shared_board(self):
+        """
+        Tests that `.has_object_permission` returns `True` for
+        an anonymous user retrieving shared board.
+        """
+        self.board.is_shared = True
+        self.board.save()
+
+        request = self.factory.get('/')
+        request.user = AnonymousUser()
 
         view = mock_view(request)
 
