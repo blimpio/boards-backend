@@ -59,4 +59,4 @@ REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
 ANNOUNCE_TEST_MODE = True
 
 # boards-web
-BOARDS_WEB_STATIC_URL = 'http://localhost:3333'
+BOARDS_WEB_STATIC_URL = 'http://localhost:3333/'

@@ -1,3 +1,5 @@
+{% load boards_web_static %}
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -7,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Blimp | Beautifully Easy Project Management</title>
     <script>window.brunch = window.brunch || {};</script>
-    <link rel="stylesheet" href="{{settings.BOARDS_WEB_STATIC_URL}}/css/app.css">
+    <link rel="stylesheet" href="{% boards_web_static "css/app.css" %}">
   </head>
   <body>
     <div id="application"></div>
@@ -20,6 +22,6 @@
       };
     </script>
     {% endif %}
-    <script src="{{settings.BOARDS_WEB_STATIC_URL}}/js/app.js" onload="require('application');"></script>
+    <script src="{% boards_web_static "js/app.js" %}" onload="require('application');"></script>
   </body>
 </html>

@@ -48,10 +48,10 @@ REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
     'rest_framework.renderers.BrowsableAPIRenderer',
 )
 
-JWT_AUTH = {
-    'JWT_PAYLOAD_HANDLER': 'blimp_boards.utils.jwt_handlers.jwt_payload_handler',
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=90)
-}
+
+# boards-web
+BOARDS_WEB_STATIC_URL = os.getenv('BOARDS_WEB_STATIC_URL')
+BOARDS_WEB_CLIENT_VERSION = os.getenv('BOARDS_WEB_CLIENT_VERSION')
 
 
 # Logging
