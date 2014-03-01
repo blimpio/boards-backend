@@ -21,7 +21,11 @@ class BoardViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return user.boards
+
+        if user.is_authenticated():
+            return user.boards
+        else:
+            return Board.objects.filter(is_shared=True)
 
 
 class BoardCollaboratorViewSet(ModelViewSet):

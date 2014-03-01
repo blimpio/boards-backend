@@ -4,21 +4,45 @@ from ..accounts.models import AccountCollaborator
 from .models import Board
 
 
-class BoardPermission(permissions.IsAuthenticated):
+class BoardPermission(permissions.BasePermission):
+    def is_authenticated(self, request):
+        return request.user and request.user.is_authenticated()
+
+    def has_permission(self, request, view):
+        """
+        Returns `True` if the user is authenticated. If the user is
+        not authenticated and view.action is `list` or is not safe.
+        """
+        is_authenticated = self.is_authenticated(request)
+        is_safe = request.method in permissions.SAFE_METHODS
+
+        if not is_authenticated and (view.action == 'list' or not is_safe):
+            return False
+
+        return True
+
     def has_object_permission(self, request, view, obj):
         """
         Return `True` if user is a collaborator with the
         corresponding permission on this board, `False` otherwise.
+        Returns `True` if permission is read and object is shared.
+        Returns `False` if user is not authenticated.
         """
         permission = 'read'
 
         if request.method not in permissions.SAFE_METHODS:
             permission = 'write'
 
+        if permission == 'read' and obj.is_shared:
+            return True
+
+        if not self.is_authenticated(request):
+            return False
+
         return obj.is_user_collaborator(request.user, permission=permission)
 
 
-class BoardCollaboratorPermission(permissions.IsAuthenticated):
+class BoardCollaboratorPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         """
         Returns `True` if the user is a board collaborator with

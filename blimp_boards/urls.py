@@ -12,6 +12,7 @@ urlpatterns = patterns(
     '',
 
     (r'^admin/', include(admin.site.urls)),
+
     (r'^api/', include('blimp_boards.router')),
 
     (r'', include('blimp_boards.users.urls')),

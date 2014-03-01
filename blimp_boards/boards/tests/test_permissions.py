@@ -40,15 +40,31 @@ class BoardPermissionTestCase(BaseTestCase):
 
         self.assertTrue(has_perm)
 
-    def test_should_return_false_for_anonymous_user(self):
+    def test_should_return_false_for_anonymous_user_unsafe(self):
         """
-        Tests that `.has_permission` returns `True` for an
-        unauthenticated user.
+        Tests that `.has_permission` returns `False` for an
+        unauthenticated user and unsafe method.
         """
         request = self.factory.post('/')
         request.user = AnonymousUser()
 
         view = mock_view(request)
+        view.action = 'create'
+
+        has_perm = self.perm_class.has_permission(request, view)
+
+        self.assertFalse(has_perm)
+
+    def test_should_return_false_for_anonymous_user_safe(self):
+        """
+        Tests that `.has_permission` returns `True` for an
+        unauthenticated user.
+        """
+        request = self.factory.get('/')
+        request.user = AnonymousUser()
+
+        view = mock_view(request)
+        view.action = 'list'
 
         has_perm = self.perm_class.has_permission(request, view)
 
@@ -142,10 +158,11 @@ class BoardCollaboratorPermissionTestCase(BaseTestCase):
         Tests that `.has_permission` returns `False`
         if user is not authenticated.
         """
-        request = Request(self.factory.get('/', self.data, format='json'))
+        request = Request(self.factory.post('/', self.data, format='json'))
         request.parsers = (JSONParser(), )
 
         view = mock_view(request)
+        view.action = 'create'
 
         has_perm = self.perm_class.has_permission(request, view)
 
