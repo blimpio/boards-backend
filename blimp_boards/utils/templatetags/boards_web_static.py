@@ -11,7 +11,7 @@ def boards_web_static(context, path):
     if settings.ENVIRONMENT != 'DEVELOPMENT':
         request = context['request']
 
-        boards_web_client_version = '123'
+        boards_web_client_version = settings.BOARDS_WEB_CLIENT_VERSION
         client_version = request.GET.get(
             'clientVersion', boards_web_client_version)
 
