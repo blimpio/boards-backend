@@ -29,6 +29,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
 
     'south',
     'rest_framework',
@@ -110,6 +111,10 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'blimp_boards.users.backends.EmailBackend',
 )
+
+
+# Cache
+SITEMAP_CACHE_TIMEOUT = 60 * 60 * 24
 
 
 # Django REST framework

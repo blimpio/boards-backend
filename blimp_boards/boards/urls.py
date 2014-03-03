@@ -1,4 +1,4 @@
-from django.conf.urls import patterns
+from django.conf.urls import patterns, url
 
 from rest_framework.routers import DefaultRouter
 
@@ -19,6 +19,6 @@ urlpatterns = patterns(
     # Prefix
     '',
 
-    (r'^(?P<account_slug>[-\w]+)/(?P<board_slug>[-\w]+)/',
-     views.BoardHTMLView.as_view())
+    url(r'^(?P<account_slug>[-\w]+)/(?P<board_slug>[-\w]+)/',
+        views.BoardHTMLView.as_view(), name='board_detail')
 )

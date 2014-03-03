@@ -34,6 +34,12 @@ class Board(BaseModel):
     def __str__(self):
         return self.name
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('board_detail', (), {
+            'account_slug': self.account.slug,
+            'board_slug': self.slug})
+
     @property
     def announce_room(self):
         return 'a{}'.format(self.account_id)
