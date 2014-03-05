@@ -5,7 +5,7 @@ from .base import *
 
 # Application settings
 DOMAIN = 'localhost:8000'
-APPLICATION_URL = '{}://{}'.format(PROTOCOL, DOMAIN)
+APPLICATION_URL = '{}://{}'.format(HTTP_PROTOCOL, DOMAIN)
 
 # Development Secret Key
 SECRET_KEY = 'bb!onz3e2hc1l-192ug40g@ykf^3@e4rtl!t9(i)d7n#oeo^!r'

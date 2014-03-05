@@ -3,7 +3,7 @@ import datetime
 
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'DEVELOPMENT')
-PROTOCOL = 'https' if ENVIRONMENT != 'DEVELOPMENT' else 'http'
+HTTP_PROTOCOL = 'https' if ENVIRONMENT != 'DEVELOPMENT' else 'http'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'blimp_boards.boards',
     'blimp_boards.cards',
     'blimp_boards.comments',
+    'blimp_boards.notifications',
 )
 
 # Middlewares
