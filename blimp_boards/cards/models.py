@@ -1,10 +1,12 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes import generic
+from django.db.models.loading import get_model
 
 from ..utils.models import BaseModel
 from ..utils.decorators import autoconnect
 from ..utils.fields import ReservedKeywordsAutoSlugField
+from ..notifications.signals import notify
 from .constants import CARD_RESERVED_KEYWORDS
 
 
@@ -82,3 +84,25 @@ class Card(BaseModel):
             if getattr(self, field):
                 msg = 'The `{}` field should not be set on a card stack.'
                 raise ValidationError(msg.format(field))
+
+    def notify_comment_created(self, user, comment):
+        User = get_model('users', 'User')
+        recipients = User.objects.filter(
+            boardcollaborator__board__id=self.board_id).exclude(id=user.id)
+
+        actor = user
+        recipients = recipients
+        label = 'card_comment_created'
+
+        extra_context = {
+            'action_object': comment,
+            'description': comment.content,
+            'target': self
+        }
+
+        notify.send(
+            actor,
+            recipients=recipients,
+            label=label,
+            extra_context=extra_context
+        )

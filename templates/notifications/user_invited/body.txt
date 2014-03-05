@@ -1,0 +1,3 @@
+Join {{ action_object.account }}:
+
+{{ application_url }}{% url "auth-signup" %}?invite={{ action_object.token }}

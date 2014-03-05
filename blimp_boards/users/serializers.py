@@ -301,9 +301,8 @@ class ForgotPasswordSerializer(serializers.Serializer):
 
         return attrs
 
-    def validate(self, attrs):
+    def send_password_reset_email(self):
         self.user.send_password_reset_email()
-        return attrs
 
 
 class ResetPasswordSerializer(serializers.Serializer):

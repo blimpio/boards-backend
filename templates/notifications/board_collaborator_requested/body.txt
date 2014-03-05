@@ -1,0 +1,4 @@
+{{ action_object.email }} wants to join your board
+Board: {{ action_object.board }}
+
+Message: {{ action_object.message }}

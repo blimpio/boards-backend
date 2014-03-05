@@ -2,12 +2,12 @@ import jwt
 
 from django.db import models
 from django.conf import settings
-from django.core.mail import send_mail
 from django.db.models.loading import get_model
 
 from ..utils.models import BaseModel
 from ..users.models import User
 from ..users.utils import get_gravatar_url
+from ..notifications.signals import notify
 from .managers import SignupRequestManager, InvitedUserManager
 
 
@@ -33,14 +33,20 @@ class SignupRequest(BaseModel):
         return jwt_token.decode('utf-8')
 
     def send_email(self):
-        message = '{}'.format(self.token)
+        actor = None
+        recipients = [self.email]
+        label = 'signup_request_created'
 
-        return send_mail(
-            'Blimp Signup Request',
-            message,
-            'from@example.com',
-            [self.email],
-            fail_silently=False
+        extra_context = {
+            'action_object': self,
+        }
+
+        notify.send(
+            actor,
+            recipients=recipients,
+            label=label,
+            extra_context=extra_context,
+            override_backends=('email', )
         )
 
 
@@ -132,21 +138,19 @@ class InvitedUser(BaseModel):
 
         return collaborator
 
-    def email_user(self, subject, message, from_email=None, **kwargs):
-        """
-        Sends an email to this User.
-        """
-        if self.user:
-            self.user.email_user(
-                subject, message, from_email=from_email, **kwargs)
-        else:
-            send_mail(subject, message, from_email, [self.email], **kwargs)
-
     def send_invite(self):
-        message = '{}'.format(self.token)
+        actor = self.created_by
+        recipients = [self.email]
+        label = 'user_invited'
 
-        self.email_user(
-            'You were invited to join {}'.format(self.account),
-            message,
-            from_email='from@example.com',
+        extra_context = {
+            'action_object': self,
+        }
+
+        notify.send(
+            actor,
+            recipients=recipients,
+            label=label,
+            extra_context=extra_context,
+            override_backends=('email', )
         )

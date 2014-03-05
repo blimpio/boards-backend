@@ -54,6 +54,13 @@ class CardCommentSerializer(serializers.ModelSerializer):
                   'date_created', 'date_modified')
 
     def save_object(self, obj, **kwargs):
-        obj.content_object = self.context['content_object']
-        obj.created_by = self.context['request'].user
-        return super(CardCommentSerializer, self).save_object(obj, **kwargs)
+        created = bool(obj.pk)
+        card = self.context['content_object']
+        user = self.context['request'].user
+
+        obj.content_object = card
+        obj.created_by = user
+        obj.save(**kwargs)
+
+        if created:
+            card.notify_comment_created(obj)

@@ -1,0 +1,3 @@
+Reset your password:
+
+{{ application_url }}{% url "auth-reset-password" %}?token={{ recipient.password_reset_token }}

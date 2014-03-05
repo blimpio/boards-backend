@@ -29,5 +29,7 @@ urlpatterns = patterns(
         views.SignupValidateTokenHTMLView.as_view(),
         name='auth-signup'),
 
-    (r'reset_password/$', views.ResetPasswordHTMLView.as_view()),
+    url(r'reset_password/$',
+        views.ResetPasswordHTMLView.as_view(),
+        name='auth-reset-password'),
 )

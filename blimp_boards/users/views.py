@@ -73,6 +73,7 @@ class ForgotPasswordAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.DATA)
 
         if serializer.is_valid():
+            serializer.send_password_reset_email()
             return Response(serializer.data)
 
         return ErrorResponse(serializer.errors)

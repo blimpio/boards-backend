@@ -34,6 +34,7 @@ class InvitedUserCreateAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.DATA)
 
         if serializer.is_valid():
+            serializer.send_invite()
             return Response(serializer.data)
 
         return ErrorResponse(serializer.errors)

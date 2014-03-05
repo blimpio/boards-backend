@@ -36,11 +36,12 @@ class InvitedUserSerializer(serializers.Serializer):
         return attrs
 
     def validate(self, attrs):
-        user_data = {
+        self.user_data = {
             'email': attrs['email'],
             'created_by': self.account.owner.user
         }
 
-        self.account.invite_user(user_data)
-
         return attrs
+
+    def send_invite(self):
+        self.account.invite_user(self.user_data)

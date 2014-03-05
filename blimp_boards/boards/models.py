@@ -4,11 +4,11 @@ from django.core.exceptions import ValidationError
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.db.models.loading import get_model
-from django.core.mail import send_mail
 
 from ..utils.models import BaseModel
 from ..utils.fields import ReservedKeywordsAutoSlugField
 from ..utils.decorators import autoconnect
+from ..notifications.signals import notify
 from .constants import BOARD_RESERVED_KEYWORDS
 
 
@@ -223,12 +223,18 @@ class BoardCollaboratorRequest(BaseModel):
         self.delete()
 
     def notify_account_owner(self):
-        message = '{} wants to join your board'.format(self.email)
+        actor = None
+        recipients = [self.email]
+        label = 'board_collaborator_requested'
 
-        return send_mail(
-            'Blimp Board Collaborator Request',
-            message,
-            'from@example.com',
-            [self.email],
-            fail_silently=False
+        extra_context = {
+            'action_object': self,
+        }
+
+        notify.send(
+            actor,
+            recipients=recipients,
+            label=label,
+            extra_context=extra_context,
+            override_backends=('email', )
         )

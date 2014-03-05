@@ -16,6 +16,7 @@ from ..utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..utils.validators import username_validator
 from ..utils.models import BaseModel
 from ..utils.decorators import autoconnect
+from ..notifications.signals import notify
 from .managers import UserManager
 
 
@@ -27,13 +28,6 @@ def update_last_ip(sender, user, request, **kwargs):
     user.last_ip = request.META.get('REMOTE_ADDR', '0.0.0.0')
     user.save()
 user_logged_in.connect(update_last_ip)
-
-
-def get_user_upload_path(instance, filename):
-    # TODO: Change to uploads/users/avatars/?
-    identifier = str(uuid.uuid4())
-    return os.path.join(
-        'uploads', 'users', instance.email, identifier, filename)
 
 
 @autoconnect
@@ -241,10 +235,13 @@ class User(BaseModel, AbstractBaseUser):
         self.token_version = str(uuid.uuid4())
 
     def send_password_reset_email(self):
-        message = '{}'.format(self.password_reset_token)
+        actor = None
+        recipients = [self]
+        label = 'password_reset_requested'
 
-        self.email_user(
-            'Password Reset',
-            message,
-            from_email='from@example.com',
+        notify.send(
+            actor,
+            recipients=recipients,
+            label=label,
+            override_backends=('email', )
         )
