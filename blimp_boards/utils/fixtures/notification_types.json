@@ -1,0 +1,57 @@
+[
+{
+    "pk": 1,
+    "model": "notifications.notificationtype",
+    "fields": {
+        "date_created": "2014-03-04T15:23:25.716Z",
+        "description": "commented",
+        "display": "Comment created",
+        "label": "card_comment_created",
+        "date_modified": "2014-03-04T17:26:04.603Z"
+    }
+},
+{
+    "pk": 2,
+    "model": "notifications.notificationtype",
+    "fields": {
+        "date_created": "2014-03-05T14:25:40.418Z",
+        "description": "invited",
+        "display": "Signup Request Created",
+        "label": "signup_request_created",
+        "date_modified": "2014-03-05T14:25:40.419Z"
+    }
+},
+{
+    "pk": 3,
+    "model": "notifications.notificationtype",
+    "fields": {
+        "date_created": "2014-03-05T15:44:40.159Z",
+        "description": "invited",
+        "display": "Invited to join account",
+        "label": "user_invited",
+        "date_modified": "2014-03-05T15:44:40.160Z"
+    }
+},
+{
+    "pk": 4,
+    "model": "notifications.notificationtype",
+    "fields": {
+        "date_created": "2014-03-05T17:02:46.141Z",
+        "description": "wants to join your board",
+        "display": "Blimp Board Collaborator Request",
+        "label": "board_collaborator_requested",
+        "date_modified": "2014-03-05T17:02:46.142Z"
+    }
+},
+{
+    "pk": 5,
+    "model": "notifications.notificationtype",
+    "fields": {
+        "date_created": "2014-03-05T18:17:19.583Z",
+        "description": "reset your password",
+        "display": "Password Reset",
+        "label": "password_reset_requested",
+        "date_modified": "2014-03-05T18:17:19.584Z"
+    }
+}
+]
