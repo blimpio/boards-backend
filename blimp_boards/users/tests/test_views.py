@@ -1,15 +1,14 @@
-from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from ...utils.tests import AuthenticatedAPITestCase
+from ...utils.tests import BaseTestCase, AuthenticatedAPITestCase
 from ...accounts.models import Account
 from ...invitations.models import SignupRequest, InvitedUser
 from ..models import User
 from ..serializers import UserSerializer
 
 
-class ValidateUsernameAPIViewTestCase(TestCase):
+class ValidateUsernameAPIViewTestCase(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
 
@@ -78,7 +77,7 @@ class ValidateUsernameAPIViewTestCase(TestCase):
         self.assertEqual(response.data, expected_response)
 
 
-class SignupAPIView(TestCase):
+class SignupAPIView(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
 
@@ -220,7 +219,7 @@ class SignupAPIView(TestCase):
         self.assertTrue('token' in response.data)
 
 
-class SigninAPIEndpoint(TestCase):
+class SigninAPIEndpoint(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
 
@@ -359,7 +358,7 @@ class SigninAPIEndpoint(TestCase):
         self.assertTrue('token' in response.data)
 
 
-class SignupValidateTokenHTMLViewTestCase(TestCase):
+class SignupValidateTokenHTMLViewTestCase(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
 
@@ -432,7 +431,7 @@ class SignupValidateTokenHTMLViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
 
-class SigninValidateTokenHTMLViewTestCase(TestCase):
+class SigninValidateTokenHTMLViewTestCase(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
 
@@ -500,7 +499,7 @@ class SigninValidateTokenHTMLViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
 
-class ForgotPasswordAPIViewTestCase(TestCase):
+class ForgotPasswordAPIViewTestCase(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
 
@@ -549,7 +548,7 @@ class ForgotPasswordAPIViewTestCase(TestCase):
         self.assertEqual(response.data, expected_response)
 
 
-class ResetPasswordAPIViewTestCase(TestCase):
+class ResetPasswordAPIViewTestCase(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
 
@@ -604,7 +603,7 @@ class ResetPasswordAPIViewTestCase(TestCase):
         self.assertEqual(response.data, expected_response)
 
 
-class ResetPasswordHTMLView(TestCase):
+class ResetPasswordHTMLView(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
 

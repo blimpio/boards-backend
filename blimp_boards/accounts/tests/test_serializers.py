@@ -1,11 +1,10 @@
-from django.test import TestCase
-
+from ...utils.tests import BaseTestCase
 from ...accounts.models import Account, EmailDomain
 from ..serializers import (ValidateSignupDomainsSerializer,
                            CheckSignupDomainSerializer)
 
 
-class ValidateSignupDomainsSerializerTestCase(TestCase):
+class ValidateSignupDomainsSerializerTestCase(BaseTestCase):
     def setUp(self):
         EmailDomain.objects.create(domain_name='example.com')
 
@@ -71,7 +70,7 @@ class ValidateSignupDomainsSerializerTestCase(TestCase):
         self.assertEqual(serializer.data, expected_data)
 
 
-class CheckSignupDomainSerializerTestCase(TestCase):
+class CheckSignupDomainSerializerTestCase(BaseTestCase):
     def setUp(self):
         self.account = Account.objects.create(name='Acme')
 

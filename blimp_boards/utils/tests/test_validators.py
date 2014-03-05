@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-from django.test import TestCase
 from django.core.exceptions import ValidationError
 
+from ...utils.tests import BaseTestCase
 from ..validators import (DomainNameValidator, ListValidator,
                           validate_domain_name, validate_list,
                           is_valid_email, is_valid_domain_name)
 
 
-class ValidatorsTestCase(TestCase):
+class ValidatorsTestCase(BaseTestCase):
     def setUp(self):
         self.valid_email = 'jpueblo@example.com'
         self.invalid_email = '.@example.com'
@@ -39,7 +39,7 @@ class ValidatorsTestCase(TestCase):
         self.assertFalse(is_valid_domain_name(self.invalid_domain))
 
 
-class DomainNameValidatorTestCase(TestCase):
+class DomainNameValidatorTestCase(BaseTestCase):
     def setUp(self):
         self.valid_domains = [
             'here.com', 'here.and.there.com', '[127.0.0.1]',
@@ -87,7 +87,7 @@ class DomainNameValidatorTestCase(TestCase):
             self.assertEqual(validate_domain_name(domain), None)
 
 
-class ListValidatorTestCase(TestCase):
+class ListValidatorTestCase(BaseTestCase):
     def setUp(self):
         self.validator = ListValidator()
 

@@ -1,10 +1,10 @@
-from django.test import TestCase
 from django.core.exceptions import ValidationError
 
+from ...utils.tests import BaseTestCase
 from ..validators import validate_signup_domain
 
 
-class ValidatorsTestCase(TestCase):
+class ValidatorsTestCase(BaseTestCase):
     def setUp(self):
         self.valid_domain = 'example.com'
         self.invalid_domain = 'examplecom'

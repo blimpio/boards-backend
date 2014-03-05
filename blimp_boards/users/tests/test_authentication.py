@@ -1,11 +1,11 @@
 from django.http import HttpResponse
-from django.test import TestCase
 
 from rest_framework import permissions, status
 from rest_framework.compat import patterns
 from rest_framework.test import APIClient
 from rest_framework.views import APIView
 
+from ...utils.tests import BaseTestCase
 from ..models import User
 from ..authentication import JWTAuthentication
 
@@ -24,7 +24,7 @@ urlpatterns = patterns(
 )
 
 
-class JSONWebTokenAuthenticationTests(TestCase):
+class JSONWebTokenAuthenticationTests(BaseTestCase):
     urls = 'blimp_boards.users.tests.test_authentication'
 
     def setUp(self):

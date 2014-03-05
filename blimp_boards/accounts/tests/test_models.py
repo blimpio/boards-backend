@@ -1,13 +1,15 @@
-from django.test import TestCase
-
+from ...utils.tests import BaseTestCase
 from ...users.models import User
 from ...invitations.models import InvitedUser
 from ..models import (Account, AccountCollaborator, EmailDomain,
                       get_company_upload_path)
 
 
-class AccountTestCase(TestCase):
+class AccountTestCase(BaseTestCase):
+    fixtures = ['notification_types.json']
+
     def setUp(self):
+        super(AccountTestCase, self).setUp()
         self.username = 'jpueblo'
         self.password = 'abc123'
 
@@ -71,7 +73,7 @@ class AccountTestCase(TestCase):
         self.assertEqual('myfile.jpg', segments[-1])
 
 
-class AccountCollaboratorTestCase(TestCase):
+class AccountCollaboratorTestCase(BaseTestCase):
     def setUp(self):
         self.username = 'jpueblo'
         self.password = 'abc123'

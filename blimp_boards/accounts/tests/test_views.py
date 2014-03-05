@@ -1,4 +1,3 @@
-from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
@@ -6,7 +5,7 @@ from ...utils.tests import BaseTestCase, AuthenticatedAPITestCase
 from ...accounts.models import Account, AccountCollaborator, EmailDomain
 
 
-class ValidateSignupDomainsAPIViewTestCase(TestCase):
+class ValidateSignupDomainsAPIViewTestCase(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
 

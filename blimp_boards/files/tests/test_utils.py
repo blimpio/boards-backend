@@ -5,11 +5,11 @@ import hmac
 import hashlib
 import uuid
 
-from django.test import TestCase
 from django.utils.encoding import smart_text, smart_bytes
 
 from mock import Mock, patch
 
+from ...utils.tests import BaseTestCase
 from ..utils import generate_policy, generate_signature, generate_file_key
 
 
@@ -21,7 +21,7 @@ def mocked_uuid4():
     return uuid.UUID('16fd2706-8baf-433b-82eb-8c7fada847da')
 
 
-class UtilsTestCase(TestCase):
+class UtilsTestCase(BaseTestCase):
     @patch('blimp_boards.files.utils.now', mocked_now)
     def test_generate_policy_should_returns_base64_policy(self):
         """

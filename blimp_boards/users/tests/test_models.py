@@ -1,9 +1,8 @@
-from django.test import TestCase
+from ...utils.tests import BaseTestCase
+from ..models import User
 
-from ..models import User, get_user_upload_path
 
-
-class UserModelTestCase(TestCase):
+class UserModelTestCase(BaseTestCase):
     def setUp(self):
         self.username = 'jpueblo'
         self.password = 'abc123'
@@ -35,32 +34,6 @@ class UserModelTestCase(TestCase):
         Tests that get_short_name returns the user's first name
         """
         self.assertEqual(self.user.get_short_name(), 'Juan')
-
-    def test_update_last_ip_when_user_logs_in(self):
-        """
-        TODO: Find a way to test this correctly.
-        """
-        pass
-
-    def test_user_upload_path_should_have_expected_segments(self):
-        """
-        Tests that get_user_upload_path returns the expected
-        number of segments.
-        """
-        path = get_user_upload_path(self.user, 'myfile.jpg')
-        segments = path.split('/')
-        expected_segments = 5
-
-        self.assertEqual(len(segments), expected_segments)
-
-    def test_user_upload_path_should_not_rename_file(self):
-        """
-        Tests that get_user_upload_path does not rename file name.
-        """
-        path = get_user_upload_path(self.user, 'myfile.jpg')
-        segments = path.split('/')
-
-        self.assertEqual('myfile.jpg', segments[-1])
 
     def test_user_password_reset_token(self):
         """

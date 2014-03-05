@@ -1,9 +1,8 @@
-from django.test import TestCase
-
+from ...utils.tests import BaseTestCase
 from ..models import Comment
 
 
-class CommentTestCase(TestCase):
+class CommentTestCase(BaseTestCase):
     def test_model_should_have_expected_number_of_fields(self):
         """
         Tests the expected number of fields in model.

@@ -1,12 +1,10 @@
-from django.test import TestCase
-
 from ...utils.tests import BaseTestCase
 from ...accounts.models import EmailDomain
 from ..models import InvitedUser
 from ..serializers import SignupRequestSerializer, InvitedUserSerializer
 
 
-class SignupRequestSerializerTestCase(TestCase):
+class SignupRequestSerializerTestCase(BaseTestCase):
     def setUp(self):
         self.email = 'jpueblo@example.com'
 
@@ -108,9 +106,9 @@ class InvitedUserSerializerTestCase(BaseTestCase):
 
         self.assertEqual(serializer.errors, expected_errors)
 
-    def test_serializer_validate_should_invite_user(self):
+    def test_serializer_send_invite_should_invite_user(self):
         """
-        Tests that serializer should send user invitation.
+        Tests that serializer.send_invite() should send user invitation.
         """
         self.create_user()
         self.create_account()
@@ -128,6 +126,7 @@ class InvitedUserSerializerTestCase(BaseTestCase):
 
         serializer = InvitedUserSerializer(data=self.data)
         serializer.is_valid()
+        serializer.send_invite()
 
         invited_users = InvitedUser.objects.all()
 

@@ -1,10 +1,9 @@
-from django.test import TestCase
-
+from ...utils.tests import BaseTestCase
 from ..models import User
 from ..backends import EmailBackend
 
 
-class EmailBackendTestCase(TestCase):
+class EmailBackendTestCase(BaseTestCase):
     def setUp(self):
         self.username = 'jpueblo'
         self.password = 'abc123'

@@ -1,15 +1,15 @@
 import jwt
 
-from django.test import TestCase
 from django.conf import settings
 
+from ...utils.tests import BaseTestCase
 from ...users.models import User
 from ...accounts.models import Account, AccountCollaborator
 from ...boards.models import Board, BoardCollaborator
 from ..models import SignupRequest, InvitedUser
 
 
-class SignupRequestTestCase(TestCase):
+class SignupRequestTestCase(BaseTestCase):
     def setUp(self):
         self.signup_request = SignupRequest.objects.create(
             email='jpueblo@example.com')
@@ -43,7 +43,7 @@ class SignupRequestTestCase(TestCase):
         self.assertEqual(signup_request, self.signup_request)
 
 
-class InvitedUserTestCase(TestCase):
+class InvitedUserTestCase(BaseTestCase):
     def setUp(self):
         self.username = 'jpueblo'
         self.password = 'abc123'
@@ -131,12 +131,6 @@ class InvitedUserTestCase(TestCase):
 
         self.assertEqual(self.invited_user.get_gravatar_url(), expected_url)
 
-    def test_get_invite_url_should_returl_absolute_invite_url(self):
-        """
-        TODO: Write test when method is implemented.
-        """
-        pass
-
     def test_accept_invitation_should_create_account_collaborator(self):
         """
         Tests that accepting invitation creates AccountCollaborator.
@@ -177,9 +171,3 @@ class InvitedUserTestCase(TestCase):
         board_collaborator = BoardCollaborator.objects.filter(user=self.user)
 
         self.assertTrue(board_collaborator.exists())
-
-    def test_notify_pending_invitations_class_method(self):
-        """
-        TODO: Write test when method is implemented.
-        """
-        pass

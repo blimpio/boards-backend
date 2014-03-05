@@ -1,10 +1,10 @@
-from django.test import TestCase
 from django.core.exceptions import ValidationError
 
+from ...utils.tests import BaseTestCase
 from ..fields import PasswordField, ListField, DomainNameField
 
 
-class PasswordFieldTestCase(TestCase):
+class PasswordFieldTestCase(BaseTestCase):
     def test_field_should_have_default_length_options(self):
         """
         Tests that field should have default min_length and max_length set.
@@ -14,7 +14,7 @@ class PasswordFieldTestCase(TestCase):
         self.assertEqual(field.max_length, None)
 
 
-class DomainNameFieldTestCase(TestCase):
+class DomainNameFieldTestCase(BaseTestCase):
     def setUp(self):
         self.field = DomainNameField()
 
@@ -26,7 +26,7 @@ class DomainNameFieldTestCase(TestCase):
             self.field.run_validators('not a domain.')
 
 
-class ListFieldTestCase(TestCase):
+class ListFieldTestCase(BaseTestCase):
     def setUp(self):
         self.field = ListField()
 

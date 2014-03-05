@@ -1,9 +1,8 @@
-from django.test import TestCase
-
+from ...utils.tests import BaseTestCase
 from ..utils import get_gravatar_url
 
 
-class UtilsTestCase(TestCase):
+class UtilsTestCase(BaseTestCase):
     def test_get_gravatar_url_should_return_gravatar_url_for_email(self):
         """
         Tests that get_gravatar_url should return a Gravatar URL

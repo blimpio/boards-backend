@@ -8,7 +8,7 @@ from ...accounts.models import EmailDomain
 from ..models import SignupRequest
 
 
-class SignupRequestCreateAPIViewTestCase(TestCase):
+class SignupRequestCreateAPIViewTestCase(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
 

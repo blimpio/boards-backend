@@ -1,5 +1,3 @@
-from django.test import TestCase
-
 from ...accounts.models import Account, AccountCollaborator
 from ...invitations.models import SignupRequest, InvitedUser
 from ...utils.tests import BaseTestCase
@@ -11,7 +9,7 @@ from ..serializers import (ValidateUsernameSerializer, SignupSerializer,
                            UserSettingsSerializer, ChangePasswordSerializer)
 
 
-class ValidateUsernameSerializerTestCase(TestCase):
+class ValidateUsernameSerializerTestCase(BaseTestCase):
     def setUp(self):
         self.username = 'jpueblo'
         self.password = 'abc123'
@@ -82,7 +80,7 @@ class ValidateUsernameSerializerTestCase(TestCase):
         self.assertEqual(serializer.object, self.data)
 
 
-class SignupSerializerTestCase(TestCase):
+class SignupSerializerTestCase(BaseTestCase):
     def setUp(self):
         self.username = 'jpueblo'
         self.password = 'abc123'
@@ -348,7 +346,7 @@ class SignupSerializerTestCase(TestCase):
         self.assertFalse(signup_request.exists())
 
 
-class SignupInvitedUserSerializerTestCase(TestCase):
+class SignupInvitedUserSerializerTestCase(BaseTestCase):
     def setUp(self):
         self.username = 'jpueblo'
         self.password = 'abc123'
@@ -514,7 +512,7 @@ class SigninSerializerTestCase(BaseTestCase):
         self.assertEqual(serializer.errors, expected_error)
 
 
-class SigninInvitedUserSerializerTestCase(TestCase):
+class SigninInvitedUserSerializerTestCase(BaseTestCase):
     def setUp(self):
         self.username = 'jpueblo'
         self.password = 'abc123'
@@ -609,7 +607,7 @@ class SigninInvitedUserSerializerTestCase(TestCase):
         self.assertTrue('token' in serializer.object)
 
 
-class ForgotPasswordSerializerTestCase(TestCase):
+class ForgotPasswordSerializerTestCase(BaseTestCase):
     def setUp(self):
         self.username = 'jpueblo'
         self.password = 'abc123'
@@ -683,7 +681,7 @@ class ForgotPasswordSerializerTestCase(TestCase):
         self.assertEqual(serializer.data, {'email': ''})
 
 
-class ResetPasswordSerializerTestCase(TestCase):
+class ResetPasswordSerializerTestCase(BaseTestCase):
     def setUp(self):
         self.username = 'jpueblo'
         self.password = 'abc123'
