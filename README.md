@@ -15,6 +15,7 @@ $ pip install -r requirements.txt
 ```
 $ ./manage.py syncdb --noinput
 $ ./manage.py migrate
+$ ./manage.py loaddata blimp_boards/utils/fixtures/notification_types.json
 $ ./manage.py loaddata blimp_boards/users/fixtures/users.json
 ```
 
