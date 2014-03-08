@@ -31,6 +31,7 @@ DATABASES = {
 # Email settings
 EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
 MANDRILL_API_KEY = os.getenv('MANDRILL_API_KEY')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 
 # Static asset settings
