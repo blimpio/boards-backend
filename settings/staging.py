@@ -4,6 +4,10 @@ from . import env_var
 from .base import *
 
 
+# Application settings
+DOMAIN = 'boards-backend-staging.herokuapp.com'
+APPLICATION_URL = '{}://{}'.format(HTTP_PROTOCOL, DOMAIN)
+
 # Debug Mode
 DEBUG = env_var('DEBUG', False)
 TEMPLATE_DEBUG = env_var('TEMPLATE_DEBUG', False)
