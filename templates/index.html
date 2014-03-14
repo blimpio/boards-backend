@@ -13,12 +13,15 @@
   </head>
   <body>
     <div id="application"></div>
-    {% if board_is_shared %}
     <script>
       window.App = {
-        PUBLIC_BOARD: {
-          id: {{ board_id }}
-        }
+        STATIC_URL: "{{ settings.BOARDS_WEB_STATIC_URL }}"
+      };
+    </script>
+    {% if board_is_shared %}
+    <script>
+      window.App.PUBLIC_BOARD = {
+        id: {{ board_id }}
       };
     </script>
     {% endif %}
