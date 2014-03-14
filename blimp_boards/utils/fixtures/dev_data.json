@@ -370,7 +370,7 @@
         "date_modified": "2014-02-20T18:22:53.257Z",
         "file_size": null,
         "date_created": "2014-02-20T18:22:31.877Z",
-        "file_extension": "",
+        "mime_type": "",
         "board": 1,
         "origin_url": ""
     },
@@ -391,7 +391,7 @@
         "date_modified": "2014-02-20T18:23:16.819Z",
         "file_size": null,
         "date_created": "2014-02-20T18:23:16.747Z",
-        "file_extension": "",
+        "mime_type": "",
         "board": 2,
         "origin_url": ""
     },

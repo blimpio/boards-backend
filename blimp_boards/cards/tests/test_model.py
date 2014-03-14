@@ -33,4 +33,5 @@ class CardTestCase(BaseTestCase):
         with self.assertRaises(ValidationError):
             Card.objects.create(
                 name='The Card', type='stack', board=self.board,
-                created_by=self.user, content='Err!', file_extension='exe')
+                created_by=self.user, content='Err!',
+                mime_type='audio/mp4')

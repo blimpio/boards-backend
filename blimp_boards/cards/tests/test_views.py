@@ -62,7 +62,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
             'file_size': None,
-            'file_extension': ''
+            'mime_type': None
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -132,7 +132,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
             'file_size': None,
-            'file_extension': ''
+            'mime_type': None
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -181,7 +181,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
             'file_size': None,
-            'file_extension': ''
+            'mime_type': None
         }
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -218,7 +218,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
             'file_size': None,
-            'file_extension': ''
+            'mime_type': None
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -264,7 +264,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
             'file_size': None,
-            'file_extension': ''
+            'mime_type': None
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -303,7 +303,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
             'file_size': None,
-            'file_extension': ''
+            'mime_type': None
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -384,7 +384,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
             'file_size': None,
-            'file_extension': ''
+            'mime_type': None
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -1,3 +1,5 @@
+import mimetypes
+
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes import generic
@@ -17,6 +19,11 @@ class Card(BaseModel):
         ('file', 'File'),
         ('stack', 'Stack'),
     )
+
+    MIME_TYPE_CHOICES = []
+
+    for mimetype in list(sorted(set(mimetypes.types_map.values()))):
+        MIME_TYPE_CHOICES.append((mimetype, mimetype))
 
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=5, choices=TYPE_CHOICES)
@@ -39,7 +46,8 @@ class Card(BaseModel):
     thumbnail_lg_path = models.TextField(blank=True)
 
     file_size = models.IntegerField(null=True, blank=True)
-    file_extension = models.CharField(max_length=5, blank=True)
+    mime_type = models.CharField(
+        max_length=40, null=True, blank=True, choices=MIME_TYPE_CHOICES)
 
     comments = generic.GenericRelation('comments.Comment')
 
@@ -78,7 +86,7 @@ class Card(BaseModel):
         disallowed_fields = [
             'origin_url', 'content', 'thumbnail_sm_path',
             'thumbnail_md_path', 'thumbnail_lg_path',
-            'file_size', 'file_extension']
+            'file_size', 'mime_type']
 
         for field in disallowed_fields:
             if getattr(self, field):
