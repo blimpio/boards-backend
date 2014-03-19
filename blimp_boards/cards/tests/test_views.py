@@ -389,3 +389,36 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)
+
+    def test_viewset_should_create_stack(self):
+        """
+        Tests that POST to viewset creates a stack.
+        """
+        self.data = {
+            'name': 'My Stack',
+            'type': 'stack',
+            'board': self.board.id,
+            'content': 'My content',
+            'cards': [self.card.id]
+        }
+
+        response = self.client.post(self.base_url, self.data, format='json')
+
+        card = Card.objects.get(pk=response.data['id'])
+
+        expected_response = {
+            'created_by': card.created_by_id,
+            'id': card.id,
+            'date_created': card.date_created,
+            'date_modified': card.date_modified,
+            'name': card.name,
+            'slug': card.slug,
+            'type': card.type,
+            'board': card.board_id,
+            'cards': [self.card.id],
+            'featured': False,
+            'is_shared': False,
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data, expected_response)

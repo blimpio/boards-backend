@@ -1,11 +1,11 @@
-from rest_framework import filters, status
+from rest_framework import filters, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from ..utils.viewsets import ModelViewSet
 from ..utils.response import ErrorResponse
 from .models import Card
-from .serializers import CardSerializer, CardCommentSerializer
+from .serializers import CardSerializer, StackSerializer, CardCommentSerializer
 from .permissions import CardPermission
 
 
@@ -15,6 +15,15 @@ class CardViewSet(ModelViewSet):
     permission_classes = (CardPermission, )
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('board', )
+
+    def get_serializer_class(self):
+        if self.request.method not in permissions.SAFE_METHODS:
+            data = self.request.DATA
+
+            if data and data['type'] == 'stack':
+                return StackSerializer
+
+        return super(CardViewSet, self).get_serializer_class()
 
     def get_queryset(self):
         board = self.request.QUERY_PARAMS.get('board')
