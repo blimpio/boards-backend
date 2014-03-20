@@ -12,9 +12,9 @@ if __name__ == "__main__":
     else:
         settings = 'development'
 
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE",
-                          "settings.%s" % settings)
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'blimp_boards.settings')
+    os.environ.setdefault('DJANGO_CONFIGURATION', settings.title())
 
-    from django.core.management import execute_from_command_line
+    from configurations.management import execute_from_command_line
 
     execute_from_command_line(sys.argv)

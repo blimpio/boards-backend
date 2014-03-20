@@ -20,10 +20,10 @@ elif ENVIRONMENT == 'PRODUCTION':
 else:
     settings = 'development'
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE",
-                      "settings.%s" % settings)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'blimp_boards.settings')
+os.environ.setdefault('DJANGO_CONFIGURATION', settings.title())
 
-from django.core.wsgi import get_wsgi_application
+from configurations.wsgi import get_wsgi_application
 from dj_static import Cling
 
 application = Cling(get_wsgi_application())
