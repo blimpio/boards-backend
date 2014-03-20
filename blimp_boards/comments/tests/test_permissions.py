@@ -1,11 +1,8 @@
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.test import APIRequestFactory
 from rest_framework.views import APIView
-from rest_framework.request import Request
-from rest_framework.parsers import JSONParser
 
 from ...utils.tests import BaseTestCase
-from ...users.models import User
 from ..models import Comment
 from ..permissions import CommentPermission
 
