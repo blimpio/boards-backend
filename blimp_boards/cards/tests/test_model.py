@@ -14,7 +14,7 @@ class CardTestCase(BaseTestCase):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(Card._meta.fields), 17)
+        self.assertEqual(len(Card._meta.fields), 18)
 
     def test_model_should_validate_card_content(self):
         """
@@ -35,3 +35,58 @@ class CardTestCase(BaseTestCase):
                 name='The Card', type='stack', board=self.board,
                 created_by=self.user, content='Err!',
                 mime_type='audio/mp4')
+
+    def test_model_cards_set_stack(self):
+        """
+        Tests that adding cards on a stack, sets the stack
+        ForeignKey field on cards added to cards ManyToManyField.
+        """
+        self.create_card()
+
+        card = Card.objects.create(
+            name='The Stack', type='stack',
+            board=self.board, created_by=self.user)
+
+        card.cards.add(self.card)
+
+        self.card = Card.objects.get(pk=self.card.pk)
+
+        self.assertEqual(self.card.stack, card)
+
+    def test_model_remove_cards_unset_stack(self):
+        """
+        Tests that disolving cards on a stack, sets the stack
+        ForeignKey field to None.
+        """
+        self.create_card()
+
+        card = Card.objects.create(
+            name='The Stack', type='stack',
+            board=self.board, created_by=self.user)
+
+        card.cards.add(self.card)
+
+        card.cards.remove(self.card)
+
+        self.card = Card.objects.get(pk=self.card.pk)
+
+        self.assertEqual(self.card.stack, None)
+
+    def test_model_clear_cards_unset_stack(self):
+        """
+        Tests that disolving cards on a stack, sets the stack
+        ForeignKey field to None.
+        """
+        self.create_card()
+
+        card = Card.objects.create(
+            name='The Stack', type='stack',
+            board=self.board, created_by=self.user)
+
+        card.cards.add(self.card)
+
+        card.cards.clear()
+
+        self.card = Card.objects.get(pk=self.card.pk)
+
+        self.assertEqual(self.card.stack, None)

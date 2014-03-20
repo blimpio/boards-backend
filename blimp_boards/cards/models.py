@@ -4,6 +4,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes import generic
 from django.db.models.loading import get_model
+from django.dispatch import receiver
+from django.db.models.signals import m2m_changed
 
 from ..utils.models import BaseModel
 from ..utils.decorators import autoconnect
@@ -32,8 +34,12 @@ class Card(BaseModel):
         unique_with='board', reserved_keywords=CARD_RESERVED_KEYWORDS)
 
     board = models.ForeignKey('boards.Board')
-    cards = models.ManyToManyField('cards.Card', blank=True, null=True)
     created_by = models.ForeignKey('users.User')
+
+    stack = models.ForeignKey(
+        'cards.Card', blank=True, null=True, related_name='+')
+    cards = models.ManyToManyField(
+        'cards.Card', blank=True, null=True, related_name='+')
 
     featured = models.BooleanField(default=False)
     origin_url = models.URLField(blank=True)
@@ -114,3 +120,20 @@ class Card(BaseModel):
             label=label,
             extra_context=extra_context
         )
+
+
+@receiver(m2m_changed, sender=Card.cards.through)
+def cards_changed(sender, **kwargs):
+    """
+    Sets the `stack` field to reference a card's stack.
+    """
+    instance = kwargs['instance']
+    action = kwargs['action']
+    pk_set = kwargs['pk_set']
+
+    if action == 'post_add':
+        Card.objects.filter(pk__in=pk_set).update(stack=instance)
+    elif action == 'post_remove':
+        Card.objects.filter(pk__in=pk_set, stack=instance).update(stack=None)
+    elif action == 'post_clear':
+        Card.objects.filter(stack=instance).update(stack=None)
