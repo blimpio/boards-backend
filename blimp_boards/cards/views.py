@@ -26,17 +26,13 @@ class CardViewSet(ModelViewSet):
         return super(CardViewSet, self).get_serializer_class()
 
     def get_queryset(self):
-        board = self.request.QUERY_PARAMS.get('board')
         user = self.request.user
 
         if user.is_authenticated():
             user = self.request.user
-            return user.cards.prefetch_related('cards')
-
-        cards = Card.objects.filter(board__is_shared=True)
-
-        if board:
-            return cards.filter(board_id=board)
+            cards = user.cards
+        else:
+            cards = Card.objects.filter(board__is_shared=True)
 
         return cards.prefetch_related('cards')
 
