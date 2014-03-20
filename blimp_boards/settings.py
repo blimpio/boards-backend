@@ -7,7 +7,7 @@ from configurations import Configuration, values
 class Common(Configuration):
 
     # Application settings
-    ENVIRONMENT = values.Value('ENVIRONMENT', environ_prefix=None)
+    ENVIRONMENT = values.Value(environ_prefix=None)
     HTTP_PROTOCOL = 'https' if ENVIRONMENT != 'DEVELOPMENT' else 'http'
 
     # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -134,13 +134,13 @@ class Common(Configuration):
     ANNOUNCE_TEST_MODE = False
 
     # AWS
-    AWS_ACCESS_KEY_ID = values.Value('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = values.Value('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = values.Value('AWS_STORAGE_BUCKET_NAME')
+    AWS_ACCESS_KEY_ID = values.Value(environ_prefix=None)
+    AWS_SECRET_ACCESS_KEY = values.Value(environ_prefix=None)
+    AWS_STORAGE_BUCKET_NAME = values.Value(environ_prefix=None)
 
     # boards-web
-    BOARDS_WEB_STATIC_URL = values.Value('BOARDS_WEB_STATIC_URL')
-    BOARDS_WEB_CLIENT_VERSION = values.Value('BOARDS_WEB_CLIENT_VERSION')
+    BOARDS_WEB_STATIC_URL = values.Value(environ_prefix=None)
+    BOARDS_WEB_CLIENT_VERSION = values.Value(environ_prefix=None)
 
 
 class Development(Common):
