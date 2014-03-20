@@ -5,7 +5,8 @@ from .models import Card
 
 
 class CardAdmin(BaseModelAdmin):
-    list_display = ('name', 'slug', 'type', 'board', 'created_by', 'featured')
+    list_display = ('name', 'slug', 'position', 'type', 'board',
+                    'created_by', 'featured')
     prepopulated_fields = {
         'slug': ('name', )
     }

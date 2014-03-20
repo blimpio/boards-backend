@@ -47,6 +47,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         expected_response = [{
             'created_by': self.card.created_by_id,
             'id': self.card.id,
+            'position': self.card.position,
             'date_created': self.card.date_created,
             'date_modified': self.card.date_modified,
             'name': self.card.name,
@@ -118,6 +119,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         expected_response = {
             'created_by': self.card.created_by_id,
             'id': self.card.id,
+            'position': self.card.position,
             'date_created': self.card.date_created,
             'date_modified': self.card.date_modified,
             'name': self.card.name,
@@ -168,6 +170,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         expected_response = {
             'created_by': card.created_by_id,
             'id': card.id,
+            'position': card.position,
             'date_created': card.date_created,
             'date_modified': card.date_modified,
             'name': card.name,
@@ -209,6 +212,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'date_created': card.date_created,
             'date_modified': card.date_modified,
             'name': self.data['name'],
+            'position': card.position,
             'slug': card.slug,
             'type': card.type,
             'board': card.board_id,
@@ -256,6 +260,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'date_created': card.date_created,
             'date_modified': card.date_modified,
             'name': self.data['name'],
+            'position': card.position,
             'slug': card.slug,
             'type': card.type,
             'board': card.board_id,
@@ -292,6 +297,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         expected_response = [{
             'created_by': self.card.created_by_id,
             'id': self.card.id,
+            'position': self.card.position,
             'date_created': self.card.date_created,
             'date_modified': self.card.date_modified,
             'name': self.card.name,
@@ -373,6 +379,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         expected_response = [{
             'created_by': self.card.created_by_id,
             'id': self.card.id,
+            'position': self.card.position,
             'date_created': self.card.date_created,
             'date_modified': self.card.date_modified,
             'name': self.card.name,
@@ -414,6 +421,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         expected_response = {
             'created_by': card.created_by_id,
             'id': card.id,
+            'position': card.position,
             'date_created': card.date_created,
             'date_modified': card.date_modified,
             'name': card.name,

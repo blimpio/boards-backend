@@ -1,5 +1,7 @@
 import mimetypes
 
+import positions
+
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes import generic
@@ -36,6 +38,9 @@ class Card(BaseModel):
     board = models.ForeignKey('boards.Board')
     created_by = models.ForeignKey('users.User')
 
+    position = positions.PositionField(collection='board')
+    objects = positions.PositionManager()
+
     stack = models.ForeignKey(
         'cards.Card', blank=True, null=True, related_name='+')
     cards = models.ManyToManyField(
@@ -59,6 +64,7 @@ class Card(BaseModel):
 
     class Meta:
         announce = True
+        ordering = ['position']
 
     def __str__(self):
         return self.name

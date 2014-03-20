@@ -33,6 +33,7 @@ class CardSerializerTestCase(BaseTestCase):
             'type': '',
             'board': None,
             'cards': [],
+            'position': -1,
             'featured': False,
             'origin_url': '',
             'content': '',
@@ -81,6 +82,7 @@ class CardSerializerTestCase(BaseTestCase):
         expected_data = {
             'created_by': serializer.object.created_by_id,
             'id': serializer.object.id,
+            'position': serializer.object.position,
             'date_created': serializer.object.date_created,
             'date_modified': serializer.object.date_modified,
             'name': self.data['name'],
@@ -133,6 +135,7 @@ class CardSerializerTestCase(BaseTestCase):
         expected_data = {
             'created_by': serializer.object.created_by_id,
             'id': serializer.object.id,
+            'position': serializer.object.position,
             'date_created': serializer.object.date_created,
             'date_modified': serializer.object.date_modified,
             'name': data['name'],
@@ -180,6 +183,7 @@ class StackSerializerTestCase(BaseTestCase):
         expected_data = {
             'name': '',
             'type': '',
+            'position': -1,
             'board': None,
             'cards': [],
             'featured': False,
@@ -222,6 +226,7 @@ class StackSerializerTestCase(BaseTestCase):
         expected_data = {
             'created_by': serializer.object.created_by_id,
             'id': serializer.object.id,
+            'position': serializer.object.position,
             'date_created': serializer.object.date_created,
             'date_modified': serializer.object.date_modified,
             'name': self.data['name'],
@@ -266,6 +271,7 @@ class StackSerializerTestCase(BaseTestCase):
         expected_data = {
             'created_by': serializer.object.created_by_id,
             'id': serializer.object.id,
+            'position': serializer.object.position,
             'date_created': serializer.object.date_created,
             'date_modified': serializer.object.date_modified,
             'name': data['name'],

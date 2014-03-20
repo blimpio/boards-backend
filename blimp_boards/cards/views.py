@@ -7,14 +7,15 @@ from ..utils.response import ErrorResponse
 from .models import Card
 from .serializers import CardSerializer, StackSerializer, CardCommentSerializer
 from .permissions import CardPermission
+from .filters import CardFilter
 
 
 class CardViewSet(ModelViewSet):
     model = Card
     serializer_class = CardSerializer
     permission_classes = (CardPermission, )
+    filter_class = CardFilter
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('board', )
 
     def get_serializer_class(self):
         if self.request.method not in permissions.SAFE_METHODS:
