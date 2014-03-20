@@ -287,8 +287,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             name='Another Card', type='note', content='abc123',
             board=board, created_by=self.user)
 
-        response = self.client.get('{}?board={}'.format(
-            self.base_url, self.board.id))
+        response = self.client.get(self.base_url, {'board': self.board.id})
 
         expected_response = [{
             'created_by': self.card.created_by_id,
@@ -369,8 +368,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         self.board.save()
 
         self.client = APIClient()
-        response = self.client.get('{}?board={}'.format(
-            self.base_url, self.board.id))
+        response = self.client.get(self.base_url, {'board': self.board.id})
 
         expected_response = [{
             'created_by': self.card.created_by_id,

@@ -343,8 +343,7 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
         Board.objects.create(
             name='Another Board', account=self.account, created_by=self.user)
 
-        response = self.client.get('{}?board={}'.format(
-            self.base_url, self.board.id))
+        response = self.client.get(self.base_url, {'board': self.board.id})
 
         expected_response = [{
             'id': self.board_collaborator.id,

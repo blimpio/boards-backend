@@ -60,8 +60,8 @@ class CardPermissionTestCase(BaseTestCase):
         Tests that `.has_permission` returns `True` for an
         unauthenticated user listing cards for a specific board.
         """
-        url = '/?board={}'.format(self.board.id)
-        request = Request(self.factory.get(url, format='json'))
+        params = {'board': self.board.id}
+        request = Request(self.factory.get('/', params, format='json'))
         request.parsers = (JSONParser(), )
         request.user = AnonymousUser()
 
