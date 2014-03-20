@@ -23,10 +23,10 @@ def generate_policy(bucket, mime_type, file_size):
         "expiration": expiration,
         "conditions": [
             {"bucket": bucket},
-            {"acl": "public-read"},
+            {"acl": "private"},
             {"content-type": mime_type},
             {"success_action_status": "200"},
-            ["starts-with", "$key", "uploads/"],
+            ["starts-with", "$key", "cards/"],
             ["content-length-range", 0, file_size],
         ]
     }
@@ -57,4 +57,4 @@ def generate_file_key(name=None, user=None):
 
     TODO: Generate correct key depending on what object the file belongs.
     """
-    return 'uploads/cards/{}/{}/{}'.format(user.id, uuid.uuid4(), name)
+    return 'cards/{}/{}'.format(uuid.uuid4(), name)
