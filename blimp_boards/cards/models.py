@@ -13,6 +13,7 @@ from ..utils.models import BaseModel
 from ..utils.decorators import autoconnect
 from ..utils.fields import ReservedKeywordsAutoSlugField
 from ..notifications.signals import notify
+from ..files.previews import queue_previews
 from .constants import CARD_RESERVED_KEYWORDS
 
 
@@ -84,6 +85,21 @@ class Card(BaseModel):
         model object is saved.
         """
         self.full_clean()
+
+    def post_save(self, created, *args, **kwargs):
+        """
+        Detect if new card is a file and request thumbnails.
+        """
+        if created and self.type == 'file':
+            url = self.content
+            sizes = ['200x200', '500x500', '800x800']
+            metadata = {
+                'cardId': self.id
+            }
+
+            queue_previews(url, sizes, metadata)
+
+        super(Card, self).post_save(created, *args, **kwargs)
 
     def clean(self):
         """

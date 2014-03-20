@@ -1,9 +1,13 @@
 from django.conf import settings
 from django.utils.encoding import smart_text
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from ..cards.models import Card
+from ..utils.parsers import PlainTextParser
 from .utils import generate_policy, generate_signature, generate_file_key
+from .previews import decode_previews_payload
 
 
 class SignS3FileUploadAPIView(APIView):
@@ -34,3 +38,37 @@ class SignS3FileUploadAPIView(APIView):
         }
 
         return Response(params)
+
+
+class FilePreviewsWebhook(APIView):
+    authentication_classes = ()
+    permission_classes = ()
+    parser_classes = (PlainTextParser, )
+
+    def post(self, request):
+        payload = decode_previews_payload(request.DATA)
+
+        if not payload:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        try:
+            metadata = payload['metadata']
+            card = Card.objects.get(pk=metadata['cardId'])
+        except Card.DoesNotExist:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        for result in payload['results']:
+            size = result['size']
+
+            if size['width'] == '200':
+                card.thumbnail_sm_path = result['url']
+
+            if size['width'] == '500':
+                card.thumbnail_md_path = result['url']
+
+            if size['width'] == '800':
+                card.thumbnail_lg_path = result['url']
+
+        card.save()
+
+        return Response(status=status.HTTP_200_OK)
