@@ -3,7 +3,6 @@ import mimetypes
 import positions
 
 from django.db import models
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes import generic
 from django.db.models.loading import get_model
