@@ -5,6 +5,9 @@ from .models import Card
 
 
 class CardSerializer(serializers.ModelSerializer):
+    thumbnail_sm_path = serializers.Field(source='get_thumbnail_sm_path')
+    thumbnail_md_path = serializers.Field(source='get_thumbnail_md_path')
+    thumbnail_lg_path = serializers.Field(source='get_thumbnail_lg_path')
     created_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:

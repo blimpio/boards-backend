@@ -38,9 +38,6 @@ class CardSerializerTestCase(BaseTestCase):
             'origin_url': '',
             'content': '',
             'is_shared': False,
-            'thumbnail_sm_path': '',
-            'thumbnail_md_path': '',
-            'thumbnail_lg_path': '',
             'file_size': 0,
             'mime_type': None
         }
@@ -95,9 +92,9 @@ class CardSerializerTestCase(BaseTestCase):
             'origin_url': '',
             'content': self.data['content'],
             'is_shared': False,
-            'thumbnail_sm_path': '',
-            'thumbnail_md_path': '',
-            'thumbnail_lg_path': '',
+            'thumbnail_sm_path': None,
+            'thumbnail_md_path': None,
+            'thumbnail_lg_path': None,
             'file_size': None,
             'mime_type': None
         }
@@ -148,9 +145,9 @@ class CardSerializerTestCase(BaseTestCase):
             'origin_url': '',
             'content': '',
             'is_shared': False,
-            'thumbnail_sm_path': '',
-            'thumbnail_md_path': '',
-            'thumbnail_lg_path': '',
+            'thumbnail_sm_path': None,
+            'thumbnail_md_path': None,
+            'thumbnail_lg_path': None,
             'file_size': None,
             'mime_type': None
         }

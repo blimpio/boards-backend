@@ -137,6 +137,7 @@ class Common(Configuration):
     AWS_ACCESS_KEY_ID = values.Value(environ_prefix=None)
     AWS_SECRET_ACCESS_KEY = values.Value(environ_prefix=None)
     AWS_STORAGE_BUCKET_NAME = values.Value(environ_prefix=None)
+    AWS_SIGNATURE_EXPIRES_IN = 60 * 60 * 3
 
     # boards-web
     BOARDS_WEB_STATIC_URL = values.Value(environ_prefix=None)

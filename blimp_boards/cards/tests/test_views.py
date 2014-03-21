@@ -60,9 +60,9 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'origin_url': '',
             'content': self.card.content,
             'is_shared': False,
-            'thumbnail_sm_path': '',
-            'thumbnail_md_path': '',
-            'thumbnail_lg_path': '',
+            'thumbnail_sm_path': None,
+            'thumbnail_md_path': None,
+            'thumbnail_lg_path': None,
             'file_size': None,
             'mime_type': None
         }]
@@ -132,9 +132,9 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'origin_url': '',
             'content': self.card.content,
             'is_shared': False,
-            'thumbnail_sm_path': '',
-            'thumbnail_md_path': '',
-            'thumbnail_lg_path': '',
+            'thumbnail_sm_path': None,
+            'thumbnail_md_path': None,
+            'thumbnail_lg_path': None,
             'file_size': None,
             'mime_type': None
         }
@@ -183,9 +183,9 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'origin_url': '',
             'content': card.content,
             'is_shared': False,
-            'thumbnail_sm_path': '',
-            'thumbnail_md_path': '',
-            'thumbnail_lg_path': '',
+            'thumbnail_sm_path': None,
+            'thumbnail_md_path': None,
+            'thumbnail_lg_path': None,
             'file_size': None,
             'mime_type': None
         }
@@ -222,9 +222,9 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'origin_url': '',
             'content': card.content,
             'is_shared': False,
-            'thumbnail_sm_path': '',
-            'thumbnail_md_path': '',
-            'thumbnail_lg_path': '',
+            'thumbnail_sm_path': None,
+            'thumbnail_md_path': None,
+            'thumbnail_lg_path': None,
             'file_size': None,
             'mime_type': None
         }
@@ -270,9 +270,9 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'origin_url': '',
             'content': self.data['content'],
             'is_shared': False,
-            'thumbnail_sm_path': '',
-            'thumbnail_md_path': '',
-            'thumbnail_lg_path': '',
+            'thumbnail_sm_path': None,
+            'thumbnail_md_path': None,
+            'thumbnail_lg_path': None,
             'file_size': None,
             'mime_type': None
         }
@@ -310,9 +310,9 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'origin_url': '',
             'content': self.card.content,
             'is_shared': False,
-            'thumbnail_sm_path': '',
-            'thumbnail_md_path': '',
-            'thumbnail_lg_path': '',
+            'thumbnail_sm_path': None,
+            'thumbnail_md_path': None,
+            'thumbnail_lg_path': None,
             'file_size': None,
             'mime_type': None
         }]
@@ -392,9 +392,9 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'origin_url': '',
             'content': self.card.content,
             'is_shared': False,
-            'thumbnail_sm_path': '',
-            'thumbnail_md_path': '',
-            'thumbnail_lg_path': '',
+            'thumbnail_sm_path': None,
+            'thumbnail_md_path': None,
+            'thumbnail_lg_path': None,
             'file_size': None,
             'mime_type': None
         }]

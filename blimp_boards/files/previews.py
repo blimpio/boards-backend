@@ -2,6 +2,10 @@ import jwt
 import requests
 
 from django.conf import settings
+from django.utils.log import getLogger
+
+
+logger = getLogger(__name__)
 
 
 def queue_previews(url, sizes, metadata):
@@ -18,10 +22,15 @@ def queue_previews(url, sizes, metadata):
         'content-type': 'text/plain'
     }
 
-    request = requests.post(
-        settings.BLIMP_PREVIEWS_URL, data=token, headers=headers)
+    try:
+        logger.info('Requesting previews for {}'.format(url))
 
-    print(request.json())
+        request = requests.post(
+            settings.BLIMP_PREVIEWS_URL, data=token, headers=headers)
+
+        logger.info(request.json())
+    except Exception as e:
+            logger.exception(e)
 
 
 def decode_previews_payload(token):

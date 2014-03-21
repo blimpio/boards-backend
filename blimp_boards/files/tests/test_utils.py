@@ -37,10 +37,10 @@ class UtilsTestCase(BaseTestCase):
         expected_policy = {
             'conditions': [
                 {'bucket': 'mybucket'},
-                {'acl': 'public-read'},
+                {'acl': 'private'},
                 {'content-type': 'image/jpeg'},
                 {'success_action_status': '200'},
-                ['starts-with', '$key', 'uploads/'],
+                ['starts-with', '$key', 'cards/'],
                 ['content-length-range', 0, 1000]
             ],
             'expiration': '2014-02-26T00:00:00.000Z'
@@ -74,7 +74,6 @@ class UtilsTestCase(BaseTestCase):
 
         key = generate_file_key(name='photo.jpg', user=user)
 
-        expected_key = ('uploads/cards/1/'
-                        '16fd2706-8baf-433b-82eb-8c7fada847da/photo.jpg')
+        expected_key = ('cards/16fd2706-8baf-433b-82eb-8c7fada847da/photo.jpg')
 
         self.assertEqual(key, expected_key)

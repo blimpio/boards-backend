@@ -3,6 +3,7 @@ import mimetypes
 import positions
 
 from django.db import models
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes import generic
 from django.db.models.loading import get_model
@@ -14,6 +15,7 @@ from ..utils.decorators import autoconnect
 from ..utils.fields import ReservedKeywordsAutoSlugField
 from ..notifications.signals import notify
 from ..files.previews import queue_previews
+from ..files.utils import sign_s3_url
 from .constants import CARD_RESERVED_KEYWORDS
 
 
@@ -90,8 +92,8 @@ class Card(BaseModel):
         """
         Detect if new card is a file and request thumbnails.
         """
-        if created and self.type == 'file':
-            url = self.content
+        if created and self.type == 'file' and self.content:
+            url = sign_s3_url(self.content)
             sizes = ['200x200', '500x500', '800x800']
             metadata = {
                 'cardId': self.id
@@ -120,6 +122,24 @@ class Card(BaseModel):
             if getattr(self, field):
                 msg = 'The `{}` field should not be set on a card stack.'
                 raise ValidationError(msg.format(field))
+
+    def get_signed_thumbnail(self, field_name):
+        """
+        Returns an AWS S3 signed URL with expiration.
+        """
+        field = getattr(self, field_name)
+
+        if field:
+            return sign_s3_url(field)
+
+    def get_thumbnail_sm_path(self):
+        return self.get_signed_thumbnail('thumbnail_sm_path')
+
+    def get_thumbnail_md_path(self):
+        return self.get_signed_thumbnail('thumbnail_md_path')
+
+    def get_thumbnail_lg_path(self):
+        return self.get_signed_thumbnail('thumbnail_lg_path')
 
     def notify_comment_created(self, user, comment):
         User = get_model('users', 'User')
