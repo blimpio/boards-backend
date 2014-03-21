@@ -43,6 +43,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'slug': 'the-board',
             'account': self.board.account_id,
             'is_shared': False,
+            'disqus_shortname': '',
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': ''
@@ -102,6 +103,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'slug': 'the-board',
             'account': self.board.account_id,
             'is_shared': False,
+            'disqus_shortname': '',
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': ''
@@ -152,6 +154,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'slug': 'new-board-name',
             'account': board.account_id,
             'is_shared': False,
+            'disqus_shortname': '',
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': ''
@@ -184,6 +187,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'slug': 'the-board',
             'account': self.board.account_id,
             'is_shared': False,
+            'disqus_shortname': '',
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': ''
@@ -226,6 +230,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'slug': 'the-board',
             'account': self.board.account_id,
             'is_shared': False,
+            'disqus_shortname': '',
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': ''
@@ -254,6 +259,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'slug': 'the-board',
             'account': self.board.account_id,
             'is_shared': True,
+            'disqus_shortname': '',
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': ''
