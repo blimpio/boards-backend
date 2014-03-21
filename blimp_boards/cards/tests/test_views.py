@@ -435,3 +435,42 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data, expected_response)
+
+    def test_viewset_unstack(self):
+        """
+        Tests that PUT to unstack, removes stack card
+        and updates cards.
+        """
+        self.data = {
+            'name': 'My Stack',
+            'type': 'stack',
+            'board': self.board,
+            'created_by': self.user
+        }
+
+        stack = Card.objects.create(**self.data)
+
+        stack.cards.add(self.card)
+
+        response = self.client.put(
+            '{}{}/unstack/'.format(self.base_url, stack.id))
+
+        card = Card.objects.get(pk=self.card.id)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.data, None)
+
+        self.assertEqual(list(stack.cards.all()), [])
+        self.assertEqual(card.stack, None)
+
+    def test_viewset_unstack_card_should_return_error(self):
+        """
+        Tests that PUT to unstack should only work on stack cards.
+        """
+        response = self.client.put(
+            '{}{}/unstack/'.format(self.base_url, self.card.id))
+
+        expected_response = {'error': 'Malformed request.', 'status_code': 400}
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, expected_response)

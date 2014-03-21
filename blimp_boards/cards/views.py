@@ -1,6 +1,7 @@
 from rest_framework import filters, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.exceptions import ParseError
 
 from ..utils.viewsets import ModelViewSet
 from ..utils.response import ErrorResponse
@@ -67,3 +68,16 @@ class CardViewSet(ModelViewSet):
             serializer = CardCommentSerializer(comments, many=True)
 
         return Response(serializer.data)
+
+    @action(methods=['PUT'])
+    def unstack(self, request, pk=None):
+        card = self.get_object()
+
+        if card.type != 'stack':
+            raise ParseError
+
+        card.cards.clear()
+
+        card.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
