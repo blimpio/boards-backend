@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.utils.encoding import smart_text
+
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -57,18 +58,24 @@ class FilePreviewsWebhook(APIView):
         except Card.DoesNotExist:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        for result in payload['results']:
-            size = result['size']
+        error = payload.get('error')
 
-            if size['width'] == '200':
-                card.thumbnail_sm_path = result['url']
+        if not error:
+            results = payload.get('results', [])
 
-            if size['width'] == '500':
-                card.thumbnail_md_path = result['url']
+            for result in results:
+                size = result['size']
 
-            if size['width'] == '800':
-                card.thumbnail_lg_path = result['url']
+                if size['width'] == '200':
+                    card.thumbnail_sm_path = result['url']
 
-        card.save()
+                if size['width'] == '500':
+                    card.thumbnail_md_path = result['url']
+
+                if size['width'] == '800':
+                    card.thumbnail_lg_path = result['url']
+
+            if results:
+                card.save()
 
         return Response(status=status.HTTP_200_OK)

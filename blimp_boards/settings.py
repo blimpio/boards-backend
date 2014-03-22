@@ -104,6 +104,31 @@ class Common(Configuration):
         'blimp_boards.users.backends.EmailBackend',
     )
 
+    # Logging configuration.
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+            },
+        },
+        'handlers': {
+            'console': {
+                'level': 'INFO',
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose'
+            },
+        },
+        'loggers': {
+            'django.db.backends': {
+                'level': 'ERROR',
+                'handlers': ['console'],
+                'propagate': False,
+            }
+        }
+    }
+
     # Cache
     SITEMAP_CACHE_TIMEOUT = 60 * 60 * 24
 
@@ -268,23 +293,3 @@ class Staging(Common):
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     )
-
-    # Logging configuration.
-    LOGGING = {
-        "version": 1,
-        # Don't throw away default loggers.
-        "disable_existing_loggers": False,
-        "handlers": {
-            # Redefine console logger to run in production.
-            "console": {
-                "level": "INFO",
-                "class": "logging.StreamHandler",
-            },
-        },
-        "loggers": {
-            # Redefine django logger to use redefined console logging.
-            "django": {
-                "handlers": ["console"],
-            }
-        }
-    }
