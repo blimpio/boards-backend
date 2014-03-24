@@ -15,7 +15,7 @@
     <div id="application"></div>
     <script>
       window.App = {
-        STATIC_URL: "{{ settings.BOARDS_WEB_STATIC_URL }}"
+        STATIC_URL: "{% boards_web_static %}"
       };
     </script>
     {% if board_is_shared %}
