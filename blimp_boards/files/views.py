@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.utils.encoding import smart_text
+from django.utils.six.moves.urllib.parse import unquote
 
 from rest_framework import status
 from rest_framework.views import APIView
@@ -65,15 +66,16 @@ class FilePreviewsWebhook(APIView):
 
             for result in results:
                 size = result['size']
+                url = unquote(result['url'])
 
                 if size['width'] == '200':
-                    card.thumbnail_sm_path = result['url']
+                    card.thumbnail_sm_path = url
 
                 if size['width'] == '500':
-                    card.thumbnail_md_path = result['url']
+                    card.thumbnail_md_path = url
 
                 if size['width'] == '800':
-                    card.thumbnail_lg_path = result['url']
+                    card.thumbnail_lg_path = url
 
             if results:
                 card.save()

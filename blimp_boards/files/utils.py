@@ -7,7 +7,7 @@ import uuid
 import time
 
 from django.conf import settings
-from django.utils.six.moves.urllib.parse import urlencode
+from django.utils.six.moves.urllib.parse import urlencode, quote
 from django.utils.encoding import smart_bytes, smart_text
 from django.utils.timezone import now
 
@@ -81,6 +81,8 @@ class S3UrlSigner(object):
         Returns a full signed URL from a given verb, key,
         bucket, and expires_in_seconds.
         """
+        key = quote(key)
+
         expires = int(time.time() + expires_in_seconds)
 
         str = '{}\n\n\n{}\n/{}'.format(verb, expires, bucket)
