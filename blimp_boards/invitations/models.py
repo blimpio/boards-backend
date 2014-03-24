@@ -79,7 +79,7 @@ class InvitedUser(BaseModel):
         """
         payload = {
             'type': 'InvitedUser',
-            'pk': self.pk
+            'email': self.email
         }
 
         jwt_token = jwt.encode(payload, settings.SECRET_KEY)
