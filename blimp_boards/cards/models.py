@@ -1,5 +1,3 @@
-import mimetypes
-
 import positions
 
 from django.db import models
@@ -25,11 +23,6 @@ class Card(BaseModel):
         ('file', 'File'),
         ('stack', 'Stack'),
     )
-
-    MIME_TYPE_CHOICES = []
-
-    for mimetype in list(sorted(set(mimetypes.types_map.values()))):
-        MIME_TYPE_CHOICES.append((mimetype, mimetype))
 
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=5, choices=TYPE_CHOICES)
@@ -59,8 +52,7 @@ class Card(BaseModel):
     thumbnail_lg_path = models.TextField(blank=True)
 
     file_size = models.IntegerField(null=True, blank=True)
-    mime_type = models.CharField(
-        max_length=40, null=True, blank=True, choices=MIME_TYPE_CHOICES)
+    mime_type = models.CharField(max_length=40, null=True, blank=True)
 
     comments = generic.GenericRelation('comments.Comment')
 
