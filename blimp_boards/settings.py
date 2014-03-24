@@ -173,6 +173,9 @@ class Common(Configuration):
     BLIMP_PREVIEWS_SECRET_KEY = values.Value(environ_prefix=None)
     BLIMP_PREVIEWS_URL = values.Value(environ_prefix=None)
 
+    # boards-sockets
+    BOARDS_SOCKETS_URL = values.Value(environ_prefix=None)
+
 
 class Development(Common):
     """
