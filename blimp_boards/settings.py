@@ -150,13 +150,13 @@ class Common(Configuration):
 
     JWT_AUTH = {
         'JWT_PAYLOAD_HANDLER':
-        'blimp_boards.utils.jwt_handlers.jwt_payload_handler',
+        'blimp_boafrds.utils.jwt_handlers.jwt_payload_handler',
 
         'JWT_EXPIRATION_DELTA': datetime.timedelta(days=90)
     }
 
     # Announce
-    ANNOUNCE_TEST_MODE = False
+    ANNOUNCE_TEST_MODE = values.Value(environ_prefix=None, default=True)
 
     # AWS
     AWS_ACCESS_KEY_ID = values.Value(environ_prefix=None)
@@ -209,9 +209,6 @@ class Development(Common):
         'rest_framework.renderers.BrowsableAPIRenderer',
     )
 
-    # Announce
-    ANNOUNCE_TEST_MODE = True
-
     # boards-web
     BOARDS_WEB_STATIC_URL = 'http://localhost:3333/'
 
@@ -246,9 +243,6 @@ class Testing(Development):
 
     # Email Settings
     EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
-
-    # Announce
-    ANNOUNCE_TEST_MODE = True
 
     # South
     SOUTH_TESTS_MIGRATE = False
