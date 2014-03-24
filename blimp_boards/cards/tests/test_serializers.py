@@ -39,7 +39,7 @@ class CardSerializerTestCase(BaseTestCase):
             'content': '',
             'is_shared': False,
             'file_size': 0,
-            'mime_type': None
+            'mime_type': ''
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -96,7 +96,7 @@ class CardSerializerTestCase(BaseTestCase):
             'thumbnail_md_path': None,
             'thumbnail_lg_path': None,
             'file_size': None,
-            'mime_type': None
+            'mime_type': ''
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -149,7 +149,7 @@ class CardSerializerTestCase(BaseTestCase):
             'thumbnail_md_path': None,
             'thumbnail_lg_path': None,
             'file_size': None,
-            'mime_type': None
+            'mime_type': ''
         }
 
         self.assertEqual(serializer.data, expected_data)

@@ -52,7 +52,7 @@ class Card(BaseModel):
     thumbnail_lg_path = models.TextField(blank=True)
 
     file_size = models.IntegerField(null=True, blank=True)
-    mime_type = models.CharField(max_length=40, null=True, blank=True)
+    mime_type = models.CharField(max_length=40, blank=True)
 
     comments = generic.GenericRelation('comments.Comment')
 
