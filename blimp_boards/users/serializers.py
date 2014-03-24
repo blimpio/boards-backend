@@ -348,7 +348,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email',
+        fields = ('id', 'username', 'first_name', 'last_name', 'email',
                   'job_title', 'avatar_path', 'gravatar_url',
                   'timezone', 'date_created', 'date_modified',
                   'token', 'accounts',)
@@ -362,7 +362,7 @@ class UserSettingsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email',
+        fields = ('id', 'username', 'first_name', 'last_name', 'email',
                   'job_title', 'avatar_path', 'gravatar_url',
                   'timezone', 'date_created', 'date_modified', 'token',)
 
