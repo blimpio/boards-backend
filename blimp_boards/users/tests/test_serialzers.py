@@ -795,7 +795,7 @@ class UserSerializerTestCase(BaseTestCase):
         data_keys = [key for key in user_data.keys()]
 
         expected_keys = [
-            'username', 'first_name', 'last_name', 'email',
+            'id', 'username', 'first_name', 'last_name', 'email',
             'job_title', 'avatar_path', 'gravatar_url', 'timezone',
             'date_created', 'date_modified', 'token', 'accounts']
 
@@ -850,6 +850,7 @@ class UserSettingsSerializerTestCase(BaseTestCase):
         serializer.is_valid()
 
         expected_data = {
+            'id': self.user.id,
             'username': self.user.username,
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
@@ -954,6 +955,7 @@ class UserSettingsSerializerTestCase(BaseTestCase):
         serializer.save()
 
         expected_data = {
+            'id': self.user.id,
             'username': self.user.username,
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,

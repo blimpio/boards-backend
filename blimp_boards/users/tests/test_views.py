@@ -667,6 +667,7 @@ class UserSettingsAPIViewTestCase(AuthenticatedAPITestCase):
         """
         response = self.client.get(self.url)
         expected_response = {
+            'id': self.user.id,
             'username': self.username,
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
@@ -712,6 +713,7 @@ class UserSettingsAPIViewTestCase(AuthenticatedAPITestCase):
         self.user = User.objects.get(username=self.username)
 
         expected_response = {
+            'id': self.user.id,
             'username': self.username,
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
@@ -771,6 +773,7 @@ class ChangePasswordAPIViewTestCase(AuthenticatedAPITestCase):
         self.user = User.objects.get(username=self.username)
 
         expected_response = {
+            'id': self.user.id,
             'username': self.username,
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
