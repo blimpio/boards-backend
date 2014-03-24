@@ -79,6 +79,7 @@ class InvitedUser(BaseModel):
         """
         payload = {
             'type': 'InvitedUser',
+            'pk': self.pk,
             'email': self.email
         }
 
