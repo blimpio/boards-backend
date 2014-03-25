@@ -157,7 +157,7 @@ class Common(Configuration):
     }
 
     # Announce
-    ANNOUNCE_TEST_MODE = values.Value(environ_prefix=None, default=True)
+    ANNOUNCE_TEST_MODE = values.BooleanValue(environ_prefix=None, default=True)
 
     # AWS
     AWS_ACCESS_KEY_ID = values.Value(environ_prefix=None)
