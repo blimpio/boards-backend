@@ -71,14 +71,17 @@ class BaseModel(models.Model):
             'data': self.to_dict()
         }
 
-        redis_url = urlparse.urlparse(settings.BOARDS_SOCKETS_REDIS_URL)
+        redis_configuration = {}
 
-        redis_configuration = {
-            'host': redis_url.hostname,
-            'password': redis_url.password,
-            'port': int(redis_url.port) if redis_url.port else 6379,
-            'db': int(redis_url.path[1:]) if redis_url.path[1:] else 0,
-        }
+        if not settings.ANNOUNCE_TEST_MODE:
+            redis_url = urlparse.urlparse(settings.BOARDS_SOCKETS_REDIS_URL)
+
+            redis_configuration.update({
+                'host': redis_url.hostname,
+                'password': redis_url.password,
+                'port': int(redis_url.port) if redis_url.port else 6379,
+                'db': int(redis_url.path[1:]) if redis_url.path[1:] else 0,
+            })
 
         announce = Announce(
             json_dumps=json_renderer,
