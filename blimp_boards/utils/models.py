@@ -1,3 +1,10 @@
+try:
+    import urlparse
+except ImportError:
+    import urllib.parse as urlparse
+
+urlparse.uses_netloc.append('redis')
+
 from django.db import models
 from django.conf import settings
 from django.utils.encoding import smart_text
@@ -64,9 +71,19 @@ class BaseModel(models.Model):
             'data': self.to_dict()
         }
 
+        redis_url = urlparse.urlparse(settings.BOARDS_SOCKETS_REDIS_URL)
+
+        redis_configuration = {
+            'host': redis_url.hostname,
+            'password': redis_url.password,
+            'port': int(redis_url.port) if redis_url.port else 6379,
+            'db': int(redis_url.path[1:]) if redis_url.path[1:] else 0,
+        }
+
         announce = Announce(
             json_dumps=json_renderer,
-            _test_mode=settings.ANNOUNCE_TEST_MODE)
+            _test_mode=settings.ANNOUNCE_TEST_MODE,
+            **redis_configuration)
 
         try:
             announce.emit('message', data, room=room)

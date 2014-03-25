@@ -176,6 +176,7 @@ class Common(Configuration):
 
     # boards-sockets
     BOARDS_SOCKETS_URL = values.Value(environ_prefix=None)
+    BOARDS_SOCKETS_REDIS_URL = values.Value(environ_prefix=None)
 
 
 class Development(Common):
