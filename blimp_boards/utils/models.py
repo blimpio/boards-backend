@@ -86,8 +86,11 @@ class BaseModel(models.Model):
             **redis_configuration)
 
         try:
-            announce.emit('message', data, room=room)
+            print('emitting message')
+            print(announce.emit('message', data, room=room))
         except Exception as e:
+            print('emitting message error')
+            print(e)
             logger.exception(e)
 
     def post_save(self, created, **kwargs):
