@@ -85,7 +85,7 @@ class Card(BaseModel):
         """
         if created and self.type == 'file' and self.content:
             url = sign_s3_url(self.content)
-            sizes = ['200x200', '500x500', '800x800']
+            sizes = ['200', '500', '800']
             metadata = {
                 'cardId': self.id
             }
