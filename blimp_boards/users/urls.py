@@ -25,7 +25,7 @@ urlpatterns = patterns(
         views.SigninValidateTokenHTMLView.as_view(),
         name='auth-signin'),
 
-    url(r'signup/$',
+    url(r'signup/',
         views.SignupValidateTokenHTMLView.as_view(),
         name='auth-signup'),
 
