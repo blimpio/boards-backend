@@ -258,6 +258,23 @@ class SignupSerializerTestCase(BaseTestCase):
 
         self.assertEqual(serializer.errors, expected_error)
 
+    def test_serializer_should_allow_empty_invite_emails(self):
+        """
+        Tests that serializer should allow empty invit_emails
+        with allow_signup and signup_domains set.
+        """
+        self.data.update({
+            'allow_signup': True,
+            'signup_domains': ['example.com'],
+            'invite_emails': [],
+        })
+
+        serializer = SignupSerializer(data=self.data)
+        serializer.is_valid()
+        expected_error = {}
+
+        self.assertEqual(serializer.errors, expected_error)
+
     def test_signup_should_return_created_user(self):
         """
         Tests that serializer.signup() should return the created user.

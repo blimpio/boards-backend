@@ -52,9 +52,6 @@ class ListValidator(object):
     message = 'Invalid value.'
 
     def __call__(self, value):
-        if not value:
-            raise ValidationError(self.message)
-
         if not isinstance(value, list):
             raise ValidationError(self.message)
 
