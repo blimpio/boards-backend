@@ -21,7 +21,7 @@ class BaseBackend(object):
             return True
 
         return NotificationSetting.for_user(
-            user, notice_type, self.medium).send
+            user, notice_type['label'], self.medium).send
 
     def deliver(self, recipient, sender, notice_type, extra_context):
         """
