@@ -8,7 +8,7 @@ class Common(Configuration):
 
     # Application settings
     ENVIRONMENT = values.Value(environ_prefix=None)
-    HTTP_PROTOCOL = 'https' if ENVIRONMENT != 'DEVELOPMENT' else 'http'
+    HTTP_PROTOCOL = 'https'
 
     # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
     BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -186,7 +186,8 @@ class Development(Common):
 
     # Application settings
     DOMAIN = 'localhost:8000'
-    APPLICATION_URL = '{}://{}'.format(Common.HTTP_PROTOCOL, DOMAIN)
+    HTTP_PROTOCOL = 'http'
+    APPLICATION_URL = '{}://{}'.format(HTTP_PROTOCOL, DOMAIN)
 
     # Debug Mode
     DEBUG = True
