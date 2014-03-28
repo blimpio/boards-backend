@@ -9,6 +9,16 @@ class SignupRequestSerializer(serializers.ModelSerializer):
         model = SignupRequest
         fields = ('email',)
 
+    def full_clean(self, instance):
+        """
+        Prevent error because of unique email
+        before trying to get or save object.
+        """
+        return instance
+
+    def save_object(self, obj, **kwargs):
+        SignupRequest.objects.get_or_create(email=obj.email)
+
 
 class InvitedUserSerializer(serializers.Serializer):
     email = serializers.EmailField()

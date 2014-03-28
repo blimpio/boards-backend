@@ -1,6 +1,6 @@
 from ...utils.tests import BaseTestCase
 from ...accounts.models import EmailDomain
-from ..models import InvitedUser
+from ..models import InvitedUser, SignupRequest
 from ..serializers import SignupRequestSerializer, InvitedUserSerializer
 
 
@@ -35,6 +35,19 @@ class SignupRequestSerializerTestCase(BaseTestCase):
         """
         Tests serializer expected data if valid.
         """
+        serializer = SignupRequestSerializer(data=self.data)
+        serializer.is_valid()
+
+        self.assertEqual(serializer.data, self.data)
+
+    def test_serializer_get_or_create_request(self):
+        """
+        Tests that serializer returns an object if the SignupRequest still
+        exists instead trying to create new object and returning error
+        because of uniqueness constraints.
+        """
+        SignupRequest.objects.create(email=self.email)
+
         serializer = SignupRequestSerializer(data=self.data)
         serializer.is_valid()
 
