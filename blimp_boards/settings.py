@@ -107,25 +107,22 @@ class Common(Configuration):
 
     # Logging configuration.
     LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'formatters': {
-            'verbose': {
-                'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {
+            "console": {
+                "level": "INFO",
+                "class": "logging.StreamHandler",
             },
         },
-        'handlers': {
-            'console': {
-                'level': 'INFO',
-                'class': 'logging.StreamHandler',
-                'formatter': 'verbose'
-            },
-        },
-        'loggers': {
+        "loggers": {
             'django.db.backends': {
                 'level': 'ERROR',
                 'handlers': ['console'],
                 'propagate': False,
+            },
+            'blimp_boards': {
+                'handlers': ['console']
             }
         }
     }
