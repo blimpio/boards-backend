@@ -57,6 +57,12 @@ class Account(BaseModel):
         return AccountCollaborator.objects.select_related(
             'user').get(account=self, is_owner=True)
 
+    @property
+    def boards(self):
+        Board = get_model('boards', 'Board')
+
+        return Board.objects.filter(account=self)
+
     def add_email_domains(self, email_domains):
         for domain in email_domains:
             self.email_domains.create(domain_name=domain)

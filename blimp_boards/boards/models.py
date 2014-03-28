@@ -1,8 +1,6 @@
 from django.db import models
 from django.db.models import Q
 from django.core.exceptions import ValidationError
-from django.dispatch import receiver
-from django.db.models.signals import post_save
 from django.db.models.loading import get_model
 
 from ..utils.models import BaseModel
@@ -51,12 +49,18 @@ class Board(BaseModel):
         from .serializers import BoardSerializer
         return BoardSerializer(self)
 
-    def get_thumbnail_url(self, size='sm'):
+    def post_save(self, created, *args, **kwargs):
         """
-        Returns full thumbnail url.
-        BUCKET_URL + thumbnail path
+        Create BoardCollaborator for account owner after creating a Board.
         """
-        pass
+        if created:
+            account_owner = self.account.owner
+
+            BoardCollaborator.objects.create(
+                board=self,
+                user=account_owner.user,
+                permission=BoardCollaborator.WRITE_PERMISSION
+            )
 
     def is_user_collaborator(self, user, permission=None):
         """
@@ -77,21 +81,7 @@ class Board(BaseModel):
         return collaborators.exists()
 
 
-@receiver([post_save], sender=Board)
-def create_owner_collaborator(instance, created=False, **kwargs):
-    """
-    Create BoardCollaborator for account owner after creating a Board.
-    """
-    if created:
-        account_owner = instance.account.owner
-
-        BoardCollaborator.objects.create(
-            board=instance,
-            user=account_owner.user,
-            permission=BoardCollaborator.WRITE_PERMISSION
-        )
-
-
+@autoconnect
 class BoardCollaborator(BaseModel):
     READ_PERMISSION = 'read'
     WRITE_PERMISSION = 'write'
@@ -136,6 +126,31 @@ class BoardCollaborator(BaseModel):
                 'Both user and invited_user cannot be set together.')
         elif not self.user and not self.invited_user:
             raise ValidationError('Either user or invited_user must be set.')
+
+    def post_save(self, created, *args, **kwargs):
+        if created and self.user:
+            self.notify_created()
+
+        super(BoardCollaborator, self).post_save(created, *args, **kwargs)
+
+    def notify_created(self):
+        user = self.user
+        actor = user
+        recipients = [user]
+
+        label = 'board_collaborator_created'
+
+        extra_context = {
+            'action_object': self,
+            'target': self.board
+        }
+
+        notify.send(
+            actor,
+            recipients=recipients,
+            label=label,
+            extra_context=extra_context
+        )
 
 
 class BoardCollaboratorRequest(BaseModel):
@@ -184,6 +199,14 @@ class BoardCollaboratorRequest(BaseModel):
         """
         if not self.user and not self.email:
             raise ValidationError('Either user or email must be set.')
+
+    def post_save(self, created, *args, **kwargs):
+        # Notify account owner
+        if created:
+            self.notify_account_owner()
+
+        super(BoardCollaboratorRequest, self).post_save(
+            created, *args, **kwargs)
 
     def accept(self):
         """

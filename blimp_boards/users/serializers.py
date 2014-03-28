@@ -351,7 +351,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
                   'job_title', 'avatar_path', 'gravatar_url',
                   'timezone', 'date_created', 'date_modified',
-                  'token', 'accounts',)
+                  'token', 'accounts', )
 
 
 class UserSettingsSerializer(serializers.ModelSerializer):
@@ -364,7 +364,7 @@ class UserSettingsSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
                   'job_title', 'avatar_path', 'gravatar_url',
-                  'timezone', 'date_created', 'date_modified', 'token',)
+                  'timezone', 'date_created', 'date_modified', 'token', )
 
     def validate_email(self, attrs, source):
         email = attrs[source].lower()

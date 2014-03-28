@@ -80,9 +80,7 @@ class Card(BaseModel):
         self.full_clean()
 
     def post_save(self, created, *args, **kwargs):
-        """
-        Detect if new card is a file and request thumbnails.
-        """
+        # Detect if new card is a file and request thumbnails.
         if created and self.type == 'file' and self.content:
             url = sign_s3_url(self.content)
             sizes = ['200', '500', '800']
@@ -91,6 +89,10 @@ class Card(BaseModel):
             }
 
             queue_previews(url, sizes, metadata)
+
+        # Notify card was created
+        if created:
+            self.notify_created()
 
         super(Card, self).post_save(created, *args, **kwargs)
 
@@ -131,6 +133,46 @@ class Card(BaseModel):
 
     def get_thumbnail_lg_path(self):
         return self.get_signed_thumbnail('thumbnail_lg_path')
+
+    def notify_created(self):
+        user = self.created_by
+
+        actor = user
+        recipients = [user]
+
+        if self.type == 'stack':
+            label = 'card_stack_created'
+        else:
+            label = 'card_created'
+
+        extra_context = {
+            'action_object': self,
+            'target': self.board
+        }
+
+        notify.send(
+            actor,
+            recipients=recipients,
+            label=label,
+            extra_context=extra_context
+        )
+
+    def notify_featured(self, user):
+        actor = user
+        recipients = [user]
+        label = 'card_featured'
+
+        extra_context = {
+            'action_object': self,
+            'target': self.board
+        }
+
+        notify.send(
+            actor,
+            recipients=recipients,
+            label=label,
+            extra_context=extra_context
+        )
 
     def notify_comment_created(self, user, comment):
         User = get_model('users', 'User')

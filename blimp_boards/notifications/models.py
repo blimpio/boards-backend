@@ -11,7 +11,7 @@ from django.utils.log import getLogger
 from model_utils import Choices
 from model_utils.managers import PassThroughManager
 from jsonfield import JSONField
-from rest_framework.renderers import JSONRenderer
+from rest_framework.utils.encoders import JSONEncoder
 
 from ..utils.models import BaseModel
 from .signals import notify
@@ -129,7 +129,7 @@ class Notification(BaseModel):
 
     target_content_type = models.ForeignKey(
         ContentType, related_name='notify_target', blank=True, null=True)
-    target_object_id = models.CharField(max_length=255, blank=True, null=True)
+    target_object_id = models.PositiveIntegerField(blank=True, null=True)
     target = generic.GenericForeignKey(
         'target_content_type', 'target_object_id')
 
@@ -143,7 +143,8 @@ class Notification(BaseModel):
 
     public = models.BooleanField(default=True)
 
-    data = JSONField(blank=True, null=True, dump_kwargs={'cls': JSONRenderer})
+    data = JSONField(blank=True, null=True, dump_kwargs={
+                     'cls': JSONEncoder, 'separators': (',', ':')})
 
     objects = PassThroughManager.for_queryset_class(NotificationQuerySet)()
 

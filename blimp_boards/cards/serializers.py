@@ -24,8 +24,17 @@ class CardSerializer(serializers.ModelSerializer):
         return attrs
 
     def save_object(self, obj, **kwargs):
-        obj.created_by = self.context['request'].user
-        return super(CardSerializer, self).save_object(obj, **kwargs)
+        created = bool(obj.pk)
+        featured_diff = obj.get_field_diff('featured')
+        user = self.context['request'].user
+
+        if not created:
+            obj.created_by = user
+
+        super(CardSerializer, self).save_object(obj, **kwargs)
+
+        if featured_diff and featured_diff[1]:
+            obj.notify_featured(user)
 
 
 class StackSerializer(CardSerializer):
@@ -72,7 +81,8 @@ class CardCommentSerializer(serializers.ModelSerializer):
 
         obj.content_object = card
         obj.created_by = user
-        obj.save(**kwargs)
+
+        super(CardCommentSerializer, self).save_object(obj, **kwargs)
 
         if created:
             card.notify_comment_created(obj)

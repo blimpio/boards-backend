@@ -81,10 +81,6 @@ class BoardCollaboratorRequestViewSet(CreateListRetrieveViewSet):
 
         return Response(serializer.data)
 
-    def post_save(self, obj, created=False):
-        if created:
-            obj.notify_account_owner()
-
 
 class BoardHTMLView(APIView):
     authentication_classes = ()

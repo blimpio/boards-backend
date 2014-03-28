@@ -21,17 +21,19 @@ class NotificationBackend(BaseBackend):
         for opt in ('target', 'action_object'):
             obj = extra_context.get(opt, None)
 
+            extra_context[opt] = obj.serializer.data
+
             if not obj is None:
                 setattr(notification, '{}_object_id'.format(opt), obj.pk)
                 setattr(notification, '{}_content_type'.format(opt),
                         ContentType.objects.get_for_model(obj))
 
         extra_context.update({
-            "recipient": recipient,
-            "sender": sender,
+            "recipient": recipient.serializer.data,
+            "sender": sender.serializer.data,
             "notice": ugettext(notice_type.display),
         })
 
-        # notification.data = extra_context
+        notification.data = extra_context
 
         notification.save()

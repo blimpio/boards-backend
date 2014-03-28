@@ -1,9 +1,16 @@
 from django.conf.urls import patterns, url
+from rest_framework.routers import DefaultRouter
 
 from . import views
 
 
-api_urlpatterns = patterns(
+router = DefaultRouter()
+
+router.register(r'accounts', views.AccountViewSet)
+
+api_urlpatterns = router.urls
+
+api_urlpatterns += patterns(
     # Prefix
     '',
 
@@ -14,7 +21,4 @@ api_urlpatterns = patterns(
     url(r'auth/signup_domains/validate/$',
         views.ValidateSignupDomainsAPIView.as_view(),
         name='auth-signup-domains-validate'),
-
-    url(r'accounts/$', views.AccountsForUserAPIView.as_view(),
-        name='accounts_for_user')
 )

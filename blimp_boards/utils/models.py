@@ -3,8 +3,6 @@ try:
 except ImportError:
     import urllib.parse as urlparse
 
-urlparse.uses_netloc.append('redis')
-
 from django.db import models
 from django.conf import settings
 from django.utils.encoding import smart_text
@@ -15,9 +13,12 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework import serializers
 
 from .fields import DateTimeCreatedField, DateTimeModifiedField
+from .mixins import ModelDiffMixin
 
 
 logger = getLogger(__name__)
+
+urlparse.uses_netloc.append('redis')
 
 models.options.DEFAULT_NAMES += ('announce', )
 
@@ -26,7 +27,7 @@ def json_renderer(data):
     return smart_text(JSONRenderer().render(data))
 
 
-class BaseModel(models.Model):
+class BaseModel(ModelDiffMixin, models.Model):
     """
     An abstract base class model that provides:
         - date_created
@@ -40,22 +41,21 @@ class BaseModel(models.Model):
         ordering = ('-date_modified', '-date_created',)
         abstract = True
 
+    @property
+    def serializer(self):
+        class ModelSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = self.__class__
+
+        return ModelSerializer(self)
+
     def to_dict(self):
         """
         Returns a dictionary representation of the model using
         REST framework's model serializers. Uses a specified serializer
         on the model or defaults to a generic ModelSerializer.
         """
-        try:
-            serializer = self.serializer
-        except:
-            class ModelSerializer(serializers.ModelSerializer):
-                class Meta:
-                    model = self.__class__
-
-            serializer = ModelSerializer(self)
-
-        return serializer.data
+        return self.serializer.data
 
     def announce(self, method):
         """
@@ -98,14 +98,20 @@ class BaseModel(models.Model):
         If model's Meta class has `announce = True`, announces
         when a model instance is created or updated.
         """
-        if self._meta.announce:
-            method = 'create' if created else 'update'
-            self.announce(method)
+        try:
+            if self._meta.announce:
+                method = 'create' if created else 'update'
+                self.announce(method)
+        except AttributeError:
+            pass
 
     def post_delete(self, **kwargs):
         """
         If model's Meta class has `announce = True`, announces
         when a model instance deleted.
         """
-        if self._meta.announce:
-            self.announce('delete')
+        try:
+            if self._meta.announce:
+                self.announce('delete')
+        except AttributeError:
+            pass
