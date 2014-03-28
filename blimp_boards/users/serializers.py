@@ -354,6 +354,18 @@ class UserSerializer(serializers.ModelSerializer):
                   'token', 'accounts', )
 
 
+class UserSimpleSerializer(serializers.ModelSerializer):
+    """
+    Simple User serializer used to serialize model.
+    """
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name', 'email',
+                  'job_title', 'avatar_path', 'gravatar_url',
+                  'timezone', 'date_created', 'date_modified', )
+
+
 class UserSettingsSerializer(serializers.ModelSerializer):
     """
     Serializer that handles user settings endpoint.

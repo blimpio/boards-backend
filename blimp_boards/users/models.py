@@ -108,8 +108,8 @@ class User(BaseModel, AbstractBaseUser):
 
     @property
     def serializer(self):
-        from .serializers import UserSettingsSerializer
-        return UserSettingsSerializer(self)
+        from .serializers import UserSimpleSerializer
+        return UserSimpleSerializer(self)
 
     def post_save(self, created, *args, **kwargs):
         if created:
