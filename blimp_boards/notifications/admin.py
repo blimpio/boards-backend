@@ -1,10 +1,6 @@
 from django.contrib import admin
 
-from .models import Notification, NotificationType, NotificationSetting
-
-
-class NotificationTypeAdmin(admin.ModelAdmin):
-    list_display = ['label', 'display', 'description']
+from .models import Notification, NotificationSetting
 
 
 class NotificationSettingAdmin(admin.ModelAdmin):
@@ -12,5 +8,4 @@ class NotificationSettingAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Notification)
-admin.site.register(NotificationType, NotificationTypeAdmin)
 admin.site.register(NotificationSetting, NotificationSettingAdmin)

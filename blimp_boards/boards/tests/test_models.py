@@ -66,8 +66,6 @@ class BoardTestCase(BaseTestCase):
 
 
 class BoardCollaboratorTestCase(BaseTestCase):
-    fixtures = ['notification_types.json']
-
     def setUp(self):
         self.create_user()
         self.create_account()
@@ -117,8 +115,6 @@ class BoardCollaboratorTestCase(BaseTestCase):
 
 
 class BoardCollaboratorRequestTestCase(BaseTestCase):
-    fixtures = ['notification_types.json']
-
     def setUp(self):
         self.create_user()
         self.create_account()

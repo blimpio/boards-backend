@@ -16,53 +16,18 @@ from rest_framework.utils.encoders import JSONEncoder
 from ..utils.models import BaseModel
 from .signals import notify
 from .query import NotificationQuerySet
+from .types import NOTIFICATION_TYPES, get_notification_type
 from . import backends
 
 
 logger = getLogger(__name__)
 
+NOTIFICATION_TYPE_CHOICES = [
+    (n['label'], n['display']) for n in NOTIFICATION_TYPES]
+
 NOTIFICATION_BACKENDS = backends.load_backends()
 NOTIFICATION_MEDIA, NOTIFICATION_MEDIA_DEFAULTS = \
     backends.load_media_defaults(backends=NOTIFICATION_BACKENDS)
-
-
-class NotificationType(BaseModel):
-    label = models.CharField(_("label"), max_length=40)
-    display = models.CharField(_("display"), max_length=50)
-    description = models.CharField(_("description"), max_length=100)
-
-    def __str__(self):
-        return self.label
-
-    class Meta:
-        verbose_name = _("notification type")
-        verbose_name_plural = _("notification types")
-
-    @classmethod
-    def create(cls, label, display, description):
-        """
-        Creates a new NotificationType.
-
-        This is intended to be used by other apps
-        as a post_syncdb manangement step.
-        """
-        try:
-            notification_type = NotificationType.objects.get(label=label)
-            updated = False
-
-            if display != notification_type.display:
-                notification_type.display = display
-                updated = True
-
-            if description != notification_type.description:
-                notification_type.description = description
-                updated = True
-
-            if updated:
-                notification_type.save()
-        except cls.DoesNotExist:
-            NotificationType.objects.create(
-                label=label, display=display, description=description)
 
 
 class NotificationSetting(BaseModel):
@@ -73,8 +38,9 @@ class NotificationSetting(BaseModel):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("user"))
 
-    notification_type = models.ForeignKey(
-        NotificationType, verbose_name=_("notification type"))
+    notification_type = models.CharField(
+        _("notification type"), max_length=255,
+        choices=NOTIFICATION_TYPE_CHOICES)
 
     medium = models.CharField(
         _("medium"), max_length=50, choices=NOTIFICATION_MEDIA)
@@ -98,6 +64,19 @@ class NotificationSetting(BaseModel):
             defaults={'send': True}, **data)
 
         return obj
+
+    @classmethod
+    def create_default_settings(cls, user):
+        settings = []
+        for notification_type in NOTIFICATION_TYPES:
+            for (key, value) in NOTIFICATION_MEDIA:
+                setting = NotificationSetting(
+                    user=user, notification_type=notification_type['label'],
+                    medium=key, send=notification_type[key])
+
+                settings.append(setting)
+
+        return NotificationSetting.objects.bulk_create(settings)
 
 
 class Notification(BaseModel):
@@ -225,7 +204,7 @@ def notify_handler(sender, **kwargs):
     label = kwargs.pop('label')
     extra_context = kwargs.pop('extra_context', {})
     override_backends = kwargs.pop('override_backends', None)
-    notice_type = NotificationType.objects.get(label=label)
+    notice_type = get_notification_type(label)
     current_language = get_language()
     sent = False
 

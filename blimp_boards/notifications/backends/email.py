@@ -26,7 +26,7 @@ class EmailBackend(BaseBackend):
             'subject.txt',
             'body.txt',
             'body.html'
-        ), notification_type.label, context)
+        ), notification_type['label'], context)
 
         subject = messages['subject.txt']
         text_content = messages['body.txt']

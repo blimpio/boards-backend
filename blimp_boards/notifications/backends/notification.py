@@ -13,7 +13,7 @@ class NotificationBackend(BaseBackend):
             recipient=recipient,
             actor_content_type=ContentType.objects.get_for_model(sender),
             actor_object_id=sender.pk,
-            verb=notice_type.description,
+            verb=notice_type['description'],
             public=extra_context.get('public', True),
             description=extra_context.get('description', None)
         )
@@ -31,7 +31,7 @@ class NotificationBackend(BaseBackend):
         extra_context.update({
             "recipient": recipient.serializer.data,
             "sender": sender.serializer.data,
-            "notice": ugettext(notice_type.display),
+            "notice": ugettext(notice_type['display']),
         })
 
         notification.data = extra_context

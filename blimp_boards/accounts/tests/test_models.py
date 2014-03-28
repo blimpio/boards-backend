@@ -6,8 +6,6 @@ from ..models import (Account, AccountCollaborator, EmailDomain,
 
 
 class AccountTestCase(BaseTestCase):
-    fixtures = ['notification_types.json']
-
     def setUp(self):
         super(AccountTestCase, self).setUp()
         self.username = 'jpueblo'

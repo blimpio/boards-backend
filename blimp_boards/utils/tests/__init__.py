@@ -8,7 +8,6 @@ from ...cards.models import Card
 
 
 class BaseTestCase(TestCase):
-    fixtures = ['notification_types.json']
     users = {}
 
     def create_user(self):
@@ -65,7 +64,6 @@ class AuthenticatedAPITestCase(BaseTestCase):
     This test case class creates a basic user
     and does authentication for you using a JWT token
     """
-    fixtures = ['notification_types.json']
 
     def setUp(self):
         self.create_user()

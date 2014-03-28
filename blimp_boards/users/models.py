@@ -15,6 +15,7 @@ from ..utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..utils.validators import username_validator
 from ..utils.models import BaseModel
 from ..utils.decorators import autoconnect
+from ..notifications.models import NotificationSetting
 from ..notifications.signals import notify
 from .managers import UserManager
 
@@ -109,6 +110,11 @@ class User(BaseModel, AbstractBaseUser):
     def serializer(self):
         from .serializers import UserSettingsSerializer
         return UserSettingsSerializer(self)
+
+    def post_save(self, created, *args, **kwargs):
+        if created:
+            NotificationSetting.create_default_settings(self)
+        return super(User, self).post_save(created, *args, **kwargs)
 
     def has_perm(self, perm, obj=None):
         """
