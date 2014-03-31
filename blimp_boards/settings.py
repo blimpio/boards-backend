@@ -217,6 +217,8 @@ class Development(Common):
 
 
 class Testing(Development):
+    LOGGING_CONFIG = None
+
     # Database Settings
     WERCKER_POSTGRESQL_DATABASE = os.getenv('WERCKER_POSTGRESQL_DATABASE')
 
