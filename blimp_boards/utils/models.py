@@ -63,7 +63,11 @@ class BaseModel(ModelDiffMixin, models.Model):
         Includes the model name as a data_type, method, and a serialized
         representation of the model instance.
         """
-        room = self.announce_room
+        try:
+            room = self.announce_room
+        except AttributeError as e:
+            logger.exception(e)
+            return None
 
         data = {
             'data_type': self.__class__.__name__.lower(),
