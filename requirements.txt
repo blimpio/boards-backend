@@ -26,6 +26,7 @@ py==1.4.20
 pycrypto==2.6.1
 pystache==0.5.3
 pytz==2014.1
+raven==4.1.1
 redis==2.9.1
 requests==2.2.1
 six==1.5.2

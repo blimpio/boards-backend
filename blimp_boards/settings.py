@@ -266,6 +266,7 @@ class Staging(Common):
     Common.INSTALLED_APPS += (
         'djrill',
         'djangosecure',
+        'raven.contrib.django.raven_compat',
     )
 
     # django-secure
