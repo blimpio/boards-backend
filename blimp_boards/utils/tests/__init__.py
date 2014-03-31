@@ -5,6 +5,7 @@ from ...users.models import User
 from ...accounts.models import Account, AccountCollaborator
 from ...boards.models import Board, BoardCollaborator
 from ...cards.models import Card
+from ...comments.models import Comment
 
 
 class BaseTestCase(TestCase):
@@ -57,6 +58,13 @@ class BaseTestCase(TestCase):
         self.card = Card.objects.create(
             name='The Card', type='note', content='abc123',
             board=self.board, created_by=self.user)
+
+    def create_comment(self):
+        self.comment = Comment.objects.create(
+            content='A comment',
+            content_object=self.card,
+            created_by=self.user
+        )
 
 
 class AuthenticatedAPITestCase(BaseTestCase):

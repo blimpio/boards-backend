@@ -2,6 +2,8 @@ from django.core.exceptions import ValidationError
 
 from ...utils.tests import BaseTestCase
 from ...users.models import User
+from ...cards.models import Card
+from ...comments.models import Comment
 from ...invitations.models import InvitedUser
 from ..models import Board, BoardCollaborator, BoardCollaboratorRequest
 
@@ -112,6 +114,18 @@ class BoardCollaboratorTestCase(BaseTestCase):
                 user=user,
                 invited_user=invited_user
             )
+
+    def test_delete_board_should_cascade(self):
+        self.create_card()
+        self.create_comment()
+
+        self.board.delete()
+
+        cards = Card.objects.filter(pk=self.card.pk).count()
+        comments = Comment.objects.filter(pk=self.comment.pk).count()
+
+        self.assertEqual(cards, 0)
+        self.assertEqual(comments, 0)
 
 
 class BoardCollaboratorRequestTestCase(BaseTestCase):
