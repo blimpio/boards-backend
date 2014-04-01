@@ -1,5 +1,5 @@
 from rest_framework import filters, status, permissions
-from rest_framework.decorators import action
+from rest_framework.decorators import action, link
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
 
@@ -81,3 +81,13 @@ class CardViewSet(ModelViewSet):
         card.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @link()
+    def download(self, request, pk=None):
+        card = self.get_object()
+
+        data = {
+            'download_url': card.download_url
+        }
+
+        return Response(data)

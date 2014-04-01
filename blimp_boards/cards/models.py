@@ -72,6 +72,15 @@ class Card(BaseModel):
         from .serializers import CardSerializer
         return CardSerializer(self)
 
+    @property
+    def download_url(self):
+        if self.type == 'file':
+            headers = {
+                'response-content-disposition': 'attachment'
+            }
+
+            return sign_s3_url(self.content, headers)
+
     def pre_save(self, *args, **kwargs):
         """
         Performs all steps involved in validating before

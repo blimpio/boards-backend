@@ -63,11 +63,13 @@ def generate_file_key(name=None, user=None):
     return 'cards/{}/{}'.format(uuid.uuid4(), name)
 
 
-def sign_s3_url(url):
+def sign_s3_url(url, response_headers=None):
     signer = S3UrlSigner(settings.AWS_ACCESS_KEY_ID,
                          settings.AWS_SECRET_ACCESS_KEY)
 
-    return signer.sign_url('GET', url, settings.AWS_SIGNATURE_EXPIRES_IN)
+    expires_in = settings.AWS_SIGNATURE_EXPIRES_IN
+
+    return signer.sign_url('GET', url, expires_in, response_headers)
 
 
 class S3UrlSigner(object):
@@ -76,7 +78,8 @@ class S3UrlSigner(object):
         self.secret_key = secret_key
         self.endpoint = 'https://s3.amazonaws.com'
 
-    def generate_url(self, verb, key, bucket, expires_in_seconds):
+    def generate_url(self, verb, key, bucket, expires_in_seconds,
+                     response_headers=None):
         """
         Returns a full signed URL from a given verb, key,
         bucket, and expires_in_seconds.
@@ -95,6 +98,10 @@ class S3UrlSigner(object):
 
         url = '{}{}'.format(url, key)
         str = '{}{}'.format(str, key)
+
+        if response_headers:
+            str = '{}?{}'.format(str, urlencode(response_headers))
+
         signature = smart_text(generate_signature(str, self.secret_key))
 
         params = {
@@ -103,9 +110,11 @@ class S3UrlSigner(object):
             'Signature': signature
         }
 
+        params.update(response_headers)
+
         return '{}?{}'.format(url, urlencode(params))
 
-    def sign_url(self, verb, url, expires_in):
+    def sign_url(self, verb, url, expires_in, response_headers=None):
         """
         Returns a full signed URL from a given verb,
         url, and expires_in_seconds.
@@ -121,4 +130,5 @@ class S3UrlSigner(object):
 
         key = '/'.join(parts)
 
-        return self.generate_url(verb, key, bucket, expires_in)
+        return self.generate_url(verb, key, bucket, expires_in,
+                                 response_headers)
