@@ -110,7 +110,8 @@ class S3UrlSigner(object):
             'Signature': signature
         }
 
-        params.update(response_headers)
+        if response_headers:
+            params.update(response_headers)
 
         return '{}?{}'.format(url, urlencode(params))
 
