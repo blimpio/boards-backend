@@ -51,16 +51,23 @@ class Board(BaseModel):
 
     def post_save(self, created, *args, **kwargs):
         """
-        Create BoardCollaborator for account owner after creating a Board.
+        Create BoardCollaborator for account owner and user creating board.
         """
         if created:
-            account_owner = self.account.owner
+            account_owner = self.account.owner.user
 
             BoardCollaborator.objects.create(
                 board=self,
-                user=account_owner.user,
+                user=account_owner,
                 permission=BoardCollaborator.WRITE_PERMISSION
             )
+
+            if account_owner != self.created_by:
+                BoardCollaborator.objects.create(
+                    board=self,
+                    user=self.created_by,
+                    permission=BoardCollaborator.WRITE_PERMISSION
+                )
 
     def is_user_collaborator(self, user, permission=None):
         """

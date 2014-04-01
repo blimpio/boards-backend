@@ -5,6 +5,7 @@ from ...users.models import User
 from ...cards.models import Card
 from ...comments.models import Comment
 from ...invitations.models import InvitedUser
+from ...accounts.models import AccountCollaborator
 from ..models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
@@ -65,6 +66,24 @@ class BoardTestCase(BaseTestCase):
             board=self.board, user=self.user, permission='write')
 
         self.assertEqual(collaborators.count(), 1)
+
+    def test_creating_board_creates_board_collaborators(self):
+        """
+        Tests that a post_save signal creates a BoardCollaborator
+        for account owner and the user that created the board if
+        different from account owner.
+        """
+        user = self.create_another_user()
+
+        AccountCollaborator.objects.create(account=self.account, user=user)
+
+        board = Board.objects.create(
+            name='The Board', account=self.account, created_by=user)
+
+        collaborators = BoardCollaborator.objects.filter(
+            board=board, permission='write')
+
+        self.assertEqual(collaborators.count(), 2)
 
 
 class BoardCollaboratorTestCase(BaseTestCase):
