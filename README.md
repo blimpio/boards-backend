@@ -29,7 +29,6 @@ BLIMP_PREVIEWS_URL=
 ```
 $ ./manage.py syncdb --noinput
 $ ./manage.py migrate
-$ ./manage.py loaddata blimp_boards/notifications/fixtures/notification_types.json
 $ ./manage.py loaddata blimp_boards/users/fixtures/users.json
 ```
 
