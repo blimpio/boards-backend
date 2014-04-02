@@ -10,6 +10,6 @@ class UtilsTestCase(BaseTestCase):
         """
         gravatar_url = get_gravatar_url('jpueblo@example.com')
         expected_url = ("https://secure.gravatar.com/"
-                        "avatar/8964266c2b9182617beb65e50fc00031?d=retro")
+                        "avatar/8964266c2b9182617beb65e50fc00031")
 
         self.assertEqual(gravatar_url, expected_url)

@@ -57,3 +57,14 @@ class UserModelTestCase(BaseTestCase):
 
         self.assertNotEqual(self.user.password, password)
         self.assertNotEqual(self.user.token_version, token_version)
+
+    def test_user_set_email_update_gravatar_url(self):
+        """
+        Tests that setting/changing email updates gravatar_url.
+        """
+        gravatar_url = self.user.gravatar_url
+
+        self.user.email = 'anotheremail@example.com'
+        self.user.save()
+
+        self.assertFalse(gravatar_url == self.user.gravatar_url)

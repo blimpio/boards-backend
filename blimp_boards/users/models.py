@@ -17,6 +17,7 @@ from ..utils.models import BaseModel
 from ..utils.decorators import autoconnect
 from ..notifications.models import NotificationSetting
 from ..notifications.signals import notify
+from .utils import get_gravatar_url
 from .managers import UserManager
 
 
@@ -111,9 +112,16 @@ class User(BaseModel, AbstractBaseUser):
         from .serializers import UserSimpleSerializer
         return UserSimpleSerializer(self)
 
+    def save(self, *args, **kwargs):
+        if not self.pk or self.has_field_changed('email'):
+            self.gravatar_url = get_gravatar_url(self.email)
+
+        return super(User, self).save(*args, **kwargs)
+
     def post_save(self, created, *args, **kwargs):
         if created:
             NotificationSetting.create_default_settings(self)
+
         return super(User, self).post_save(created, *args, **kwargs)
 
     def has_perm(self, perm, obj=None):

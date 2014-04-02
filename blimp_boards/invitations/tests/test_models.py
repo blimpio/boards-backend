@@ -127,7 +127,7 @@ class InvitedUserTestCase(BaseTestCase):
         Tests that get_gravatar_url() returns the user's gravatar URL.
         """
         expected_url = ('https://secure.gravatar.com/'
-                        'avatar/be7fb46dbd6620092dcc039fef94da52?d=retro')
+                        'avatar/be7fb46dbd6620092dcc039fef94da52')
 
         self.assertEqual(self.invited_user.get_gravatar_url(), expected_url)
 
