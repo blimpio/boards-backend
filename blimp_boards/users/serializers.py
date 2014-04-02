@@ -42,6 +42,7 @@ class SignupSerializer(serializers.Serializer):
     first_name = serializers.CharField(read_only=True)
     last_name = serializers.CharField(read_only=True)
     account_name = serializers.CharField()
+    account_logo_color = serializers.CharField()
     username = serializers.CharField()
     password = fields.PasswordField(write_only=True)
     allow_signup = serializers.BooleanField()
@@ -152,12 +153,14 @@ class SignupSerializer(serializers.Serializer):
 
     def create_account(self, attrs):
         account_name = attrs['account_name']
+        logo_color = attrs['account_logo_color']
         allow_signup = attrs['allow_signup']
         signup_domains = attrs.get('signup_domains', [])
 
         account = Account.objects.create(
             name=account_name,
-            allow_signup=allow_signup
+            allow_signup=allow_signup,
+            logo_color=logo_color
         )
 
         if allow_signup and signup_domains:

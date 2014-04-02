@@ -96,6 +96,7 @@ class SignupAPIView(BaseTestCase):
             'username': 'juan',
             'password': 'abc123',
             'account_name': 'Pueblo Co.',
+            'account_logo_color': 'red',
             'allow_signup': True,
             'signup_domains': ['example.com', 'example2.com'],
             'invite_emails': ['pedro@example.com', 'sara@example2.com'],
@@ -123,6 +124,7 @@ class SignupAPIView(BaseTestCase):
             'username': 'juan',
             'password': 'abc123',
             'account_name': 'Pueblo Co.',
+            'account_logo_color': 'red',
             'allow_signup': False,
             'signup_request_token': self.signup_request.token
         }
@@ -151,6 +153,7 @@ class SignupAPIView(BaseTestCase):
                 'email': ['This field is required.'],
                 'full_name': ['This field is required.'],
                 'account_name': ['This field is required.'],
+                'account_logo_color': ['This field is required.'],
                 'signup_request_token': ['This field is required.']
             }
         }

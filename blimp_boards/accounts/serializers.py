@@ -18,7 +18,7 @@ class AccountSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Account
-        fields = ('id', 'name', 'slug', 'disqus_shortname',
+        fields = ('id', 'name', 'slug', 'disqus_shortname', 'logo_color',
                   'date_created', 'date_modified')
 
 

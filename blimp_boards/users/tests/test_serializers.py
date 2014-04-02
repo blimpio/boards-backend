@@ -103,6 +103,7 @@ class SignupSerializerTestCase(BaseTestCase):
             'username': 'juan',
             'password': 'abc123',
             'account_name': 'Pueblo Co.',
+            'account_logo_color': 'red',
             'allow_signup': False,
             'signup_request_token': self.signup_request.token
         }

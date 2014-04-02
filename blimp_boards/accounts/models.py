@@ -35,6 +35,7 @@ class Account(BaseModel):
     allow_signup = models.BooleanField(default=False)
     email_domains = models.ManyToManyField(EmailDomain, blank=True, null=True)
 
+    logo_color = models.CharField(max_length=255)
     disqus_shortname = models.CharField(max_length=255, blank=True)
 
     class Meta:
