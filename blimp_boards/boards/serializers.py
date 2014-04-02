@@ -1,8 +1,10 @@
 from rest_framework import serializers
 
-from ..accounts.permissions import AccountPermission
 from ..accounts.models import AccountCollaborator
 from ..invitations.models import InvitedUser
+from ..accounts.permissions import AccountPermission
+from ..users.serializers import UserSimpleSerializer
+from ..invitations.serializers import InvitedUserSimpleSerializer
 from .models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
@@ -35,6 +37,8 @@ class BoardSerializer(serializers.ModelSerializer):
 
 class BoardCollaboratorSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(write_only=True, required=False)
+    user = UserSimpleSerializer(required=False)
+    invited_user = InvitedUserSimpleSerializer(required=False)
 
     class Meta:
         model = BoardCollaborator

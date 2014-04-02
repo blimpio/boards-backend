@@ -813,7 +813,7 @@ class UserSerializerTestCase(BaseTestCase):
 
         expected_keys = [
             'id', 'username', 'first_name', 'last_name', 'email',
-            'job_title', 'avatar_path', 'gravatar_url', 'timezone',
+            'avatar_path', 'gravatar_url', 'timezone',
             'date_created', 'date_modified', 'token', 'accounts']
 
         self.assertEqual(data_keys, expected_keys)
@@ -833,7 +833,6 @@ class UserSettingsSerializerTestCase(BaseTestCase):
             'first_name': '',
             'last_name': '',
             'email': '',
-            'job_title': '',
             'avatar_path': '',
             'gravatar_url': '',
             'timezone': ''
@@ -872,7 +871,6 @@ class UserSettingsSerializerTestCase(BaseTestCase):
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
             'email': self.user.email,
-            'job_title': '',
             'avatar_path': '',
             'gravatar_url': '',
             'timezone': 'UTC',
@@ -964,7 +962,6 @@ class UserSettingsSerializerTestCase(BaseTestCase):
             'last_name': self.user.last_name,
             'username': self.user.username,
             'email': self.user.email,
-            'job_title': 'CEO'
         }
 
         serializer = self.serializer_class(data=data, instance=self.user)
@@ -977,7 +974,6 @@ class UserSettingsSerializerTestCase(BaseTestCase):
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
             'email': self.user.email,
-            'job_title': self.user.job_title,
             'avatar_path': '',
             'gravatar_url': '',
             'timezone': 'UTC',

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from ..accounts.models import Account
-from .models import SignupRequest
+from .models import SignupRequest, InvitedUser
 
 
 class SignupRequestSerializer(serializers.ModelSerializer):
@@ -18,6 +18,13 @@ class SignupRequestSerializer(serializers.ModelSerializer):
 
     def save_object(self, obj, **kwargs):
         SignupRequest.objects.get_or_create(email=obj.email)
+
+
+class InvitedUserSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InvitedUser
+        fields = ('id', 'first_name', 'last_name', 'email',
+                  'date_created', 'date_modified')
 
 
 class InvitedUserSerializer(serializers.Serializer):

@@ -172,7 +172,14 @@ class BoardCollaboratorSerializerTestCase(BaseTestCase):
             'date_created': serializer.object.date_created,
             'date_modified': serializer.object.date_modified,
             'user': None,
-            'invited_user': serializer.object.invited_user_id,
+            'invited_user': {
+                'id': serializer.object.invited_user_id,
+                'first_name': serializer.object.invited_user.first_name,
+                'last_name': serializer.object.invited_user.last_name,
+                'email': serializer.object.invited_user.email,
+                'date_created': serializer.object.invited_user.date_created,
+                'date_modified': serializer.object.invited_user.date_modified
+            },
             'permission': serializer.object.permission
         }
 

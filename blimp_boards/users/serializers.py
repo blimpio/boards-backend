@@ -349,9 +349,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
-                  'job_title', 'avatar_path', 'gravatar_url',
-                  'timezone', 'date_created', 'date_modified',
-                  'token', 'accounts', )
+                  'avatar_path', 'gravatar_url', 'timezone',
+                  'date_created', 'date_modified', 'token', 'accounts', )
 
 
 class UserSimpleSerializer(serializers.ModelSerializer):
@@ -362,8 +361,8 @@ class UserSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
-                  'job_title', 'avatar_path', 'gravatar_url',
-                  'timezone', 'date_created', 'date_modified', )
+                  'avatar_path', 'gravatar_url', 'timezone',
+                  'date_created', 'date_modified', )
 
 
 class UserSettingsSerializer(serializers.ModelSerializer):
@@ -375,7 +374,7 @@ class UserSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
-                  'job_title', 'avatar_path', 'gravatar_url',
+                  'avatar_path', 'gravatar_url',
                   'timezone', 'date_created', 'date_modified', 'token', )
 
     def validate_email(self, attrs, source):

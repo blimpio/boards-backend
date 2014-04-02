@@ -333,7 +333,18 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
             'date_created': self.board_collaborator.date_created,
             'date_modified': self.board_collaborator.date_modified,
             'board': self.board.id,
-            'user': self.board_collaborator.user_id,
+            'user': {
+                'id': self.board_collaborator.user.id,
+                'username': self.board_collaborator.user.username,
+                'first_name': self.board_collaborator.user.first_name,
+                'last_name': self.board_collaborator.user.last_name,
+                'email': self.board_collaborator.user.email,
+                'avatar_path': self.board_collaborator.user.avatar_path,
+                'gravatar_url': self.board_collaborator.user.gravatar_url,
+                'timezone': self.board_collaborator.user.timezone,
+                'date_created': self.board_collaborator.user.date_created,
+                'date_modified': self.board_collaborator.user.date_modified,
+            },
             'invited_user': None,
             'permission': self.board_collaborator.permission
         }]
@@ -356,7 +367,18 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
             'date_created': self.board_collaborator.date_created,
             'date_modified': self.board_collaborator.date_modified,
             'board': self.board.id,
-            'user': self.board_collaborator.user_id,
+            'user': {
+                'id': self.board_collaborator.user.id,
+                'username': self.board_collaborator.user.username,
+                'first_name': self.board_collaborator.user.first_name,
+                'last_name': self.board_collaborator.user.last_name,
+                'email': self.board_collaborator.user.email,
+                'avatar_path': self.board_collaborator.user.avatar_path,
+                'gravatar_url': self.board_collaborator.user.gravatar_url,
+                'timezone': self.board_collaborator.user.timezone,
+                'date_created': self.board_collaborator.user.date_created,
+                'date_modified': self.board_collaborator.user.date_modified,
+            },
             'invited_user': None,
             'permission': self.board_collaborator.permission
         }]
