@@ -87,6 +87,10 @@ class InvitedUser(BaseModel):
 
         return jwt_token.decode('utf-8')
 
+    @property
+    def gravatar_url(self):
+        return get_gravatar_url(self.email)
+
     def save(self, *args, **kwargs):
         """
         When saving a InvitedUser, try to set first_name,
@@ -115,9 +119,6 @@ class InvitedUser(BaseModel):
         """
         full_name = u'{} {}'.format(self.first_name, self.last_name)
         return full_name.strip()
-
-    def get_gravatar_url(self):
-        return get_gravatar_url(self.email)
 
     def get_invite_url(self):
         pass

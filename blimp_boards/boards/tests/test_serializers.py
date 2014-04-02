@@ -177,6 +177,7 @@ class BoardCollaboratorSerializerTestCase(BaseTestCase):
                 'first_name': serializer.object.invited_user.first_name,
                 'last_name': serializer.object.invited_user.last_name,
                 'email': serializer.object.invited_user.email,
+                'gravatar_url': serializer.object.invited_user.gravatar_url,
                 'date_created': serializer.object.invited_user.date_created,
                 'date_modified': serializer.object.invited_user.date_modified
             },

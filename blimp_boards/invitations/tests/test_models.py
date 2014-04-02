@@ -124,12 +124,12 @@ class InvitedUserTestCase(BaseTestCase):
 
     def test_get_gravatar_url_should_return_user_gravatar_url(self):
         """
-        Tests that get_gravatar_url() returns the user's gravatar URL.
+        Tests that gravatar_url returns the user's gravatar URL.
         """
         expected_url = ('https://secure.gravatar.com/'
                         'avatar/be7fb46dbd6620092dcc039fef94da52')
 
-        self.assertEqual(self.invited_user.get_gravatar_url(), expected_url)
+        self.assertEqual(self.invited_user.gravatar_url, expected_url)
 
     def test_accept_invitation_should_create_account_collaborator(self):
         """
