@@ -114,6 +114,13 @@ class BoardCollaborator(BaseModel):
     def __str__(self):
         return str(self.user) if self.user else str(self.invited_user)
 
+    @property
+    def email(self):
+        if self.user:
+            return self.user.email
+        elif self.invited_user:
+            return self.invited_user.email
+
     def save(self, force_insert=False, force_update=False, **kwargs):
         """
         Performs all steps involved in validating  whenever
