@@ -16,16 +16,10 @@
     <script>
       window.App = {
         STATIC_URL: "{% boards_web_static %}",
-        SOCKETS_URL: "{{ settings.BOARDS_SOCKETS_URL }}"
+        SOCKETS_URL: "{{ settings.BOARDS_SOCKETS_URL }}",
+        PUBLIC_BOARD: {% if board_is_shared %}{{ board_id }}{% else %}null{% endif %}
       };
     </script>
-    {% if board_is_shared %}
-    <script>
-      window.App.PUBLIC_BOARD = {
-        id: {{ board_id }}
-      };
-    </script>
-    {% endif %}
     <script src="{{ settings.BOARDS_SOCKETS_URL }}socket.io/socket.io.js"></script>
     <script src="{% boards_web_static "js/app.js" %}" onload="require('application');"></script>
   </body>
