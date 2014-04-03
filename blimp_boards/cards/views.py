@@ -44,10 +44,15 @@ class CardViewSet(ModelViewSet):
         filter query param.
         """
         request_method = request.method.lower()
+        action = self.action_map.get(request_method)
         board = request.GET.get('board')
 
-        if self.action_map.get(request_method) == 'list' and board:
+        if action == 'list' and board:
             self.authentication_classes = ()
+
+        if request_method == 'get' and action == 'comments':
+            self.authentication_classes = ()
+            self.permission_classes = ()
 
         return super(CardViewSet, self).initialize_request(
             request, *args, **kwargs)
