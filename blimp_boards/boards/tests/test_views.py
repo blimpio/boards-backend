@@ -689,4 +689,5 @@ class BoardHTMLViewTestCase(AuthenticatedAPITestCase):
 
         response = self.client.get(self.url)
 
-        self.assertContains(response, 'PUBLIC_BOARD: {}'.format(self.board.id))
+        self.assertContains(response, 'PUBLIC_BOARD:')
+        self.assertContains(response, 'id: {}'.format(self.board.id))

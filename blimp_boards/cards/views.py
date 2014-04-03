@@ -43,19 +43,24 @@ class CardViewSet(ModelViewSet):
         Disable authentication for `list` action with board
         filter query param.
         """
+        initialized_request = super(CardViewSet, self).initialize_request(
+            request, *args, **kwargs)
+
+        user = request.user
         request_method = request.method.lower()
         action = self.action_map.get(request_method)
         board = request.GET.get('board')
 
+        if user.is_authenticated():
+            return initialized_request
+
         if action == 'list' and board:
             self.authentication_classes = ()
-
-        if request_method == 'get' and action == 'comments':
+        elif action == 'comments' and request_method == 'get':
             self.authentication_classes = ()
             self.permission_classes = ()
 
-        return super(CardViewSet, self).initialize_request(
-            request, *args, **kwargs)
+        return initialized_request
 
     @action(methods=['GET', 'POST'], serializer_class=CardCommentSerializer)
     def comments(self, request, pk=None):

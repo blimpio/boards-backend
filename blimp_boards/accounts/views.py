@@ -68,14 +68,18 @@ class AccountViewSet(viewsets.ReadOnlyModelViewSet):
         """
         Disable authentication for `retrieve` action.
         """
-        request_method = request.method.lower()
+        initialized_request = super(AccountViewSet, self).initialize_request(
+            request, *args, **kwargs)
 
-        if self.action_map.get(request_method) == 'retrieve':
+        user = request.user
+        request_method = request.method.lower()
+        action = self.action_map.get(request_method)
+
+        if not user.is_authenticated() and action == 'retrieve':
             self.authentication_classes = ()
             self.permission_classes = ()
 
-        return super(AccountViewSet, self).initialize_request(
-            request, *args, **kwargs)
+        return initialized_request
 
     @link(paginate_by=10)
     def activity(self, request, pk=None):

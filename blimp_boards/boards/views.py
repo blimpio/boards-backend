@@ -31,13 +31,17 @@ class BoardViewSet(ModelViewSet):
         """
         Disable authentication for `retrieve` action.
         """
-        request_method = request.method.lower()
+        initialized_request = super(BoardViewSet, self).initialize_request(
+            request, *args, **kwargs)
 
-        if self.action_map.get(request_method) == 'retrieve':
+        user = request.user
+        request_method = request.method.lower()
+        action = self.action_map.get(request_method)
+
+        if not user.is_authenticated() and action == 'retrieve':
             self.authentication_classes = ()
 
-        return super(BoardViewSet, self).initialize_request(
-            request, *args, **kwargs)
+        return initialized_request
 
 
 class BoardCollaboratorViewSet(ModelViewSet):
@@ -66,14 +70,19 @@ class BoardCollaboratorRequestViewSet(CreateListRetrieveViewSet):
         """
         Disable authentication and permissions for `create` action.
         """
-        request_method = request.method.lower()
+        initialized_request = super(
+            BoardCollaboratorRequestViewSet, self).initialize_request(
+            request, *args, **kwargs)
 
-        if self.action_map.get(request_method) == 'create':
+        user = request.user
+        request_method = request.method.lower()
+        action = self.action_map.get(request_method)
+
+        if not user.is_authenticated() and action == 'create':
             self.authentication_classes = ()
             self.permission_classes = ()
 
-        return super(BoardCollaboratorRequestViewSet,
-                     self).initialize_request(request, *args, **kwargs)
+        return initialized_request
 
     @action(methods=['PUT'])
     def accept(self, request, pk=None):
