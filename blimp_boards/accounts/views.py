@@ -57,7 +57,25 @@ class AccountViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = AccountSerializer
 
     def get_queryset(self):
-        return self.request.user.accounts
+        user = self.request.user
+
+        if user.is_authenticated():
+            return user.accounts
+
+        return Account.objects.filter(board__is_shared=True)
+
+    def initialize_request(self, request, *args, **kwargs):
+        """
+        Disable authentication for `retrieve` action.
+        """
+        request_method = request.method.lower()
+
+        if self.action_map.get(request_method) == 'retrieve':
+            self.authentication_classes = ()
+            self.permission_classes = ()
+
+        return super(AccountViewSet, self).initialize_request(
+            request, *args, **kwargs)
 
     @link(paginate_by=10)
     def activity(self, request, pk=None):
