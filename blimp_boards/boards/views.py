@@ -27,6 +27,18 @@ class BoardViewSet(ModelViewSet):
 
         return Board.objects.filter(is_shared=True)
 
+    def initialize_request(self, request, *args, **kwargs):
+        """
+        Disable authentication for `retrieve` action.
+        """
+        request_method = request.method.lower()
+
+        if self.action_map.get(request_method) == 'retrieve':
+            self.authentication_classes = ()
+
+        return super(BoardViewSet, self).initialize_request(
+            request, *args, **kwargs)
+
 
 class BoardCollaboratorViewSet(ModelViewSet):
     model = BoardCollaborator
