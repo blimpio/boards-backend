@@ -38,6 +38,20 @@ class CardViewSet(ModelViewSet):
 
         return cards.prefetch_related('cards')
 
+    def initialize_request(self, request, *args, **kwargs):
+        """
+        Disable authentication for `list` action with board
+        filter query param.
+        """
+        request_method = request.method.lower()
+        board = request.GET.get('board')
+
+        if self.action_map.get(request_method) == 'list' and board:
+            self.authentication_classes = ()
+
+        return super(CardViewSet, self).initialize_request(
+            request, *args, **kwargs)
+
     @action(methods=['GET', 'POST'], serializer_class=CardCommentSerializer)
     def comments(self, request, pk=None):
         card = self.get_object()
