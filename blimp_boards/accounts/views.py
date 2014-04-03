@@ -62,7 +62,7 @@ class AccountViewSet(viewsets.ReadOnlyModelViewSet):
         if user.is_authenticated():
             return user.accounts
 
-        return Account.objects.filter(board__is_shared=True)
+        return Account.objects.filter(board__is_shared=True).distinct()
 
     def initialize_request(self, request, *args, **kwargs):
         """
