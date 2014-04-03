@@ -682,12 +682,11 @@ class BoardHTMLViewTestCase(AuthenticatedAPITestCase):
 
     def test_view_should_include_javascript_object(self):
         """
-        Tests that view contains the JS object window.App.PUBLIC_BOARD.id
+        Tests that view contains the JS object window.App.PUBLIC_BOARD
         """
         self.board.is_shared = True
         self.board.save()
 
         response = self.client.get(self.url)
 
-        self.assertContains(response, 'window.App.PUBLIC_BOARD')
-        self.assertContains(response, 'id: {}'.format(self.board.id))
+        self.assertContains(response, 'PUBLIC_BOARD: {}'.format(self.board.id))
