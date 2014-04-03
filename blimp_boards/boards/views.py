@@ -104,13 +104,14 @@ class BoardHTMLView(APIView):
         board_slug = kwargs['board_slug']
 
         board = get_object_or_404(
-            Board.objects.values_list('id', 'is_shared'),
+            Board.objects.values_list('id', 'account', 'is_shared'),
             account__slug=account_slug,
             slug=board_slug)
 
         data = {
             'board_id': board[0],
-            'board_is_shared': board[1]
+            'board_account_id': board[1],
+            'board_is_shared': board[2],
         }
 
         return Response(data, template_name='index.html')
