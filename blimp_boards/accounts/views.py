@@ -1,6 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import link
 from rest_framework.pagination import PaginationSerializer
@@ -11,6 +11,7 @@ from ..notifications.pagination import PaginatedNotificationSerializer
 from ..notifications.models import Notification
 from ..utils.response import ErrorResponse
 from .models import Account
+from .permissions import AccountPermission
 from .serializers import (ValidateSignupDomainsSerializer,
                           AccountSerializer, CheckSignupDomainSerializer)
 
@@ -55,31 +56,29 @@ class AccountViewSet(viewsets.ReadOnlyModelViewSet):
     """
     model = Account
     serializer_class = AccountSerializer
+    permission_classes = (AccountPermission, )
 
     def get_queryset(self):
         user = self.request.user
-
-        if user.is_authenticated():
-            return user.accounts
-
-        return Account.objects.filter(board__is_shared=True).distinct()
-
-    def initialize_request(self, request, *args, **kwargs):
-        """
-        Disable authentication for `retrieve` action.
-        """
-        initialized_request = super(AccountViewSet, self).initialize_request(
-            request, *args, **kwargs)
-
-        user = request.user
-        request_method = request.method.lower()
+        request_method = self.request.method.lower()
         action = self.action_map.get(request_method)
 
-        if not user.is_authenticated() and action == 'retrieve':
-            self.authentication_classes = ()
-            self.permission_classes = ()
+        user_accounts = None
+        public_accounts = None
 
-        return initialized_request
+        if user.is_authenticated():
+            user_accounts = user.accounts.distinct()
+
+        if action == 'retrieve':
+            public_accounts = Account.objects.filter(
+                board__is_shared=True).distinct()
+
+        if user_accounts and public_accounts:
+            return user_accounts | public_accounts
+        elif user_accounts:
+            return user_accounts
+        elif public_accounts:
+            return public_accounts
 
     @link(paginate_by=10)
     def activity(self, request, pk=None):
