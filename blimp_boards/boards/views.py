@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from ..utils.viewsets import ModelViewSet, CreateListRetrieveViewSet
 from .models import Board, BoardCollaborator, BoardCollaboratorRequest
 from .serializers import (BoardSerializer, BoardCollaboratorSerializer,
+                          BoardCollaboratorPublicSerializer,
                           BoardCollaboratorRequestSerializer)
 from .permissions import (BoardPermission, BoardCollaboratorPermission,
                           BoardCollaboratorRequestPermission)
@@ -77,6 +78,18 @@ class BoardCollaboratorViewSet(ModelViewSet):
             collaborators = public_collaborators
 
         return collaborators
+
+    def get_serializer_class(self):
+        user = self.request.user
+        user_ids = []
+
+        for collaborator in self.object_list:
+            user_ids.append(collaborator.user_id)
+
+        if not user.is_authenticated() or user.id not in user_ids:
+            return BoardCollaboratorPublicSerializer
+
+        return super(BoardCollaboratorViewSet, self).get_serializer_class()
 
 
 class BoardCollaboratorRequestViewSet(CreateListRetrieveViewSet):

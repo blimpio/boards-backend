@@ -81,6 +81,31 @@ class BoardCollaboratorSerializer(serializers.ModelSerializer):
             self.invited_user.send_invite()
 
 
+class BoardCollaboratorPublicSerializer(serializers.ModelSerializer):
+    """
+    BoardCollaborator serializer that removes email from
+    user and invited_user fields.
+    """
+    user = UserSimpleSerializer(required=False)
+    invited_user = InvitedUserSimpleSerializer(required=False)
+
+    class Meta:
+        model = BoardCollaborator
+
+    def __init__(self, *args, **kwargs):
+        super(BoardCollaboratorPublicSerializer, self).__init__(
+            *args, **kwargs)
+
+        user = self.fields['user']
+        invited_user = self.fields['invited_user']
+
+        if user:
+            user.fields.pop('email', None)
+
+        if invited_user:
+            invited_user.fields.pop('email', None)
+
+
 class BoardCollaboratorRequestSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
 
