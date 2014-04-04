@@ -80,6 +80,8 @@ class AccountViewSet(viewsets.ReadOnlyModelViewSet):
         elif public_accounts:
             return public_accounts
 
+        return []
+
     @link(paginate_by=10)
     def activity(self, request, pk=None):
         account = self.get_object()

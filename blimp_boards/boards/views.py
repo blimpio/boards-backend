@@ -21,27 +21,26 @@ class BoardViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-
-        if user.is_authenticated():
-            return user.boards
-
-        return Board.objects.filter(is_shared=True)
-
-    def initialize_request(self, request, *args, **kwargs):
-        """
-        Disable authentication for `retrieve` action.
-        """
-        initialized_request = super(BoardViewSet, self).initialize_request(
-            request, *args, **kwargs)
-
-        user = request.user
-        request_method = request.method.lower()
+        request_method = self.request.method.lower()
         action = self.action_map.get(request_method)
 
-        if not user.is_authenticated() and action == 'retrieve':
-            self.authentication_classes = ()
+        user_boards = None
+        public_boards = None
 
-        return initialized_request
+        if user.is_authenticated():
+            user_boards = user.boards
+
+        if action == 'retrieve':
+            public_boards = Board.objects.filter(is_shared=True)
+
+        if user_boards and public_boards:
+            return user_boards | public_boards
+        elif user_boards:
+            return user_boards
+        elif public_boards:
+            return public_boards
+
+        return []
 
 
 class BoardCollaboratorViewSet(ModelViewSet):
