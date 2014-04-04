@@ -53,7 +53,30 @@ class BoardCollaboratorViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return BoardCollaborator.objects.filter(board__in=user.boards)
+        request_method = self.request.method.lower()
+        action = self.action_map.get(request_method)
+        board = self.request.QUERY_PARAMS.get('board')
+
+        collaborators = BoardCollaborator.objects.none()
+        user_collaborators = None
+        public_collaborators = None
+
+        if user.is_authenticated():
+            user_collaborators = BoardCollaborator.objects.filter(
+                board__in=user.boards)
+
+        if action == 'list' and board:
+            public_collaborators = BoardCollaborator.objects.filter(
+                board__is_shared=True)
+
+        if user_collaborators and public_collaborators:
+            collaborators = user_collaborators | public_collaborators
+        elif user_collaborators:
+            collaborators = user_collaborators
+        elif public_collaborators:
+            collaborators = public_collaborators
+
+        return collaborators
 
 
 class BoardCollaboratorRequestViewSet(CreateListRetrieveViewSet):

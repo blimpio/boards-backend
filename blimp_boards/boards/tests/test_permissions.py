@@ -215,6 +215,7 @@ class BoardCollaboratorPermissionTestCase(BaseTestCase):
         request.user = self.user
 
         view = mock_view(request)
+        view.action = 'list'
 
         has_perm = self.perm_class.has_permission(request, view)
 
@@ -229,6 +230,7 @@ class BoardCollaboratorPermissionTestCase(BaseTestCase):
         request.user = self.user
 
         view = mock_view(request)
+        view.action = 'list'
 
         has_perm = self.perm_class.has_permission(request, view)
 
@@ -244,6 +246,7 @@ class BoardCollaboratorPermissionTestCase(BaseTestCase):
         request.user = self.user
 
         view = mock_view(request)
+        view.action = 'create'
 
         has_perm = self.perm_class.has_permission(request, view)
 
@@ -261,6 +264,7 @@ class BoardCollaboratorPermissionTestCase(BaseTestCase):
         request.user = self.account_owner.user
 
         view = mock_view(request)
+        view.action = 'create'
 
         has_perm = self.perm_class.has_permission(request, view)
 

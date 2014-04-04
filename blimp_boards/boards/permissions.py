@@ -50,13 +50,16 @@ class BoardCollaboratorPermission(permissions.BasePermission):
         user is the account owner.
         """
         is_authenticated = request.user and request.user.is_authenticated()
+        is_safe = request.method in permissions.SAFE_METHODS
+        action = view.action
 
-        if not is_authenticated:
-            return False
-
+        board = request.QUERY_PARAMS.get('board')
         board_id = request.DATA.get('board')
 
-        if request.method == 'POST' and board_id:
+        if not is_authenticated and is_safe and action == 'list' and board:
+            return True
+
+        if is_authenticated and request.method == 'POST' and board_id:
             try:
                 board = Board.objects.get(pk=board_id)
             except Board.DoesNotExist:
@@ -74,7 +77,10 @@ class BoardCollaboratorPermission(permissions.BasePermission):
 
             return has_board_permission or account_owner.exists()
 
-        return True
+        if is_authenticated:
+            return True
+
+        return False
 
     def has_object_permission(self, request, view, obj):
         """
