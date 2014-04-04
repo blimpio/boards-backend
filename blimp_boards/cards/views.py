@@ -29,38 +29,30 @@ class CardViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-
-        if user.is_authenticated():
-            user = self.request.user
-            cards = user.cards
-        else:
-            cards = Card.objects.filter(board__is_shared=True)
-
-        return cards.prefetch_related('cards')
-
-    def initialize_request(self, request, *args, **kwargs):
-        """
-        Disable authentication for `list` action with board
-        filter query param.
-        """
-        initialized_request = super(CardViewSet, self).initialize_request(
-            request, *args, **kwargs)
-
-        user = request.user
-        request_method = request.method.lower()
+        request_method = self.request.method.lower()
         action = self.action_map.get(request_method)
-        board = request.GET.get('board')
+        board = self.request.QUERY_PARAMS.get('board')
+
+        cards = Card.objects.none()
+        user_cards = None
+        public_cards = None
 
         if user.is_authenticated():
-            return initialized_request
+            user_cards = user.cards.prefetch_related('cards')
 
-        if action == 'list' and board:
-            self.authentication_classes = ()
-        elif action == 'comments' and request_method == 'get':
-            self.authentication_classes = ()
-            self.permission_classes = ()
+        if (action == 'list' and board) or \
+                (action == 'comments' and request_method == 'get'):
+            public_cards = Card.objects.prefetch_related(
+                'cards').filter(board__is_shared=True)
 
-        return initialized_request
+        if user_cards and public_cards:
+            cards = user_cards | public_cards
+        elif user_cards:
+            cards = user_cards
+        elif public_cards:
+            cards = public_cards
+
+        return cards
 
     @action(methods=['GET', 'POST'], serializer_class=CardCommentSerializer)
     def comments(self, request, pk=None):

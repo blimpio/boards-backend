@@ -34,6 +34,7 @@ class CardPermissionTestCase(BaseTestCase):
         request.user = self.user
 
         view = mock_view(request)
+        view.action = 'list'
 
         has_perm = self.perm_class.has_permission(request, view)
 
