@@ -423,6 +423,40 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response.data, expected_response)
 
+    def test_viewset_should_use_public_serializer(self):
+        """
+        Test that viewset uses public serializer when needed.
+        """
+        self.board.is_shared = True
+        self.board.save()
+
+        self.client = APIClient()
+
+        response = self.client.get(self.base_url, {'board': self.board.id})
+
+        expected_response = [{
+            'id': self.board_collaborator.id,
+            'date_created': self.board_collaborator.date_created,
+            'date_modified': self.board_collaborator.date_modified,
+            'board': self.board.id,
+            'user': {
+                'id': self.board_collaborator.user.id,
+                'username': self.board_collaborator.user.username,
+                'first_name': self.board_collaborator.user.first_name,
+                'last_name': self.board_collaborator.user.last_name,
+                'avatar_path': self.board_collaborator.user.avatar_path,
+                'gravatar_url': self.board_collaborator.user.gravatar_url,
+                'timezone': self.board_collaborator.user.timezone,
+                'date_created': self.board_collaborator.user.date_created,
+                'date_modified': self.board_collaborator.user.date_modified,
+            },
+            'invited_user': None,
+            'permission': self.board_collaborator.permission
+        }]
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
 
 class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
     def setUp(self):
