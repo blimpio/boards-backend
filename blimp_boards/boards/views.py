@@ -24,6 +24,7 @@ class BoardViewSet(ModelViewSet):
         request_method = self.request.method.lower()
         action = self.action_map.get(request_method)
 
+        boards = Board.objects.none()
         user_boards = None
         public_boards = None
 
@@ -34,13 +35,13 @@ class BoardViewSet(ModelViewSet):
             public_boards = Board.objects.filter(is_shared=True)
 
         if user_boards and public_boards:
-            return user_boards | public_boards
+            boards = user_boards | public_boards
         elif user_boards:
-            return user_boards
+            boards = user_boards
         elif public_boards:
-            return public_boards
+            boards = public_boards
 
-        return []
+        return boards
 
 
 class BoardCollaboratorViewSet(ModelViewSet):

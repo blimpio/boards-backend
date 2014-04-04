@@ -63,6 +63,7 @@ class AccountViewSet(viewsets.ReadOnlyModelViewSet):
         request_method = self.request.method.lower()
         action = self.action_map.get(request_method)
 
+        accounts = Account.objects.none()
         user_accounts = None
         public_accounts = None
 
@@ -74,13 +75,13 @@ class AccountViewSet(viewsets.ReadOnlyModelViewSet):
                 board__is_shared=True).distinct()
 
         if user_accounts and public_accounts:
-            return user_accounts | public_accounts
+            accounts = user_accounts | public_accounts
         elif user_accounts:
-            return user_accounts
+            accounts = user_accounts
         elif public_accounts:
-            return public_accounts
+            accounts = public_accounts
 
-        return []
+        return accounts
 
     @link(paginate_by=10)
     def activity(self, request, pk=None):
