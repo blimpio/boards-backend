@@ -30,7 +30,6 @@ class BoardSerializerTestCase(BaseTestCase):
             'name': '',
             'account': None,
             'is_shared': False,
-            'disqus_shortname': '',
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': ''
@@ -96,7 +95,6 @@ class BoardSerializerTestCase(BaseTestCase):
             'slug': serializer.object.slug,
             'account': self.account.id,
             'is_shared': False,
-            'disqus_shortname': '',
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': ''
