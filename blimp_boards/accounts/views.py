@@ -1,15 +1,14 @@
 from django.contrib.contenttypes.models import ContentType
 
-from rest_framework import generics, viewsets, permissions
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.decorators import link
-from rest_framework.pagination import PaginationSerializer
 
 from ..boards.models import Board
-from ..notifications.serializers import NotificationSerializer
 from ..notifications.pagination import PaginatedNotificationSerializer
 from ..notifications.models import Notification
 from ..utils.response import ErrorResponse
+from ..utils.viewsets import ListRetrieveUpdateViewSet
 from .models import Account
 from .permissions import AccountPermission
 from .serializers import (ValidateSignupDomainsSerializer,
@@ -50,7 +49,7 @@ class CheckSignupDomainAPIView(generics.CreateAPIView):
         return ErrorResponse(serializer.errors)
 
 
-class AccountViewSet(viewsets.ReadOnlyModelViewSet):
+class AccountViewSet(ListRetrieveUpdateViewSet):
     """
     Get a list of accounts for the user in the request
     """

@@ -70,3 +70,14 @@ class RetrieveUpdateViewSet(mixins.RetrieveModelMixin,
     and `partial_update()` actions.
     """
     pass
+
+
+class ListRetrieveUpdateViewSet(mixins.RetrieveModelMixin,
+                                mixins.ListModelMixin,
+                                UpdateModelMixin,
+                                viewsets.GenericViewSet):
+    """
+    A viewset that provides default `list()`, `retrieve()`,
+    `update()`, and `partial_update()` actions.
+    """
+    pass
