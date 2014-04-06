@@ -18,6 +18,7 @@ class AccountSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Account
+        read_only_fields = ('logo_color', )
         fields = ('id', 'name', 'slug', 'disqus_shortname', 'logo_color',
                   'date_created', 'date_modified')
 
