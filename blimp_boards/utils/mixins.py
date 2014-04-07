@@ -1,6 +1,8 @@
 from django.forms.models import model_to_dict
 
+from rest_framework import status
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
+from rest_framework.response import Response
 
 from .response import ErrorResponse
 
@@ -34,6 +36,36 @@ class UpdateModelMixin(UpdateModelMixin):
         if serializer.is_valid():
             return super(UpdateModelMixin, self).update(
                 request, *args, **kwargs)
+
+        return ErrorResponse(serializer.errors)
+
+
+class BulkCreateModelMixin(CreateModelMixin):
+    """
+    From https://github.com/miki725/django-rest-framework-bulk
+
+    Either create a single or many model instances in bulk by using the
+    Serializer's ``many=True`` ability from Django REST >= 2.2.5.
+
+    This mixin uses the same method to create model instances
+    as ``CreateModelMixin`` because both non-bulk and bulk
+    requests will use ``POST`` request method.
+    """
+
+    def create(self, request, *args, **kwargs):
+        bulk = isinstance(request.DATA, list)
+
+        if not bulk:
+            return super(BulkCreateModelMixin, self).create(
+                request, *args, **kwargs)
+
+        serializer = self.get_serializer(data=request.DATA, many=True)
+
+        if serializer.is_valid():
+            [self.pre_save(obj) for obj in serializer.object]
+            self.object = serializer.save(force_insert=True)
+            [self.post_save(obj) for obj in self.object]
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return ErrorResponse(serializer.errors)
 

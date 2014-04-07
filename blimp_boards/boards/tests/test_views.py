@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from ...utils.tests import AuthenticatedAPITestCase
+from ...invitations.models import InvitedUser
 from ..models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
@@ -449,6 +450,43 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+    def test_viewset_bulk_create(self):
+        """
+        Tests that viewset can accept an array to create.
+        """
+        data = [{
+            'email': 'abc@example.com',
+            'board': self.board.id,
+            'permission': 'write'
+        }]
+
+        response = self.client.post(self.base_url, data, format='json')
+
+        invited_user = InvitedUser.objects.get(email='abc@example.com')
+        board_collaborator = BoardCollaborator.objects.get(
+            invited_user=invited_user, board=self.board)
+
+        expected_response = [{
+            'id': board_collaborator.id,
+            'date_created': board_collaborator.date_created,
+            'date_modified': board_collaborator.date_modified,
+            'board': self.board.id,
+            'user': None,
+            'invited_user': {
+                'id': invited_user.id,
+                'first_name': '',
+                'last_name': '',
+                'email': invited_user.email,
+                'gravatar_url': invited_user.gravatar_url,
+                'date_created': invited_user.date_created,
+                'date_modified': invited_user.date_modified,
+            },
+            'permission': self.board_collaborator.permission
+        }]
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data, expected_response)
 
 

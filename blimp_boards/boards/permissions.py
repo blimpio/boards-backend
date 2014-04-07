@@ -43,39 +43,63 @@ class BoardPermission(permissions.BasePermission):
 
 
 class BoardCollaboratorPermission(permissions.BasePermission):
+    def is_authenticated(self, request):
+        return request.user and request.user.is_authenticated()
+
+    def board_collaborator_has_permission(self, request, view, board_id):
+        try:
+            board = Board.objects.get(pk=board_id)
+        except Board.DoesNotExist:
+            return False
+
+        permission = BoardPermission()
+        has_board_permission = permission.has_object_permission(
+            request, view, board)
+
+        account_owner = AccountCollaborator.objects.filter(
+            account_id=board.account_id,
+            user=request.user,
+            is_owner=True
+        )
+
+        return has_board_permission or account_owner.exists()
+
     def has_permission(self, request, view):
         """
         Returns `True` if the user is a board collaborator with
         write permissions trying to create. Returns `True` if
         user is the account owner.
         """
-        is_authenticated = request.user and request.user.is_authenticated()
+        is_authenticated = self.is_authenticated(request)
         is_safe = request.method in permissions.SAFE_METHODS
         action = view.action
 
         board = request.QUERY_PARAMS.get('board')
-        board_id = request.DATA.get('board')
 
         if not is_authenticated and is_safe and action == 'list' and board:
             return True
 
-        if is_authenticated and request.method == 'POST' and board_id:
-            try:
-                board = Board.objects.get(pk=board_id)
-            except Board.DoesNotExist:
-                return False
+        bulk = isinstance(request.DATA, list)
 
-            permission = BoardPermission()
-            has_board_permission = permission.has_object_permission(
-                request, view, board)
+        if is_authenticated and request.method == 'POST':
+            has_perm = None
 
-            account_owner = AccountCollaborator.objects.filter(
-                account_id=board.account_id,
-                user=request.user,
-                is_owner=True
-            )
+            if not bulk:
+                board_id = request.DATA.get('board')
+                if board_id:
+                    has_perm = self.board_collaborator_has_permission(
+                        request, view, board_id)
+            else:
+                perms = []
+                for item in request.DATA:
+                    board_id = item.get('board')
+                    if board_id:
+                        perms.append(self.board_collaborator_has_permission(
+                            request, view, board_id))
+                has_perm = all(perms)
 
-            return has_board_permission or account_owner.exists()
+            if has_perm is not None:
+                return has_perm
 
         if is_authenticated:
             return True

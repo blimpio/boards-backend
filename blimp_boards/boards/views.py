@@ -1,11 +1,13 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework import filters
+from rest_framework import filters, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 
+from ..utils.response import ErrorResponse
+from ..utils.mixins import BulkCreateModelMixin
 from ..utils.viewsets import ModelViewSet, CreateListRetrieveViewSet
 from .models import Board, BoardCollaborator, BoardCollaboratorRequest
 from .serializers import (BoardSerializer, BoardCollaboratorSerializer,
@@ -45,7 +47,7 @@ class BoardViewSet(ModelViewSet):
         return boards
 
 
-class BoardCollaboratorViewSet(ModelViewSet):
+class BoardCollaboratorViewSet(BulkCreateModelMixin, ModelViewSet):
     model = BoardCollaborator
     serializer_class = BoardCollaboratorSerializer
     permission_classes = (BoardCollaboratorPermission, )
@@ -83,11 +85,12 @@ class BoardCollaboratorViewSet(ModelViewSet):
         user = self.request.user
         user_ids = []
 
-        for collaborator in self.object_list:
-            user_ids.append(collaborator.user_id)
+        if hasattr(self, 'object_list'):
+            for collaborator in self.object_list:
+                user_ids.append(collaborator.user_id)
 
-        if not user.is_authenticated() or user.id not in user_ids:
-            return BoardCollaboratorPublicSerializer
+            if not user.is_authenticated() or user.id not in user_ids:
+                return BoardCollaboratorPublicSerializer
 
         return super(BoardCollaboratorViewSet, self).get_serializer_class()
 
