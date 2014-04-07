@@ -22,6 +22,9 @@ class CardPermission(permissions.BasePermission):
         if view.action == 'comments' and is_safe:
             return True
 
+        if view.action == 'download' and is_safe:
+            return True
+
         if not is_authenticated and view.action == 'list':
             return bool(request.QUERY_PARAMS.get('board'))
 

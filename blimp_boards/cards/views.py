@@ -40,8 +40,13 @@ class CardViewSet(ModelViewSet):
         if user.is_authenticated():
             user_cards = user.cards.prefetch_related('cards')
 
-        if (action == 'list' and board) or \
-                (action == 'comments' and request_method == 'get'):
+        public_criteria = [
+            (action == 'list' and board),
+            (action == 'comments' and request_method == 'get'),
+            (action == 'download' and request_method == 'get'),
+        ]
+
+        if any(public_criteria):
             public_cards = Card.objects.prefetch_related(
                 'cards').filter(board__is_shared=True)
 
