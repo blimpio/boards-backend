@@ -1,12 +1,11 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework import filters, status
+from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 
-from ..utils.response import ErrorResponse
 from ..utils.mixins import BulkCreateModelMixin
 from ..utils.viewsets import ModelViewSet, CreateListRetrieveViewSet
 from .models import Board, BoardCollaborator, BoardCollaboratorRequest
