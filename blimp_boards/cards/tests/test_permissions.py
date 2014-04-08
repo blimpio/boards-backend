@@ -82,6 +82,7 @@ class CardPermissionTestCase(BaseTestCase):
         request.user = self.user
 
         view = mock_view(request)
+        view.action = 'create'
 
         has_perm = self.perm_class.has_object_permission(
             request, view, self.card)
@@ -100,6 +101,7 @@ class CardPermissionTestCase(BaseTestCase):
         self.board_collaborator.save()
 
         view = mock_view(request)
+        view.action = 'create'
 
         has_perm = self.perm_class.has_object_permission(
             request, view, self.card)
@@ -118,6 +120,7 @@ class CardPermissionTestCase(BaseTestCase):
         self.board_collaborator.save()
 
         view = mock_view(request)
+        view.action = 'list'
 
         has_perm = self.perm_class.has_object_permission(
             request, view, self.card)
@@ -136,6 +139,7 @@ class CardPermissionTestCase(BaseTestCase):
         self.board_collaborator.save()
 
         view = mock_view(request)
+        view.action = 'list'
 
         has_perm = self.perm_class.has_object_permission(
             request, view, self.card)

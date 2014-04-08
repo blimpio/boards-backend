@@ -365,6 +365,30 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data, expected_response)
 
+    def test_viewset_comments_action_post_read_permission(self):
+        data = {
+            'content': 'This is my comment.'
+        }
+
+        self.board_collaborator.permission = 'read'
+        self.board_collaborator.save()
+
+        response = self.client.post(
+            '{}{}/comments/'.format(self.base_url, self.card.id), data)
+
+        comment = Comment.objects.get(pk=response.data['id'])
+
+        expected_response = {
+            'id': comment.id,
+            'content': 'This is my comment.',
+            'created_by': self.user.id,
+            'date_created': comment.date_created,
+            'date_modified': comment.date_modified
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data, expected_response)
+
     def test_viewset_should_allow_anonymous_user_to_list_cards(self):
         """
         Tests that viewset should allow anonymous users to list cards

@@ -29,15 +29,22 @@ class BoardPermission(permissions.BasePermission):
         Returns `False` if user is not authenticated.
         """
         permission = 'read'
+        is_authenticated = self.is_authenticated(request)
+        is_safe = request.method in permissions.SAFE_METHODS
+        action = view.action
 
-        if request.method not in permissions.SAFE_METHODS:
+        if not is_safe:
             permission = 'write'
 
         if permission == 'read' and obj.is_shared:
             return True
 
-        if not self.is_authenticated(request):
+        if not is_authenticated:
             return False
+
+        if action == 'comments':
+            # Any collaborator can work with permissions
+            permission = None
 
         return obj.is_user_collaborator(request.user, permission=permission)
 
