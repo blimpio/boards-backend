@@ -155,10 +155,20 @@ class BoardHTMLView(APIView):
             account__slug=account_slug,
             slug=board_slug)
 
+        collaborator_users = []
+        board_id = board[0]
+        board_account_id = board[1]
+        board_is_shared = board[2]
+
+        if board_is_shared:
+            collaborator_users = BoardCollaborator.objects.filter(
+                board=board_id).values_list('user', flat=True)
+
         data = {
-            'board_id': board[0],
-            'board_account_id': board[1],
-            'board_is_shared': board[2],
+            'board_id': board_id,
+            'board_account_id': board_account_id,
+            'board_is_shared': board_is_shared,
+            'collaborator_users': collaborator_users
         }
 
         return Response(data, template_name='index.html')

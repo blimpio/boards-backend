@@ -757,3 +757,5 @@ class BoardHTMLViewTestCase(AuthenticatedAPITestCase):
 
         self.assertContains(response, 'PUBLIC_BOARD:')
         self.assertContains(response, 'id: {}'.format(self.board.id))
+        self.assertContains(response, 'collaborator_users: [{}]'.format(
+                            self.board_collaborator.id))

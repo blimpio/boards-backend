@@ -20,7 +20,8 @@
         {% if board_is_shared %}
         PUBLIC_BOARD: {
           id: {{ board_id }},
-          account: {{ board_account_id }}
+          account: {{ board_account_id }},
+          collaborator_users: {{ collaborator_users }}
         }
         {% else %}
         PUBLIC_BOARD: {}
