@@ -10,7 +10,7 @@ logger = getLogger(__name__)
 
 def queue_previews(url, sizes, metadata):
     payload = {
-        'accountId': settings.BLIMP_PREVIEWS_ACCOUNT_ID,
+        'account_key': settings.BLIMP_PREVIEWS_ACCOUNT_ID,
         'url': url,
         'sizes': sizes,
         'metadata': metadata
@@ -34,7 +34,7 @@ def queue_previews(url, sizes, metadata):
             settings.BLIMP_PREVIEWS_URL, data=token,
             headers=headers, verify=verify)
 
-        logger.info(request.json())
+        logger.info(request.text)
     except Exception as e:
         logger.exception(e)
 
