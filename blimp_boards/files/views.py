@@ -68,13 +68,13 @@ class FilePreviewsWebhook(APIView):
                 size = result['size']
                 url = unquote(result['url'])
 
-                if size == '200':
+                if size['width'] == '200':
                     card.thumbnail_sm_path = url
 
-                if size == '500':
+                if size['width'] == '500':
                     card.thumbnail_md_path = url
 
-                if size == '800':
+                if size['width'] == '800':
                     card.thumbnail_lg_path = url
 
             if results:
