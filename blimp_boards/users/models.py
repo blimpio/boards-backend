@@ -64,9 +64,9 @@ class User(BaseModel, AbstractBaseUser):
         help_text=username_help_text, validators=[username_validator]
     )
 
-    first_name = models.CharField(_('first name'), max_length=30)
+    first_name = models.CharField(_('first name'), max_length=30, blank=True)
 
-    last_name = models.CharField(_('last name'), max_length=30)
+    last_name = models.CharField(_('last name'), max_length=30, blank=True)
 
     email = models.EmailField(_('email address'), max_length=254, unique=True)
 

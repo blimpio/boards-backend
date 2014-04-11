@@ -77,7 +77,7 @@ class ValidateUsernameAPIViewTestCase(BaseTestCase):
         self.assertEqual(response.data, expected_response)
 
 
-class SignupAPIView(BaseTestCase):
+class SignupAPIViewTestCase(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
 
@@ -151,8 +151,6 @@ class SignupAPIView(BaseTestCase):
                 'username': ['This field is required.'],
                 'password': ['This field is required.'],
                 'email': ['This field is required.'],
-                'full_name': ['This field is required.'],
-                'account_name': ['This field is required.'],
                 'account_logo_color': ['This field is required.'],
                 'signup_request_token': ['This field is required.']
             }

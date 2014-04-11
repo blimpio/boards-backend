@@ -38,16 +38,9 @@ class SignupSerializer(serializers.Serializer):
     Serializer that handles signup endpoint data.
     """
     email = serializers.EmailField()
-    full_name = serializers.CharField()
-    first_name = serializers.CharField(read_only=True)
-    last_name = serializers.CharField(read_only=True)
-    account_name = serializers.CharField()
     account_logo_color = serializers.CharField()
     username = serializers.CharField()
     password = fields.PasswordField(write_only=True)
-    allow_signup = serializers.BooleanField()
-    signup_domains = SignupDomainsField(required=False)
-    invite_emails = fields.ListField(required=False)
     signup_request_token = serializers.CharField(write_only=True)
 
     def validate_signup_request_token(self, attrs, source):
@@ -64,14 +57,6 @@ class SignupSerializer(serializers.Serializer):
         if self.signup_request.email != email:
             msg = 'Signup request email does not match email.'
             raise serializers.ValidationError(msg)
-
-        return attrs
-
-    def validate_full_name(self, attrs, source):
-        full_name = attrs[source]
-
-        attrs['first_name'] = full_name.split(' ')[0]
-        attrs['last_name'] = " ".join(full_name.split(' ')[1:])
 
         return attrs
 
@@ -109,62 +94,25 @@ class SignupSerializer(serializers.Serializer):
 
         return attrs
 
-    def validate_signup_domains(self, attrs, source):
-        signup_domains = attrs.get('signup_domains')
-        allow_signup = attrs.get('allow_signup')
-
-        if allow_signup and not signup_domains:
-            raise serializers.ValidationError(self.error_messages['required'])
-
-        return attrs
-
-    def validate_invite_emails(self, attrs, source):
-        invite_emails = set(attrs.get(source, []))
-        allow_signup = attrs.get('allow_signup')
-
-        if not allow_signup:
-            return attrs
-
-        for email in invite_emails:
-            if not is_valid_email(email):
-                msg = "{} is not a valid email address.".format(email)
-                raise serializers.ValidationError(msg)
-
-        return attrs
-
     def create_user(self, attrs):
         username = attrs['username']
         email = attrs['email']
         password = attrs['password']
-        first_name = attrs['first_name']
-        last_name = attrs['last_name']
-
-        extra_fields = {
-            'first_name': first_name,
-            'last_name': last_name
-        }
 
         return User.objects.create_user(
             username=username,
             email=email,
-            password=password,
-            **extra_fields
+            password=password
         )
 
     def create_account(self, attrs):
-        account_name = attrs['account_name']
+        account_name = attrs['username']
         logo_color = attrs['account_logo_color']
-        allow_signup = attrs['allow_signup']
-        signup_domains = attrs.get('signup_domains', [])
 
         account = Account.objects.create(
             name=account_name,
-            allow_signup=allow_signup,
             logo_color=logo_color
         )
-
-        if allow_signup and signup_domains:
-            account.add_email_domains(signup_domains)
 
         return account
 
@@ -172,24 +120,11 @@ class SignupSerializer(serializers.Serializer):
         return AccountCollaborator.objects.create_owner(
             account=account, user=user)
 
-    def invite_users(self, account, user, attrs):
-        invite_emails = attrs.get('invite_emails', [])
-
-        for invite_email in invite_emails:
-            user_data = {
-                'email': invite_email,
-                'created_by': user
-            }
-
-            account.invite_user(user_data)
-
     def validate(self, attrs):
         user = self.create_user(attrs)
         account = self.create_account(attrs)
 
         self.create_account_owner(account, user)
-
-        self.invite_users(account, user, attrs)
 
         self.signup_request.delete()
 
@@ -203,8 +138,7 @@ class SignupInvitedUserSerializer(SignupSerializer):
     invited_user_token = serializers.CharField(write_only=True)
 
     class Meta:
-        fields = ('email', 'full_name', 'first_name', 'last_name', 'username',
-                  'password', 'invite_emails', 'invited_user_token')
+        fields = ('email',  'username', 'password', 'invited_user_token')
 
     def validate_invited_user_token(self, attrs, source):
         invited_user_token = attrs[source]
@@ -225,11 +159,8 @@ class SignupInvitedUserSerializer(SignupSerializer):
 
     def validate(self, attrs):
         user = self.create_user(attrs)
-        account = self.invited_user.account
 
         self.invited_user.accept(user)
-
-        self.invite_users(account, user, attrs)
 
         return UserSerializer(user).data
 
@@ -372,6 +303,8 @@ class UserSettingsSerializer(serializers.ModelSerializer):
     """
     Serializer that handles user settings endpoint.
     """
+    first_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
     token = serializers.Field(source='token')
 
     class Meta:

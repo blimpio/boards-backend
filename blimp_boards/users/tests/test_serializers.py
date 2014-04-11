@@ -98,13 +98,10 @@ class SignupSerializerTestCase(BaseTestCase):
             email='juan@example.com')
 
         self.data = {
-            'full_name': 'Juan Pueblo',
             'email': 'juan@example.com',
             'username': 'juan',
             'password': 'abc123',
-            'account_name': 'Pueblo Co.',
             'account_logo_color': 'red',
-            'allow_signup': False,
             'signup_request_token': self.signup_request.token
         }
 
@@ -204,78 +201,6 @@ class SignupSerializerTestCase(BaseTestCase):
 
         self.assertEqual(serializer.errors, expected_error)
 
-    def test_serializer_should_return_error_invalid_signup_domain(self):
-        """
-        Tests that serializer should return error if signup
-        domain is invalid.
-        """
-        self.data.update({
-            'allow_signup': True,
-            'signup_domains': ['gmail.com']
-        })
-
-        serializer = SignupSerializer(data=self.data)
-        serializer.is_valid()
-        expected_error = {
-            'signup_domains': ["gmail.com is an invalid sign-up domain."]
-        }
-
-        self.assertEqual(serializer.errors, expected_error)
-
-    def test_serializer_allow_signup_needs_signup_domains(self):
-        """
-        Tests that serializer should return error if allow_signup is True but
-        signup_domains is not set set.
-        """
-        self.data.update({
-            'allow_signup': True
-        })
-
-        serializer = SignupSerializer(data=self.data)
-        serializer.is_valid()
-
-        expected_error = {
-            'signup_domains': ['This field is required.']
-        }
-
-        self.assertEqual(serializer.errors, expected_error)
-
-    def test_serializer_should_return_error_invalid_invite_email(self):
-        """
-        Tests that serializer should return error if invite
-        email is invalid.
-        """
-        self.data.update({
-            'allow_signup': True,
-            'signup_domains': ['example.com'],
-            'invite_emails': ['@example.com'],
-        })
-
-        serializer = SignupSerializer(data=self.data)
-        serializer.is_valid()
-        expected_error = {
-            'invite_emails': ['@example.com is not a valid email address.']
-        }
-
-        self.assertEqual(serializer.errors, expected_error)
-
-    def test_serializer_should_allow_empty_invite_emails(self):
-        """
-        Tests that serializer should allow empty invit_emails
-        with allow_signup and signup_domains set.
-        """
-        self.data.update({
-            'allow_signup': True,
-            'signup_domains': ['example.com'],
-            'invite_emails': [],
-        })
-
-        serializer = SignupSerializer(data=self.data)
-        serializer.is_valid()
-        expected_error = {}
-
-        self.assertEqual(serializer.errors, expected_error)
-
     def test_signup_should_return_created_user(self):
         """
         Tests that serializer.signup() should return the created user.
@@ -303,7 +228,7 @@ class SignupSerializerTestCase(BaseTestCase):
         """
         serializer = SignupSerializer(data=self.data)
         serializer.is_valid()
-        expected_account = Account.objects.filter(slug='pueblo-co')
+        expected_account = Account.objects.filter(slug='juan')
 
         self.assertEqual(expected_account.count(), 1)
 
@@ -315,29 +240,11 @@ class SignupSerializerTestCase(BaseTestCase):
         serializer = SignupSerializer(data=self.data)
         serializer.is_valid()
         user = User.objects.get(username=self.data['username'])
-        expected_account = Account.objects.get(slug='pueblo-co')
+        expected_account = Account.objects.filter(slug='juan')
         expected_owner = AccountCollaborator.objects.filter(
             account=expected_account, user=user, is_owner=True)
 
         self.assertEqual(expected_owner.count(), 1)
-
-    def test_invite_users_should_return_invited_users(self):
-        """
-        Tests that serializer.invite_users should return a list of
-        the invited users.
-        """
-        self.data.update({
-            'allow_signup': True,
-            'signup_domains': ['example.com'],
-            'invite_emails': ['ppueblo@example.com', 'qpueblo@example.com'],
-        })
-
-        serializer = SignupSerializer(data=self.data)
-        serializer.is_valid()
-        invited_users = InvitedUser.objects.filter(
-            email__in=['ppueblo@example.com', 'qpueblo@example.com'])
-
-        self.assertEqual(invited_users.count(), 2)
 
     def test_serializer_should_validate_password_requirements(self):
         """
@@ -442,18 +349,6 @@ class SignupInvitedUserSerializerTestCase(BaseTestCase):
         invited_users = InvitedUser.objects.all()
 
         self.assertEqual(invited_users.count(), 0)
-
-    def test_validate_should_invite_users(self):
-        """
-        Tests that serializer should invite users.
-        """
-        self.data['invite_emails'] = ['ppueblo@example.com']
-        serializer = SignupInvitedUserSerializer(data=self.data)
-        serializer.is_valid()
-
-        invited_users = InvitedUser.objects.all()
-
-        self.assertEqual(invited_users.count(), 1)
 
     def test_validate_should_return_token(self):
         """
@@ -849,10 +744,8 @@ class UserSettingsSerializerTestCase(BaseTestCase):
         serializer.is_valid()
 
         expected_errors = {
-            'last_name': ['This field is required.'],
             'username': ['This field is required.'],
             'email': ['This field is required.'],
-            'first_name': ['This field is required.']
         }
 
         self.assertEqual(serializer.errors, expected_errors)
