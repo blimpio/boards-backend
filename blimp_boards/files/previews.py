@@ -25,14 +25,8 @@ def queue_previews(url, sizes, metadata):
     try:
         logger.info('Requesting previews for {}'.format(url))
 
-        if settings.ENVIRONMENT == 'DEVELOPMENT':
-            verify = False
-        else:
-            verify = '{}/certs/blimp-previews.crt'.format(settings.BASE_DIR)
-
         request = requests.post(
-            settings.BLIMP_PREVIEWS_URL, data=token,
-            headers=headers, verify=verify)
+            settings.BLIMP_PREVIEWS_URL, data=token, headers=headers)
 
         logger.info(request.text)
     except Exception as e:
