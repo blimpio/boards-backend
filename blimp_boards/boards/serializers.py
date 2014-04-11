@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+
 from rest_framework import serializers
 
 from ..accounts.models import AccountCollaborator
@@ -69,6 +71,16 @@ class BoardCollaboratorSerializer(serializers.ModelSerializer):
                 email=email, account=account, defaults=invited_user_data)
 
             attrs['invited_user'] = self.invited_user
+
+        return attrs
+
+    def validate_user(self, attrs, source):
+        user = attrs.get(source)
+        board = attrs.get('board')
+
+        if user and board and board.is_user_collaborator(user):
+            msg = 'User is already a collaborator in this board.'
+            raise ValidationError(msg)
 
         return attrs
 
