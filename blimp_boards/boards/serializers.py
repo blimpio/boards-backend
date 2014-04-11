@@ -39,11 +39,18 @@ class BoardSerializer(serializers.ModelSerializer):
 
 class BoardCollaboratorSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(write_only=True, required=False)
-    user = UserSimpleSerializer(required=False)
-    invited_user = InvitedUserSimpleSerializer(required=False)
+    user_data = serializers.SerializerMethodField('get_user_data')
 
     class Meta:
         model = BoardCollaborator
+
+    def get_user_data(self, obj):
+        if obj.invited_user:
+            serializer = InvitedUserSimpleSerializer(obj.invited_user)
+        else:
+            serializer = UserSimpleSerializer(obj.user)
+
+        return serializer.data
 
     def validate_email(self, attrs, source):
         email = attrs.get(source)
