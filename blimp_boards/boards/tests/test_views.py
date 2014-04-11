@@ -328,7 +328,8 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
             'date_created': self.board_collaborator.date_created,
             'date_modified': self.board_collaborator.date_modified,
             'board': self.board.id,
-            'user': {
+            'user': self.board_collaborator.user.id,
+            'user_data': {
                 'id': self.board_collaborator.user.id,
                 'username': self.board_collaborator.user.username,
                 'first_name': self.board_collaborator.user.first_name,
@@ -362,7 +363,8 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
             'date_created': self.board_collaborator.date_created,
             'date_modified': self.board_collaborator.date_modified,
             'board': self.board.id,
-            'user': {
+            'user': self.board_collaborator.user.id,
+            'user_data': {
                 'id': self.board_collaborator.user.id,
                 'username': self.board_collaborator.user.username,
                 'first_name': self.board_collaborator.user.first_name,
@@ -474,7 +476,9 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
             'date_modified': board_collaborator.date_modified,
             'board': self.board.id,
             'user': None,
-            'invited_user': {
+            'invited_user': board_collaborator.invited_user.id,
+            'permission': self.board_collaborator.permission,
+            'user_data': {
                 'id': invited_user.id,
                 'first_name': '',
                 'last_name': '',
@@ -482,8 +486,7 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
                 'gravatar_url': invited_user.gravatar_url,
                 'date_created': invited_user.date_created,
                 'date_modified': invited_user.date_modified,
-            },
-            'permission': self.board_collaborator.permission
+            }
         }]
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)

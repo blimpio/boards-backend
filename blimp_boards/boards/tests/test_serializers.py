@@ -170,7 +170,9 @@ class BoardCollaboratorSerializerTestCase(BaseTestCase):
             'date_created': serializer.object.date_created,
             'date_modified': serializer.object.date_modified,
             'user': None,
-            'invited_user': {
+            'invited_user': serializer.object.invited_user.pk,
+            'permission': serializer.object.permission,
+            'user_data': {
                 'id': serializer.object.invited_user_id,
                 'first_name': serializer.object.invited_user.first_name,
                 'last_name': serializer.object.invited_user.last_name,
@@ -178,8 +180,7 @@ class BoardCollaboratorSerializerTestCase(BaseTestCase):
                 'gravatar_url': serializer.object.invited_user.gravatar_url,
                 'date_created': serializer.object.invited_user.date_created,
                 'date_modified': serializer.object.invited_user.date_modified
-            },
-            'permission': serializer.object.permission
+            }
         }
 
         self.assertEqual(serializer.data, expected_data)
