@@ -3,13 +3,14 @@ import uuid
 
 from django.db import models
 from django.db.models.loading import get_model
+from django.core.exceptions import ValidationError
 
 from ..users.models import User
 from ..utils.models import BaseModel
 from ..utils.decorators import autoconnect
 from ..utils.fields import ReservedKeywordsAutoSlugField
-from .managers import AccountCollaboratorManager
 from .constants import ACCOUNT_RESERVED_KEYWORDS
+from . import managers
 
 
 def get_company_upload_path(instance, filename):
@@ -27,16 +28,30 @@ class EmailDomain(BaseModel):
 
 @autoconnect
 class Account(BaseModel):
+    PERSONAL_ACCOUNT = 'personal'
+    TEAM_ACCOUNT = 'team'
+
+    ACCOUNT_TYPE_CHOICES = (
+        (PERSONAL_ACCOUNT, 'Personal'),
+        (TEAM_ACCOUNT, 'Team'),
+    )
+
     name = models.CharField(max_length=255)
     slug = ReservedKeywordsAutoSlugField(
-        populate_from='name', unique=True, editable=True,
+        populate_from='name', blank=True, unique=True, editable=True,
         reserved_keywords=ACCOUNT_RESERVED_KEYWORDS)
+
+    type = models.CharField(max_length=10, choices=ACCOUNT_TYPE_CHOICES)
 
     allow_signup = models.BooleanField(default=False)
     email_domains = models.ManyToManyField(EmailDomain, blank=True, null=True)
 
-    logo_color = models.CharField(max_length=255)
+    logo_color = models.CharField(max_length=255, blank=True)
     disqus_shortname = models.CharField(max_length=255, blank=True)
+
+    objects = models.Manager()
+    personals = managers.PersonalAccountManager()
+    teams = managers.TeamAccountManager()
 
     class Meta:
         announce = True
@@ -63,6 +78,22 @@ class Account(BaseModel):
         Board = get_model('boards', 'Board')
 
         return Board.objects.filter(account=self)
+
+    def save(self, *args, **kwargs):
+        """
+        Performs all steps involved in validating  whenever
+        a model object is saved.
+        """
+        self.full_clean()
+
+        return super(Account, self).save(*args, **kwargs)
+
+    def clean(self):
+        """
+        Validates that either a user or an invited_user is set.
+        """
+        if not self.type:
+            raise ValidationError('Account type is required.')
 
     def add_email_domains(self, email_domains):
         for domain in email_domains:
@@ -103,7 +134,7 @@ class AccountCollaborator(BaseModel):
     user = models.ForeignKey(User)
     is_owner = models.BooleanField(default=False)
 
-    objects = AccountCollaboratorManager()
+    objects = managers.AccountCollaboratorManager()
 
     class Meta:
         unique_together = (

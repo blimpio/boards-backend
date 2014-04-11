@@ -77,7 +77,7 @@ class CheckSignupDomainAPIViewTestCase(BaseTestCase):
         Tests that POST request with valid data to endpoint
         returns expected data.
         """
-        account = Account.objects.create(name='Acme', allow_signup=True)
+        account = Account.personals.create(name='Acme', allow_signup=True)
         email_domain = EmailDomain.objects.create(domain_name='example.com')
         account.email_domains.add(email_domain)
 
@@ -139,7 +139,7 @@ class AccountsForUserAPIViewTestCase(AuthenticatedAPITestCase):
     def setUp(self):
         super(AccountsForUserAPIViewTestCase, self).setUp()
 
-        self.account = Account.objects.create(name='Acme', slug='acme')
+        self.account = Account.personals.create(name='Acme', slug='acme')
         self.collaborator = AccountCollaborator.objects.create(
             user=self.user, account=self.account)
 

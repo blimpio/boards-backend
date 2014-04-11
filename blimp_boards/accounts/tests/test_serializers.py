@@ -72,7 +72,7 @@ class ValidateSignupDomainsSerializerTestCase(BaseTestCase):
 
 class CheckSignupDomainSerializerTestCase(BaseTestCase):
     def setUp(self):
-        self.account = Account.objects.create(name='Acme')
+        self.account = Account.personals.create(name='Acme')
 
     def test_serializer_empty_data(self):
         """

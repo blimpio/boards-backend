@@ -190,7 +190,7 @@ class SignupAPIViewTestCase(BaseTestCase):
         Tests that POST request with an valid invited_user_token
         returns a token.
         """
-        account = Account.objects.create(name='Acme')
+        account = Account.personals.create(name='Acme')
 
         user = User.objects.create_user(
             username='jpueblo',
@@ -339,7 +339,7 @@ class SigninAPIEndpoint(BaseTestCase):
         Tests that POST request with an valid invited_user_token
         returns a token.
         """
-        account = Account.objects.create(name='Acme')
+        account = Account.personals.create(name='Acme')
 
         invited_user = InvitedUser.objects.create(
             first_name='Juan', last_name='Pueblo',
@@ -418,7 +418,7 @@ class SignupValidateTokenHTMLViewTestCase(BaseTestCase):
         Tests that view redirects to signin if invited_user
         has a user associated to it.
         """
-        account = Account.objects.create(name='Acme')
+        account = Account.personals.create(name='Acme')
 
         invited_user = InvitedUser.objects.create(
             account=account, created_by=self.user, user=self.user
@@ -484,7 +484,7 @@ class SigninValidateTokenHTMLViewTestCase(BaseTestCase):
         Tests that view redirects to signup if invited_user has
         no user associated with it.
         """
-        account = Account.objects.create(name='Acme')
+        account = Account.personals.create(name='Acme')
 
         invited_user = InvitedUser.objects.create(
             first_name='Roberto', last_name='Pueblo',

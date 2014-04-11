@@ -285,7 +285,7 @@ class SignupInvitedUserSerializerTestCase(BaseTestCase):
             last_name='Pueblo'
         )
 
-        self.account = Account.objects.create(name='Acme')
+        self.account = Account.personals.create(name='Acme')
 
         self.invited_user = InvitedUser.objects.create(
             first_name='Roberto', last_name='Pueblo',
@@ -439,7 +439,7 @@ class SigninInvitedUserSerializerTestCase(BaseTestCase):
             last_name='Pueblo'
         )
 
-        self.account = Account.objects.create(name='Acme')
+        self.account = Account.personals.create(name='Acme')
 
         self.invited_user = InvitedUser.objects.create(
             first_name='Roberto', last_name='Pueblo',

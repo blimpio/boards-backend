@@ -109,7 +109,7 @@ class SignupSerializer(serializers.Serializer):
         account_name = attrs['username']
         logo_color = attrs['account_logo_color']
 
-        account = Account.objects.create(
+        account = Account.personals.create(
             name=account_name,
             logo_color=logo_color
         )
