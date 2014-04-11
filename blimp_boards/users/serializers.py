@@ -5,7 +5,6 @@ from rest_framework import serializers
 from ..utils import fields
 from ..utils.validators import is_valid_email
 from ..accounts.models import Account, AccountCollaborator
-from ..accounts.fields import SignupDomainsField
 from ..accounts.serializers import AccountSerializer
 from ..invitations.models import SignupRequest, InvitedUser
 from .models import User
