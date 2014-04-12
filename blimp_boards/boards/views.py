@@ -2,12 +2,13 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import filters
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework.decorators import action, link
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 
 from ..utils.mixins import BulkCreateModelMixin
-from ..utils.viewsets import ModelViewSet, CreateListRetrieveViewSet
+from ..utils.viewsets import (ModelViewSet, CreateListRetrieveViewSet,
+                              CreateRetrieveUpdateDestroyViewSet)
 from .models import Board, BoardCollaborator, BoardCollaboratorRequest
 from .serializers import (BoardSerializer, BoardCollaboratorSerializer,
                           BoardCollaboratorPublicSerializer,
@@ -33,7 +34,12 @@ class BoardViewSet(ModelViewSet):
         if user.is_authenticated():
             user_boards = user.boards
 
-        if action == 'retrieve':
+        public_criteria = [
+            (action == 'retrieve'),
+            (action == 'collaborators')
+        ]
+
+        if any(public_criteria):
             public_boards = Board.objects.filter(is_shared=True)
 
         if user_boards and public_boards:
@@ -45,53 +51,30 @@ class BoardViewSet(ModelViewSet):
 
         return boards
 
-
-class BoardCollaboratorViewSet(BulkCreateModelMixin, ModelViewSet):
-    model = BoardCollaborator
-    serializer_class = BoardCollaboratorSerializer
-    permission_classes = (BoardCollaboratorPermission, )
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('board', )
-
-    def get_queryset(self):
-        user = self.request.user
-        request_method = self.request.method.lower()
-        action = self.action_map.get(request_method)
-        board = self.request.QUERY_PARAMS.get('board')
-
-        collaborators = BoardCollaborator.objects.none()
-        user_collaborators = None
-        public_collaborators = None
-
-        if user.is_authenticated():
-            user_collaborators = BoardCollaborator.objects.filter(
-                board__in=user.boards)
-
-        if action == 'list' and board:
-            public_collaborators = BoardCollaborator.objects.filter(
-                board__is_shared=True)
-
-        if user_collaborators and public_collaborators:
-            collaborators = user_collaborators | public_collaborators
-        elif user_collaborators:
-            collaborators = user_collaborators
-        elif public_collaborators:
-            collaborators = public_collaborators
-
-        return collaborators
-
-    def get_serializer_class(self):
+    @link(serializer_class=BoardCollaboratorSerializer)
+    def collaborators(self, request, pk=None):
+        board = self.get_object()
         user = self.request.user
         user_ids = []
 
-        if hasattr(self, 'object_list'):
-            for collaborator in self.object_list:
-                user_ids.append(collaborator.user_id)
+        self.object_list = BoardCollaborator.objects.filter(board=board)
 
-            if not user.is_authenticated() or user.id not in user_ids:
-                return BoardCollaboratorPublicSerializer
+        for collaborator in self.object_list:
+            user_ids.append(collaborator.user_id)
 
-        return super(BoardCollaboratorViewSet, self).get_serializer_class()
+        if not user.is_authenticated() or user.id not in user_ids:
+            self.serializer_class = BoardCollaboratorPublicSerializer
+
+        serializer = self.get_serializer(self.object_list, many=True)
+
+        return Response(serializer.data)
+
+
+class BoardCollaboratorViewSet(BulkCreateModelMixin,
+                               CreateRetrieveUpdateDestroyViewSet):
+    model = BoardCollaborator
+    serializer_class = BoardCollaboratorSerializer
+    permission_classes = (BoardCollaboratorPermission, )
 
 
 class BoardCollaboratorRequestViewSet(CreateListRetrieveViewSet):

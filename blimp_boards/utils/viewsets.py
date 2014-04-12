@@ -81,3 +81,15 @@ class ListRetrieveUpdateViewSet(mixins.RetrieveModelMixin,
     `update()`, and `partial_update()` actions.
     """
     pass
+
+
+class CreateRetrieveUpdateDestroyViewSet(CreateModelMixin,
+                                         mixins.RetrieveModelMixin,
+                                         UpdateModelMixin,
+                                         mixins.DestroyModelMixin,
+                                         viewsets.GenericViewSet):
+    """
+    A viewset that provides default `create()`, `retrieve()`, `update()`,
+    `partial_update()`, and `destroy()` actions.
+    """
+    pass

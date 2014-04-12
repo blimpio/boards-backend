@@ -291,6 +291,86 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data, expected_response)
 
+    def test_viewset_should_return_collaborators_user_can_access(self):
+        """
+        Tests that viewset returns board collaborators of
+        boards that the user can access.
+        """
+        url = '{}{}/collaborators/'.format(self.base_url, self.board.id)
+        response = self.client.get(url)
+
+        expected_response = [{
+            'id': self.board_collaborator.id,
+            'date_created': self.board_collaborator.date_created,
+            'date_modified': self.board_collaborator.date_modified,
+            'board': self.board.id,
+            'user': self.board_collaborator.user.id,
+            'user_data': {
+                'id': self.board_collaborator.user.id,
+                'username': self.board_collaborator.user.username,
+                'first_name': self.board_collaborator.user.first_name,
+                'last_name': self.board_collaborator.user.last_name,
+                'email': self.board_collaborator.user.email,
+                'avatar_path': self.board_collaborator.user.avatar_path,
+                'gravatar_url': self.board_collaborator.user.gravatar_url,
+                'timezone': self.board_collaborator.user.timezone,
+                'date_created': self.board_collaborator.user.date_created,
+                'date_modified': self.board_collaborator.user.date_modified,
+            },
+            'invited_user': None,
+            'permission': self.board_collaborator.permission
+        }]
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+    def test_viewset_collaborators_should_use_public_serializer(self):
+        """
+        Test that viewset uses public serializer when needed.
+        """
+        self.board.is_shared = True
+        self.board.save()
+
+        self.client = APIClient()
+
+        url = '{}{}/collaborators/'.format(self.base_url, self.board.id)
+        response = self.client.get(url)
+
+        expected_response = [{
+            'id': self.board_collaborator.id,
+            'date_created': self.board_collaborator.date_created,
+            'date_modified': self.board_collaborator.date_modified,
+            'board': self.board.id,
+            'user': {
+                'id': self.board_collaborator.user.id,
+                'username': self.board_collaborator.user.username,
+                'first_name': self.board_collaborator.user.first_name,
+                'last_name': self.board_collaborator.user.last_name,
+                'avatar_path': self.board_collaborator.user.avatar_path,
+                'gravatar_url': self.board_collaborator.user.gravatar_url,
+                'timezone': self.board_collaborator.user.timezone,
+                'date_created': self.board_collaborator.user.date_created,
+                'date_modified': self.board_collaborator.user.date_modified,
+            },
+            'invited_user': None,
+            'permission': self.board_collaborator.permission
+        }]
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+    def test_viewset_shouldnt_return_collabs_to_user_with_no_access(self):
+        """
+        Tests that viewset doesn't returns collaborator
+        that the user can't access.
+        """
+        self.client = APIClient()
+
+        url = '{}{}/collaborators/'.format(self.base_url, self.board.id)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
 
 class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
     def setUp(self):
@@ -316,86 +396,6 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data, expected_response)
 
-    def test_viewset_should_return_collaborators_user_can_access(self):
-        """
-        Tests that viewset returns board collaborators of
-        boards that the user can access.
-        """
-        response = self.client.get(self.base_url)
-
-        expected_response = [{
-            'id': self.board_collaborator.id,
-            'date_created': self.board_collaborator.date_created,
-            'date_modified': self.board_collaborator.date_modified,
-            'board': self.board.id,
-            'user': self.board_collaborator.user.id,
-            'user_data': {
-                'id': self.board_collaborator.user.id,
-                'username': self.board_collaborator.user.username,
-                'first_name': self.board_collaborator.user.first_name,
-                'last_name': self.board_collaborator.user.last_name,
-                'email': self.board_collaborator.user.email,
-                'avatar_path': self.board_collaborator.user.avatar_path,
-                'gravatar_url': self.board_collaborator.user.gravatar_url,
-                'timezone': self.board_collaborator.user.timezone,
-                'date_created': self.board_collaborator.user.date_created,
-                'date_modified': self.board_collaborator.user.date_modified,
-            },
-            'invited_user': None,
-            'permission': self.board_collaborator.permission
-        }]
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, expected_response)
-
-    def test_viewset_should_allow_filtering_by_board(self):
-        """
-        Tests that viewset returns board collaborators of
-        boards that the user can access.
-        """
-        Board.objects.create(
-            name='Another Board', account=self.account, created_by=self.user)
-
-        response = self.client.get(self.base_url, {'board': self.board.id})
-
-        expected_response = [{
-            'id': self.board_collaborator.id,
-            'date_created': self.board_collaborator.date_created,
-            'date_modified': self.board_collaborator.date_modified,
-            'board': self.board.id,
-            'user': self.board_collaborator.user.id,
-            'user_data': {
-                'id': self.board_collaborator.user.id,
-                'username': self.board_collaborator.user.username,
-                'first_name': self.board_collaborator.user.first_name,
-                'last_name': self.board_collaborator.user.last_name,
-                'email': self.board_collaborator.user.email,
-                'avatar_path': self.board_collaborator.user.avatar_path,
-                'gravatar_url': self.board_collaborator.user.gravatar_url,
-                'timezone': self.board_collaborator.user.timezone,
-                'date_created': self.board_collaborator.user.date_created,
-                'date_modified': self.board_collaborator.user.date_modified,
-            },
-            'invited_user': None,
-            'permission': self.board_collaborator.permission
-        }]
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, expected_response)
-
-    def test_viewset_shouldnt_return_collabs_to_user_with_no_access(self):
-        """
-        Tests that viewset doesn't returns collaborator
-        that the user can't access.
-        """
-        self.board_collaborator.delete()
-
-        response = self.client.get(self.base_url)
-        expected_response = []
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, expected_response)
-
     def test_viewset_should_check_permissions(self):
         """
         Tests that viewset checks for custom permissions.
@@ -418,40 +418,6 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
         }
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(response.data, expected_response)
-
-    def test_viewset_should_use_public_serializer(self):
-        """
-        Test that viewset uses public serializer when needed.
-        """
-        self.board.is_shared = True
-        self.board.save()
-
-        self.client = APIClient()
-
-        response = self.client.get(self.base_url, {'board': self.board.id})
-
-        expected_response = [{
-            'id': self.board_collaborator.id,
-            'date_created': self.board_collaborator.date_created,
-            'date_modified': self.board_collaborator.date_modified,
-            'board': self.board.id,
-            'user': {
-                'id': self.board_collaborator.user.id,
-                'username': self.board_collaborator.user.username,
-                'first_name': self.board_collaborator.user.first_name,
-                'last_name': self.board_collaborator.user.last_name,
-                'avatar_path': self.board_collaborator.user.avatar_path,
-                'gravatar_url': self.board_collaborator.user.gravatar_url,
-                'timezone': self.board_collaborator.user.timezone,
-                'date_created': self.board_collaborator.user.date_created,
-                'date_modified': self.board_collaborator.user.date_modified,
-            },
-            'invited_user': None,
-            'permission': self.board_collaborator.permission
-        }]
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)
 
     def test_viewset_bulk_create(self):
