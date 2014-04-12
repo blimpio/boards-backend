@@ -43,6 +43,9 @@ class BoardCollaboratorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BoardCollaborator
+        read_only_fields = ('board', )
+        fields = ('id', 'board', 'user', 'invited_user', 'permission',
+                  'email', 'user_data', 'date_created', 'date_modified',)
 
     def get_user_data(self, obj):
         if obj.invited_user:
@@ -93,6 +96,9 @@ class BoardCollaboratorSerializer(serializers.ModelSerializer):
 
     def save_object(self, obj, **kwargs):
         created = bool(obj.pk)
+
+        obj.board = self.context['board']
+
         super(BoardCollaboratorSerializer, self).save_object(obj, **kwargs)
 
         if not created and obj.invited_user:

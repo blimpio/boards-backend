@@ -1,14 +1,15 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework import filters
+from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import action, link
+from rest_framework.decorators import action
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 
+from ..utils.response import ErrorResponse
 from ..utils.mixins import BulkCreateModelMixin
 from ..utils.viewsets import (ModelViewSet, CreateListRetrieveViewSet,
-                              CreateRetrieveUpdateDestroyViewSet)
+                              RetrieveUpdateDestroyViewSet)
 from .models import Board, BoardCollaborator, BoardCollaboratorRequest
 from .serializers import (BoardSerializer, BoardCollaboratorSerializer,
                           BoardCollaboratorPublicSerializer,
@@ -51,27 +52,51 @@ class BoardViewSet(ModelViewSet):
 
         return boards
 
-    @link(serializer_class=BoardCollaboratorSerializer)
+    @action(methods=['GET', 'POST'])
     def collaborators(self, request, pk=None):
+        self.serializer_class = BoardCollaboratorSerializer
+
         board = self.get_object()
         user = self.request.user
         user_ids = []
 
-        self.object_list = BoardCollaborator.objects.filter(board=board)
+        if request.method == 'POST':
+            context = self.get_serializer_context()
 
-        for collaborator in self.object_list:
-            user_ids.append(collaborator.user_id)
+            context.update({
+                'board': board
+            })
 
-        if not user.is_authenticated() or user.id not in user_ids:
-            self.serializer_class = BoardCollaboratorPublicSerializer
+            serializer = self.serializer_class(
+                data=request.DATA, context=context)
 
-        serializer = self.get_serializer(self.object_list, many=True)
+            if serializer.is_valid():
+                serializer.save()
+
+                headers = self.get_success_headers(serializer.data)
+
+                return Response(
+                    serializer.data,
+                    status=status.HTTP_201_CREATED,
+                    headers=headers)
+            else:
+                return ErrorResponse(serializer.errors)
+        else:
+            self.object_list = BoardCollaborator.objects.filter(board=board)
+
+            for collaborator in self.object_list:
+                user_ids.append(collaborator.user_id)
+
+            if not user.is_authenticated() or user.id not in user_ids:
+                self.serializer_class = BoardCollaboratorPublicSerializer
+
+            serializer = self.get_serializer(self.object_list, many=True)
 
         return Response(serializer.data)
 
 
 class BoardCollaboratorViewSet(BulkCreateModelMixin,
-                               CreateRetrieveUpdateDestroyViewSet):
+                               RetrieveUpdateDestroyViewSet):
     model = BoardCollaborator
     serializer_class = BoardCollaboratorSerializer
     permission_classes = (BoardCollaboratorPermission, )
