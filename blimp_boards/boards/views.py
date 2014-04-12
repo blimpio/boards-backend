@@ -61,17 +61,25 @@ class BoardViewSet(ModelViewSet):
         user_ids = []
 
         if request.method == 'POST':
+            bulk = isinstance(request.DATA, list)
             context = self.get_serializer_context()
 
             context.update({
                 'board': board
             })
 
-            serializer = self.serializer_class(
-                data=request.DATA, context=context)
+            serializer_kwargs = {
+                'data': request.DATA,
+                'context': context
+            }
+
+            if bulk:
+                serializer_kwargs.update({'many': True})
+
+            serializer = self.serializer_class(**serializer_kwargs)
 
             if serializer.is_valid():
-                serializer.save()
+                self.object = serializer.save(force_insert=True)
 
                 headers = self.get_success_headers(serializer.data)
 

@@ -126,7 +126,6 @@ class BoardCollaboratorSerializerTestCase(BaseTestCase):
         """
         serializer = self.serializer_class()
         expected_data = {
-            'board': None,
             'user': None,
             'invited_user': None,
             'permission': ''
@@ -142,7 +141,6 @@ class BoardCollaboratorSerializerTestCase(BaseTestCase):
         serializer.is_valid()
 
         expected_errors = {
-            'board': ['This field is required.'],
             'permission': ['This field is required.'],
         }
 
@@ -157,10 +155,11 @@ class BoardCollaboratorSerializerTestCase(BaseTestCase):
 
         context = {
             'request': request,
-            'view': BoardCollaboratorViewSet.as_view()
+            'view': BoardCollaboratorViewSet.as_view(),
+            'board': self.board
         }
 
-        serializer = self.serializer_class(data=self.data, context=context)
+        serializer = self.serializer_class(self.board_collaborator, data=self.data, context=context)
         serializer.is_valid()
         serializer.save()
 
@@ -194,7 +193,8 @@ class BoardCollaboratorSerializerTestCase(BaseTestCase):
 
         context = {
             'request': request,
-            'view': BoardCollaboratorViewSet.as_view()
+            'view': BoardCollaboratorViewSet.as_view(),
+            'board': self.board
         }
 
         serializer = self.serializer_class(data=self.data, context=context)
@@ -219,7 +219,8 @@ class BoardCollaboratorSerializerTestCase(BaseTestCase):
 
         context = {
             'request': request,
-            'view': BoardCollaboratorViewSet.as_view()
+            'view': BoardCollaboratorViewSet.as_view(),
+            'board': self.board
         }
 
         self.data['email'] = user.email

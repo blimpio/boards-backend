@@ -63,7 +63,7 @@ class BoardCollaboratorSerializer(serializers.ModelSerializer):
 
         del attrs[source]
 
-        board = attrs.get('board')
+        board = self.context['board']
         account = board.account
 
         try:
