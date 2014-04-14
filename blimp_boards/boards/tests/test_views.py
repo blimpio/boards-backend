@@ -460,6 +460,50 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response.data, expected_response)
 
+    def test_viewset_serializer_update(self):
+        """
+        Test that viewset can update BoardCollaborator.
+        """
+        user = self.create_another_user()
+
+        data = {
+            'board': self.board.id,
+            'user': user.id,
+            'permission': "write"
+        }
+
+        url = '{}{}/'.format(self.base_url, self.board_collaborator.id)
+
+        response = self.client.put(url, data, format='json')
+
+        board_collaborator = BoardCollaborator.objects.get(
+            pk=self.board_collaborator.id)
+
+        expected_response = {
+            'id': board_collaborator.id,
+            'date_created': board_collaborator.date_created,
+            'date_modified': board_collaborator.date_modified,
+            'board': self.board.id,
+            'user': board_collaborator.user.id,
+            'invited_user': None,
+            'permission': board_collaborator.permission,
+            'user_data': {
+                'id': board_collaborator.user.id,
+                'username': board_collaborator.user.username,
+                'first_name': board_collaborator.user.first_name,
+                'last_name': board_collaborator.user.last_name,
+                'email': board_collaborator.user.email,
+                'avatar_path': board_collaborator.user.avatar_path,
+                'gravatar_url': board_collaborator.user.gravatar_url,
+                'timezone': board_collaborator.user.timezone,
+                'date_created': board_collaborator.user.date_created,
+                'date_modified': board_collaborator.user.date_modified,
+            }
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
 
 class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
     def setUp(self):

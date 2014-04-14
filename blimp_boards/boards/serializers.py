@@ -96,8 +96,10 @@ class BoardCollaboratorSerializer(serializers.ModelSerializer):
 
     def save_object(self, obj, **kwargs):
         created = bool(obj.pk)
+        board = self.context.get('board')
 
-        obj.board = self.context['board']
+        if not created and board:
+            obj.board = board
 
         super(BoardCollaboratorSerializer, self).save_object(obj, **kwargs)
 
