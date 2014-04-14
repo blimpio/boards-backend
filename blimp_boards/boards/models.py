@@ -224,7 +224,7 @@ class BoardCollaboratorRequest(BaseModel):
         """
         - Creates an InvitedUser for this board
         - Creates a BoardCollaborator for invited_user
-        - Sets it in the InvitedUser.board_collaborators
+        - Sets it in the InvitedUser.board_collaborator
         - Sends invitation
         - Deletes BoardCollaboratorRequest
         """
@@ -247,7 +247,8 @@ class BoardCollaboratorRequest(BaseModel):
             permission=BoardCollaborator.READ_PERMISSION
         )
 
-        invited_user.board_collaborators.add(board_collaborator)
+        invited_user.board_collaborator = board_collaborator
+        invited_user.save()
 
         invited_user.send_invite()
 

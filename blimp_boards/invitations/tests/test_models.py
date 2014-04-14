@@ -75,7 +75,7 @@ class InvitedUserTestCase(BaseTestCase):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(InvitedUser._meta.fields), 9)
+        self.assertEqual(len(InvitedUser._meta.fields), 10)
 
     def test_save_should_set_additional_user_data_if_available(self):
         """
@@ -164,7 +164,7 @@ class InvitedUserTestCase(BaseTestCase):
             permission='read'
         )
 
-        self.invited_user.board_collaborators.add(board_collaborator)
+        self.invited_user.board_collaborator = board_collaborator
 
         self.invited_user.accept(self.user2)
 

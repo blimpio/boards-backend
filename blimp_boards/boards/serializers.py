@@ -114,7 +114,7 @@ class BoardCollaboratorSerializer(serializers.ModelSerializer):
         super(BoardCollaboratorSerializer, self).save_object(obj, **kwargs)
 
         if not created and obj.invited_user:
-            self.invited_user.board_collaborators.add(obj)
+            self.invited_user.board_collaborator = obj
             self.invited_user.send_invite()
 
 

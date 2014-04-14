@@ -275,9 +275,9 @@ class BoardCollaboratorRequestTestCase(BaseTestCase):
         invited_user = InvitedUser.objects.get(
             email=request.email, account=self.account)
 
-        board_collaborators = invited_user.board_collaborators.all()
+        board_collaborator = invited_user.board_collaborator
 
-        self.assertEqual(board_collaborators.count(), 1)
+        self.assertEqual(board_collaborator.invited_user.email, request.email)
 
     def test_accept_should_delete_request(self):
         """

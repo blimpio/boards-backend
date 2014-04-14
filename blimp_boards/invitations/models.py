@@ -59,8 +59,8 @@ class InvitedUser(BaseModel):
     created_by = models.ForeignKey(
         'users.User', related_name='%(class)s_created_by')
 
-    board_collaborators = models.ManyToManyField('boards.BoardCollaborator',
-                                                 blank=True, null=True)
+    board_collaborator = models.ForeignKey('boards.BoardCollaborator',
+                                           blank=True, null=True)
 
     objects = InvitedUserManager()
 
@@ -134,7 +134,10 @@ class InvitedUser(BaseModel):
         collaborator = AccountCollaborator.objects.create(
             user=user, account=self.account)
 
-        self.board_collaborators.all().update(user=user, invited_user=None)
+        if self.board_collaborator:
+            self.board_collaborator.user = user
+            self.board_collaborator.invited_user = None
+            self.board_collaborator.save()
 
         self.delete()
 
