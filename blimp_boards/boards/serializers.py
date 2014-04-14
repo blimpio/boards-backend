@@ -6,7 +6,6 @@ from ..accounts.models import AccountCollaborator
 from ..invitations.models import InvitedUser
 from ..accounts.permissions import AccountPermission
 from ..users.serializers import UserSimpleSerializer
-from ..invitations.serializers import InvitedUserSimpleSerializer
 from .models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
@@ -37,6 +36,15 @@ class BoardSerializer(serializers.ModelSerializer):
         return super(BoardSerializer, self).save_object(obj, **kwargs)
 
 
+class BoardCollaboratorSimpleSerializer(serializers.ModelSerializer):
+    board = BoardSerializer()
+
+    class Meta:
+        model = BoardCollaborator
+        fields = ('id', 'board', 'user', 'invited_user', 'permission',
+                  'date_created', 'date_modified',)
+
+
 class BoardCollaboratorSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(write_only=True, required=False)
     user_data = serializers.SerializerMethodField('get_user_data')
@@ -48,6 +56,8 @@ class BoardCollaboratorSerializer(serializers.ModelSerializer):
                   'email', 'user_data', 'date_created', 'date_modified',)
 
     def get_user_data(self, obj):
+        from ..invitations.serializers import InvitedUserSimpleSerializer
+
         if obj.invited_user:
             serializer = InvitedUserSimpleSerializer(obj.invited_user)
         else:

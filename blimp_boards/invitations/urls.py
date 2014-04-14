@@ -1,9 +1,18 @@
 from django.conf.urls import patterns, url
 
-from .views import SignupRequestCreateAPIView, InvitedUserCreateAPIView
+from rest_framework.routers import DefaultRouter
+
+from .views import (SignupRequestCreateAPIView, InvitedUserCreateAPIView,
+                    InvitedUserViewSet)
 
 
-api_urlpatterns = patterns(
+router = DefaultRouter()
+
+router.register(r'auth/invitations', InvitedUserViewSet)
+
+api_urlpatterns = router.urls
+
+api_urlpatterns += patterns(
     # Prefix
     '',
 

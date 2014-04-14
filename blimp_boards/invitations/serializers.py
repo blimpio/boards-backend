@@ -1,6 +1,9 @@
 from rest_framework import serializers
 
 from ..accounts.models import Account
+from ..accounts.serializers import AccountSerializer
+from ..boards.serializers import BoardCollaboratorSimpleSerializer
+from ..users.serializers import UserSimpleSerializer
 from .models import SignupRequest, InvitedUser
 
 
@@ -27,6 +30,16 @@ class InvitedUserSimpleSerializer(serializers.ModelSerializer):
         model = InvitedUser
         fields = ('id', 'first_name', 'last_name', 'email', 'gravatar_url',
                   'date_created', 'date_modified')
+
+
+class InvitedUserFullSerializer(serializers.ModelSerializer):
+    account = AccountSerializer()
+    created_by = UserSimpleSerializer()
+    user = UserSimpleSerializer()
+    board_collaborators = BoardCollaboratorSimpleSerializer(many=True)
+
+    class Meta:
+        model = InvitedUser
 
 
 class InvitedUserSerializer(serializers.Serializer):
