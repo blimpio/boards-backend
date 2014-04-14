@@ -13,6 +13,8 @@ api_urlpatterns = patterns(
     (r'auth/forgot_password/$', views.ForgotPasswordAPIView.as_view()),
     (r'auth/reset_password/$', views.ResetPasswordAPIView.as_view()),
 
+    (r'autocomplete/users/$', views.UserAutoCompleteAPIView.as_view()),
+
     (r'users/me/$', views.UserSettingsAPIView.as_view()),
     (r'users/me/change_password/$', views.ChangePasswordAPIView.as_view()),
 )

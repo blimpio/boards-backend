@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 
 from ..utils import fields
+from ..utils.serializers import DynamicFieldsModelSerializer
 from ..utils.validators import is_valid_email
 from ..accounts.models import Account, AccountCollaborator
 from ..accounts.serializers import AccountSerializer
@@ -286,7 +287,7 @@ class UserSerializer(serializers.ModelSerializer):
                   'date_created', 'date_modified', 'token', 'accounts', )
 
 
-class UserSimpleSerializer(serializers.ModelSerializer):
+class UserSimpleSerializer(DynamicFieldsModelSerializer):
     """
     Simple User serializer used to serialize model.
     """

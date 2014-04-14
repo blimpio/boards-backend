@@ -1,6 +1,6 @@
 from django.http import Http404
 
-from rest_framework import generics
+from rest_framework import generics, filters
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -114,6 +114,35 @@ class ResetPasswordAPIView(generics.CreateAPIView):
             return Response(serializer.object)
 
         return ErrorResponse(serializer.errors)
+
+
+class UserAutoCompleteAPIView(generics.ListAPIView):
+    model = User
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('^username',)
+    serializer_class = serializers.UserSimpleSerializer
+
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        context = self.get_serializer_context()
+
+        kwargs.update({
+            'context': context,
+            'exclude': ('email', 'timezone', 'date_created', 'date_modified')
+        })
+
+        return serializer_class(*args, **kwargs)
+
+    def filter_queryset(self, queryset):
+        params = self.request.QUERY_PARAMS.get('search')
+
+        if not params:
+            return []
+
+        users = User.objects.all()
+        queryset = super(UserAutoCompleteAPIView, self).filter_queryset(users)
+
+        return queryset[:10]
 
 
 class SigninValidateTokenHTMLView(APIView):
