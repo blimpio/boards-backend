@@ -36,7 +36,7 @@ class InvitedUserFullSerializer(serializers.ModelSerializer):
     account = AccountSerializer()
     created_by = UserSimpleSerializer()
     user = UserSimpleSerializer()
-    board_collaborators = BoardCollaboratorSimpleSerializer(many=True)
+    board_collaborator = BoardCollaboratorSimpleSerializer()
 
     class Meta:
         model = InvitedUser
