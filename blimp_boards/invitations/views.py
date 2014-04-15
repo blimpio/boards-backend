@@ -1,12 +1,11 @@
 from django.http import Http404
 
-from rest_framework import generics
+from rest_framework import generics, mixins, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from ..utils.response import ErrorResponse
 from ..utils.mixins import BulkCreateModelMixin
-from ..utils.viewsets import RetrieveUpdateViewSet
 from .models import SignupRequest, InvitedUser
 from .serializers import (SignupRequestSerializer, InvitedUserSerializer,
                           InvitedUserFullSerializer)
@@ -37,7 +36,7 @@ class InvitedUserCreateAPIView(generics.CreateAPIView):
         return ErrorResponse(serializer.errors)
 
 
-class InvitedUserViewSet(RetrieveUpdateViewSet):
+class InvitedUserViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     model = InvitedUser
     serializer_class = InvitedUserFullSerializer
     permission_classes = ()
