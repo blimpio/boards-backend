@@ -1,6 +1,12 @@
 Hi {{ recipient.get_short_name }},
 
 {{ sender.get_full_name }} left a comment on a card.
-Card: {{ target }}
 
+Card: {{ target }}
 Comment: {{ description }}
+
+View comment on Blimp Boards
+{{ application_url }}{{ target.get_absolute_url }}
+
+Thanks,
+The Blimp Boards team

@@ -1,3 +1,10 @@
-Join {{ action_object.account }}:
+Hi,
+
+{{ action_object.created_by.full_name }} wants to collaborate with you on Blimp Boards.
+
+Use the following link to accept the invitation:
 
 {{ application_url }}{% url "auth-signup" %}?invite={{ action_object.token }}
+
+Thanks,
+The Blimp Boards team

@@ -84,5 +84,5 @@ class CardCommentSerializer(serializers.ModelSerializer):
 
         super(CardCommentSerializer, self).save_object(obj, **kwargs)
 
-        if created:
-            card.notify_comment_created(obj)
+        if not created:
+            card.notify_comment_created(user, obj)

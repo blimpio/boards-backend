@@ -1,1 +1,26 @@
-<a href="{{ application_url }}{% url "auth-signup" %}?token={{ action_object.token }}">Sign up</a>
+{% extends "notifications/base.html" %}
+
+{% block workspace_name %}{% endblock %}
+
+{% block salutation %}
+    Hi,
+{% endblock %}
+
+{% block message %}
+    <p style="font-size: 16px; line-height: 21px; margin: 0;">
+        Thanks for signing up to Blimp Boards.
+    </p>
+
+    <p style="font-size: 16px; line-height: 21px; margin: 1em 0;">
+        Use the following link to verify your email address:
+    </p>
+
+    <p style="font-size: 16px; line-height: 21px; margin: 1em 0;">
+        <a href="{{ application_url }}{% url "auth-signup" %}?token={{ action_object.token }}" target ="_blank" style="color: #16b1e1; text-decoration: none;">
+            Verify your email address
+        </a>
+    </p>
+
+    <p style="font-size: 16px; line-height: 21px; margin: 1em 0 0;">Thanks,</p>
+    <p style="font-size: 16px; line-height: 21px; margin: 0;">The Blimp Boards team</p>
+{% endblock %}

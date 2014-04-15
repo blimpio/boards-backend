@@ -1,6 +1,28 @@
-<p>Hi {{ recipient.get_short_name }},</p>
+{% extends "notifications/base.html" %}
 
-<p>{{ sender.get_full_name }} left a comment on a card.</p>
-<p>Card: {{ target }}</p>
+{% block workspace_name %}
+    Card: {{ target }}
+{% endblock %}
 
-<p>Comment: {{ description }}</p>
+{% block salutation %}
+    Hi {{ recipient.first_name }},
+{% endblock %}
+
+{% block message %}
+    <p style="font-size: 16px; line-height: 21px; margin: 0;">
+        {{ sender.get_full_name }} left a comment on a card.
+    </p>
+
+    <p style="font-size: 16px; line-height: 21px; margin: 1em 0;">
+        Comment: {{ description }}
+    </p>
+
+    <p style="font-size: 16px; line-height: 21px; margin: 1em 0;">
+        <a href="{{ application_url }}{{ target.get_absolute_url }}" target ="_blank" style="color: #16b1e1; text-decoration: none;">
+            View comment on Blimp Boards
+        </a>
+    </p>
+
+    <p style="font-size: 16px; line-height: 21px; margin: 1em 0 0;">Thanks,</p>
+    <p style="font-size: 16px; line-height: 21px; margin: 0;">The Blimp Boards team</p>
+{% endblock %}

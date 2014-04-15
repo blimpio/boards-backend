@@ -1,1 +1,1 @@
-{{ notification_type.display }}
+{{ sender.get_full_name }} left a comment on a card.

@@ -1,1 +1,1 @@
-You were invited to join {{ action_object.account }}
+{{ action_object.created_by.full_name }} wants to collaborate on Blimp Boards

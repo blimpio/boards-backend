@@ -207,6 +207,13 @@ class User(BaseModel, AbstractBaseUser):
 
         return Card.objects.filter(board__in=self.boards)
 
+    @property
+    def full_name(self):
+        """
+        Convenience property method to access user.get_full_name()
+        """
+        return self.get_full_name()
+
     def get_full_name(self):
         """
         Returns the first_name plus the last_name, with a space in between.

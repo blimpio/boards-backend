@@ -142,4 +142,4 @@ class AccountCollaborator(BaseModel):
         )
 
     def __str__(self):
-        return self.user.get_full_name() or self.user.email
+        return self.user.full_name or self.user.email

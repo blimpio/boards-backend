@@ -2,6 +2,7 @@ import positions
 
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.contrib.contenttypes import generic
 from django.db.models.loading import get_model
 from django.dispatch import receiver
@@ -62,6 +63,12 @@ class Card(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('card_detail', kwargs={
+            'account_slug': self.board.account.slug,
+            'board_slug': self.board.slug,
+            'card_slug': self.slug})
 
     @property
     def announce_room(self):

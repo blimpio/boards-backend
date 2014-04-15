@@ -1,1 +1,30 @@
-<a href="{{ application_url }}{% url "auth-reset-password" %}?token={{ recipient.password_reset_token }}">Reset your password</a>
+{% extends "notifications/base.html" %}
+
+{% block workspace_name %}{% endblock %}
+
+{% block salutation %}
+    Hi {{ recipient.first_name }},
+{% endblock %}
+
+{% block message %}
+    <p style="font-size: 16px; line-height: 21px; margin: 0;">
+        You're receiving this email because you requested a password reset for your user account at Blimp Boards.
+    </p>
+
+    <p style="font-size: 16px; line-height: 21px; margin: 1em 0;">
+        Use the following link to reset your password:
+    </p>
+
+    <p style="font-size: 16px; line-height: 21px; margin: 1em 0;">
+        <a href="{{ application_url }}{% url "auth-reset-password" %}?token={{ recipient.password_reset_token }}" target ="_blank" style="color: #16b1e1; text-decoration: none;">
+            Reset your password
+        </a>
+    </p>
+
+    <p style="font-size: 16px; line-height: 21px; margin: 1em 0;">
+        Your username, in case you've forgotten: {{ recipient.username }}.
+    </p>
+
+    <p style="font-size: 16px; line-height: 21px; margin: 1em 0 0;">Thanks,</p>
+    <p style="font-size: 16px; line-height: 21px; margin: 0;">The Blimp Boards team</p>
+{% endblock %}

@@ -1,1 +1,10 @@
+Hi,
+
+Thanks for signing up to Blimp Boards.
+
+Use the following link to verify your email address:
+
 {{ application_url }}{% url "auth-signup" %}?token={{ action_object.token }}
+
+Thanks,
+The Blimp Boards team

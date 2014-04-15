@@ -20,5 +20,8 @@ urlpatterns = patterns(
     '',
 
     url(r'^(?P<account_slug>[-\w]+)/(?P<board_slug>[-\w]+)/',
-        views.BoardHTMLView.as_view(), name='board_detail')
+        views.BoardHTMLView.as_view(), name='board_detail'),
+
+    url(r'^(?P<account_slug>[-\w]+)/(?P<board_slug>[-\w]+)/(?P<card_slug>[-\w]+)/',
+        views.BoardHTMLView.as_view(), name='card_detail')
 )
