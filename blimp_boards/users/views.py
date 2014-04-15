@@ -159,9 +159,6 @@ class SigninValidateTokenHTMLView(APIView):
             if not invited_user:
                 raise Http404
 
-            if not invited_user.user:
-                return redirect_with_params(request, 'auth-signup')
-
         return Response(template_name='index.html')
 
 
@@ -185,9 +182,6 @@ class SignupValidateTokenHTMLView(APIView):
 
             if not invited_user:
                 raise Http404
-
-            if invited_user.user:
-                return redirect_with_params(request, 'auth-signin')
 
         return Response(template_name='index.html')
 

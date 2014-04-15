@@ -413,24 +413,6 @@ class SignupValidateTokenHTMLViewTestCase(BaseTestCase):
         response = self.client.get(self.url, {'invite': 'abc'})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_view_should_redirect_to_sigin_if_invited_user_has_user(self):
-        """
-        Tests that view redirects to signin if invited_user
-        has a user associated to it.
-        """
-        account = Account.personals.create(name='Acme')
-
-        invited_user = InvitedUser.objects.create(
-            account=account, created_by=self.user, user=self.user
-        )
-
-        response = self.client.get(self.url, {'invite': invited_user.token})
-
-        expected_url = '/signin/?invite={}'.format(invited_user.token)
-
-        self.assertRedirects(response, expected_url)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-
 
 class SigninValidateTokenHTMLViewTestCase(BaseTestCase):
     def setUp(self):
@@ -478,26 +460,6 @@ class SigninValidateTokenHTMLViewTestCase(BaseTestCase):
         """
         response = self.client.get(self.url, {'invite': 'abc'})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_view_should_redirect_to_signup_if_invited_user_has_no_user(self):
-        """
-        Tests that view redirects to signup if invited_user has
-        no user associated with it.
-        """
-        account = Account.personals.create(name='Acme')
-
-        invited_user = InvitedUser.objects.create(
-            first_name='Roberto', last_name='Pueblo',
-            email='rpueblo@example.com', account=account,
-            created_by=self.user
-        )
-
-        response = self.client.get(self.url, {'invite': invited_user.token})
-
-        expected_url = '/signup/?invite={}'.format(invited_user.token)
-
-        self.assertRedirects(response, expected_url)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
 
 class ForgotPasswordAPIViewTestCase(BaseTestCase):
