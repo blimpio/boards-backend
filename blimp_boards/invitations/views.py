@@ -2,10 +2,11 @@ from django.http import Http404
 
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from ..utils.response import ErrorResponse
 from ..utils.mixins import BulkCreateModelMixin
-from ..utils.viewsets import ModelViewSet
+from ..utils.viewsets import RetrieveUpdateViewSet
 from .models import SignupRequest, InvitedUser
 from .serializers import (SignupRequestSerializer, InvitedUserSerializer,
                           InvitedUserFullSerializer)
@@ -36,10 +37,9 @@ class InvitedUserCreateAPIView(generics.CreateAPIView):
         return ErrorResponse(serializer.errors)
 
 
-class InvitedUserViewSet(ModelViewSet):
+class InvitedUserViewSet(RetrieveUpdateViewSet):
     model = InvitedUser
     serializer_class = InvitedUserFullSerializer
-    authentication_classes = ()
     permission_classes = ()
 
     def get_object(self, queryset=None):
@@ -55,3 +55,21 @@ class InvitedUserViewSet(ModelViewSet):
         self.check_object_permissions(self.request, obj)
 
         return obj
+
+    @action(methods=['PUT'])
+    def accept(self, request, pk=None):
+        object = self.get_object()
+        serializer = self.get_serializer(object)
+
+        object.accept(request.user)
+
+        return Response(serializer.data)
+
+    @action(methods=['PUT'], authentication_classes=())
+    def reject(self, request, pk=None):
+        object = self.get_object()
+        serializer = self.get_serializer(object)
+
+        object.reject()
+
+        return Response(serializer.data)

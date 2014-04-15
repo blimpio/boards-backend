@@ -143,6 +143,12 @@ class InvitedUser(BaseModel):
 
         return collaborator
 
+    def reject(self):
+        """
+        TODO: Notify created_by
+        """
+        self.delete()
+
     def send_invite(self):
         actor = self.created_by
         recipients = [self.email]
