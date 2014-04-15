@@ -119,7 +119,7 @@ class ResetPasswordAPIView(generics.CreateAPIView):
 class UserAutoCompleteAPIView(generics.ListAPIView):
     model = User
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('^username',)
+    search_fields = ('^username', '^first_name', '^last_name')
     serializer_class = serializers.UserSimpleSerializer
 
     def get_serializer(self, *args, **kwargs):
