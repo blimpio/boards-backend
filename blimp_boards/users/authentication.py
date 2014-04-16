@@ -1,4 +1,5 @@
 from rest_framework import exceptions
+from rest_framework.authentication import SessionAuthentication
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
@@ -24,3 +25,15 @@ class JWTAuthentication(JSONWebTokenAuthentication):
             raise exceptions.AuthenticationFailed(msg)
 
         return user
+
+
+class SessionAuthentication(SessionAuthentication):
+    """
+    Use Django's session framework for authentication.
+    """
+
+    def enforce_csrf(self, request):
+        """
+        Remove CSRF enforcement.
+        """
+        pass

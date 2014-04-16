@@ -137,7 +137,7 @@ class Common(Configuration):
         ),
         'DEFAULT_AUTHENTICATION_CLASSES': (
             'blimp_boards.users.authentication.JWTAuthentication',
-            'rest_framework.authentication.SessionAuthentication',
+            'blimp_boards.users.authentication.SessionAuthentication',
         ),
         'DEFAULT_RENDERER_CLASSES': (
             'rest_framework.renderers.JSONRenderer',
