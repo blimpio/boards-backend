@@ -138,7 +138,8 @@ class SignupInvitedUserSerializer(SignupSerializer):
     invited_user_token = serializers.CharField(write_only=True)
 
     class Meta:
-        fields = ('email',  'username', 'password', 'invited_user_token')
+        fields = ('email',  'username', 'password', 'account_logo_color',
+                  'invited_user_token')
 
     def validate_invited_user_token(self, attrs, source):
         invited_user_token = attrs[source]
@@ -159,6 +160,9 @@ class SignupInvitedUserSerializer(SignupSerializer):
 
     def validate(self, attrs):
         user = self.create_user(attrs)
+        account = self.create_account(attrs)
+
+        self.create_account_owner(account, user)
 
         self.invited_user.accept(user)
 

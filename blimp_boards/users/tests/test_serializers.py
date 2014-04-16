@@ -298,6 +298,7 @@ class SignupInvitedUserSerializerTestCase(BaseTestCase):
             'email': 'rpueblo@example.com',
             'username': 'rpueblo',
             'password': 'abc123',
+            'account_logo_color': 'red',
             'invited_user_token': self.invited_user.token
         }
 

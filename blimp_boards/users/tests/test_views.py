@@ -170,6 +170,7 @@ class SignupAPIViewTestCase(BaseTestCase):
             'username': 'juan',
             'password': 'abc123',
             'account_name': 'Pueblo Co.',
+            'account_logo_color': 'red',
             'allow_signup': False,
             'invited_user_token': 'invalidtoken'
         }
@@ -211,6 +212,7 @@ class SignupAPIViewTestCase(BaseTestCase):
             'email': 'rpueblo@example.com',
             'username': 'roberto',
             'password': 'abc123',
+            'account_logo_color': 'red',
             'invited_user_token': invited_user.token
         }
 
