@@ -204,7 +204,9 @@ class Development(Common):
     ) + Common.MIDDLEWARE_CLASSES
 
     # Email settings
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
+    MANDRILL_API_KEY = values.Value(environ_prefix=None)
+    DEFAULT_FROM_EMAIL = values.Value(environ_prefix=None)
 
     # Django REST framework
     Common.REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
@@ -286,8 +288,8 @@ class Staging(Common):
 
     # Email settings
     EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
-    MANDRILL_API_KEY = os.getenv('MANDRILL_API_KEY')
-    DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+    MANDRILL_API_KEY = values.Value(environ_prefix=None)
+    DEFAULT_FROM_EMAIL = values.Value(environ_prefix=None)
 
     # Static asset settings
     STATIC_ROOT = 'staticfiles'
