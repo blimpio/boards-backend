@@ -12,7 +12,7 @@ class PersonalAccountManager(models.Manager):
 
 
 class TeamAccountManager(models.Manager):
-    def get_query(self):
+    def get_queryset(self):
         queryset = super(TeamAccountManager, self).get_queryset()
         return queryset.filter(type=self.model.TEAM_ACCOUNT)
 

@@ -93,6 +93,7 @@ class CheckSignupDomainAPIViewTestCase(BaseTestCase):
             'name': 'Acme',
             'slug': 'acme',
             'logo_color': '',
+            'type': 'personal',
             'disqus_shortname': '',
             'date_created': account.date_created,
             'date_modified': account.date_modified
@@ -163,6 +164,7 @@ class AccountsForUserAPIViewTestCase(AuthenticatedAPITestCase):
             'name': 'Acme',
             'slug': 'acme',
             'logo_color': '',
+            'type': 'personal',
             'disqus_shortname': '',
             'date_created': self.account.date_created,
             'date_modified': self.account.date_modified
