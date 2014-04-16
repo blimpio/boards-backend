@@ -173,17 +173,23 @@ class User(BaseModel, AbstractBaseUser):
         return jwt_token.decode('utf-8')
 
     @property
+    def account(self):
+        """
+        Returns personal account owned by user.
+        """
+        Account = get_model('accounts', 'Account')
+
+        return Account.personals.get(
+            accountcollaborator__user=self, accountcollaborator__is_owner=True)
+
+    @property
     def accounts(self):
         """
         Returns a list of all accounts where user is a collaborator.
         """
         Account = get_model('accounts', 'Account')
-        AccountCollaborator = get_model('accounts', 'AccountCollaborator')
 
-        account_ids = AccountCollaborator.objects.filter(
-            user=self).values_list('account_id', flat=True)
-
-        return Account.objects.filter(pk__in=account_ids)
+        return Account.objects.filter(accountcollaborator__user=self)
 
     @property
     def boards(self):
