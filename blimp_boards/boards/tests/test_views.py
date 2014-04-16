@@ -342,6 +342,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'date_modified': self.board_collaborator.date_modified,
             'board': self.board.id,
             'user': self.board_collaborator.user.id,
+            'created_by': self.board_collaborator.created_by.id,
             'user_data': {
                 'id': self.board_collaborator.user.id,
                 'username': self.board_collaborator.user.username,

@@ -62,7 +62,7 @@ NOTIFICATION_TYPES = [
         'label': 'board_collaborator_created',
         'display': _('New board collaborator'),
         'description': _('is now a collaborator on board'),
-        'email': False,
+        'email': True,
         'notification': True
     },
 ]

@@ -96,7 +96,7 @@ class BoardCollaboratorTestCase(BaseTestCase):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(BoardCollaborator._meta.fields), 7)
+        self.assertEqual(len(BoardCollaborator._meta.fields), 8)
 
     def test_user_or_invited_user_must_be_set_before_creating(self):
         """

@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Q
+from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 from django.db.models.loading import get_model
 
@@ -32,9 +33,8 @@ class Board(BaseModel):
     def __str__(self):
         return self.name
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('board_detail', (), {
+        return reverse('board_detail', kwargs={
             'account_slug': self.account.slug,
             'board_slug': self.slug})
 
@@ -57,6 +57,7 @@ class Board(BaseModel):
             BoardCollaborator.objects.create(
                 board=self,
                 user=account_owner,
+                created_by=self.created_by,
                 permission=BoardCollaborator.WRITE_PERMISSION
             )
 
@@ -64,6 +65,7 @@ class Board(BaseModel):
                 BoardCollaborator.objects.create(
                     board=self,
                     user=self.created_by,
+                    created_by=self.created_by,
                     permission=BoardCollaborator.WRITE_PERMISSION
                 )
 
@@ -100,6 +102,9 @@ class BoardCollaborator(BaseModel):
     user = models.ForeignKey('users.User', blank=True, null=True)
     invited_user = models.ForeignKey('invitations.InvitedUser',
                                      blank=True, null=True)
+
+    created_by = models.ForeignKey(
+        'users.User', related_name='%(class)s_created_by')
 
     permission = models.CharField(max_length=5, choices=PERMISSION_CHOICES)
 
@@ -140,15 +145,14 @@ class BoardCollaborator(BaseModel):
             raise ValidationError('Either user or invited_user must be set.')
 
     def post_save(self, created, *args, **kwargs):
-        if created and self.user:
+        if created and self.user and self.user != self.created_by:
             self.notify_created()
 
         super(BoardCollaborator, self).post_save(created, *args, **kwargs)
 
     def notify_created(self):
-        user = self.user
-        actor = user
-        recipients = [user]
+        actor = self.created_by
+        recipients = [self.user]
 
         label = 'board_collaborator_created'
 
@@ -244,7 +248,8 @@ class BoardCollaboratorRequest(BaseModel):
         board_collaborator = BoardCollaborator.objects.create(
             board=self.board,
             invited_user=invited_user,
-            permission=BoardCollaborator.READ_PERMISSION
+            permission=BoardCollaborator.READ_PERMISSION,
+            created_by=self.board.account.owner.user
         )
 
         invited_user.board_collaborator = board_collaborator

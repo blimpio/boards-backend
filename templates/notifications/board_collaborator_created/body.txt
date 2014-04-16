@@ -1,1 +1,9 @@
-board_collaborator_created body.txt
+Hi {{ recipient.short_name }}
+
+{{ action_object.created_by.full_name }} added you as a collaborator on a Board.
+
+View and collaborate on Blimp Boards:
+{{ application_url }}{{ target.get_absolute_url }}
+
+Thanks,
+The Blimp Boards team

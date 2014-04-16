@@ -163,7 +163,8 @@ class InvitedUserTestCase(BaseTestCase):
         board_collaborator = BoardCollaborator.objects.create(
             invited_user=self.invited_user,
             board=board,
-            permission='read'
+            permission='read',
+            created_by=self.user
         )
 
         self.invited_user.board_collaborator = board_collaborator
