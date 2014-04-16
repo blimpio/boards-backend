@@ -1,12 +1,11 @@
-from django.shortcuts import get_object_or_404
-
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 
-from ..accounts.models import Account
+from ..accounts.models import Account, AccountCollaborator
 from ..utils.response import ErrorResponse
 from ..utils.mixins import BulkCreateModelMixin
 from ..utils.viewsets import (ModelViewSet, CreateListRetrieveViewSet,
@@ -182,9 +181,16 @@ class BoardHTMLView(APIView):
         account_slug = kwargs['account_slug']
         board_slug = kwargs['board_slug']
 
-        board = get_object_or_404(
-            Board.objects.values_list('id', 'account', 'is_shared'),
+        account_collaborator = get_object_or_404(
+            AccountCollaborator.objects.select_related('account', 'user'),
             account__slug=account_slug,
+            is_owner=True)
+
+        if account_collaborator.account.type == Account.PERSONAL_ACCOUNT:
+            boards = account_collaborator.user.boards
+
+        board = get_object_or_404(
+            boards.values_list('id', 'account', 'is_shared'),
             slug=board_slug)
 
         collaborator_users = []
