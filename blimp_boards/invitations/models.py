@@ -2,6 +2,7 @@ import jwt
 
 from django.db import models
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
 
 from ..utils.models import BaseModel
@@ -95,7 +96,16 @@ class InvitedUser(BaseModel):
 
     @property
     def username(self):
-        return self.user.username if self.user else None
+        return self.user.username if self.user_id else None
+
+    @property
+    def invite_url(self):
+        if self.user_id:
+            url = reverse('auth-signup')
+        else:
+            url = reverse('auth-signin')
+
+        return '{}?invite={}'.format(url, self.token)
 
     def save(self, *args, **kwargs):
         """
@@ -132,9 +142,6 @@ class InvitedUser(BaseModel):
         """
         full_name = u'{} {}'.format(self.first_name, self.last_name)
         return full_name.strip()
-
-    def get_invite_url(self):
-        pass
 
     def accept(self, user):
         """

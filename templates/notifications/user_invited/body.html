@@ -16,7 +16,7 @@
     </p>
 
     <p style="font-size: 16px; line-height: 21px; margin: 1em 0;">
-        <a href="{{ application_url }}{% url "auth-signup" %}?invite={{ action_object.token }}" target ="_blank" style="color: #16b1e1; text-decoration: none;">
+        <a href="{{ application_url }}{{ action_object.invite_url }}" target ="_blank" style="color: #16b1e1; text-decoration: none;">
             Accept the invitation and join
         </a>
     </p>

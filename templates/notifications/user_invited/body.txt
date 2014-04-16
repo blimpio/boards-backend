@@ -4,7 +4,7 @@ Hi,
 
 Use the following link to accept the invitation:
 
-{{ application_url }}{% url "auth-signup" %}?invite={{ action_object.token }}
+{{ application_url }}{{ action_object.invite_url }}
 
 Thanks,
 The Blimp Boards team
