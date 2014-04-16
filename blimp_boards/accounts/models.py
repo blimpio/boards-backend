@@ -49,6 +49,8 @@ class Account(BaseModel):
     logo_color = models.CharField(max_length=255, blank=True)
     disqus_shortname = models.CharField(max_length=255, blank=True)
 
+    created_by = models.ForeignKey('users.User')
+
     objects = models.Manager()
     personals = managers.PersonalAccountManager()
     teams = managers.TeamAccountManager()

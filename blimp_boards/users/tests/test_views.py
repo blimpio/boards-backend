@@ -191,8 +191,6 @@ class SignupAPIViewTestCase(BaseTestCase):
         Tests that POST request with an valid invited_user_token
         returns a token.
         """
-        account = Account.personals.create(name='Acme')
-
         user = User.objects.create_user(
             username='jpueblo',
             email='jpueblo@example.com',
@@ -200,6 +198,8 @@ class SignupAPIViewTestCase(BaseTestCase):
             first_name='Juan',
             last_name='Pueblo'
         )
+
+        account = Account.personals.create(name='Acme', created_by=user)
 
         invited_user = InvitedUser.objects.create(
             first_name='Roberto', last_name='Pueblo',
@@ -341,7 +341,7 @@ class SigninAPIEndpoint(BaseTestCase):
         Tests that POST request with an valid invited_user_token
         returns a token.
         """
-        account = Account.personals.create(name='Acme')
+        account = Account.personals.create(name='Acme', created_by=self.user)
 
         invited_user = InvitedUser.objects.create(
             first_name='Juan', last_name='Pueblo',

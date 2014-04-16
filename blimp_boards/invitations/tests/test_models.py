@@ -56,7 +56,9 @@ class InvitedUserTestCase(BaseTestCase):
             last_name='Pueblo'
         )
 
-        self.account = Account.personals.create(name='Acme')
+        self.account = Account.personals.create(
+            name='Acme', created_by=self.user)
+
         self.account_collaborator = AccountCollaborator.objects.create(
             account=self.account, user=self.user, is_owner=True)
 

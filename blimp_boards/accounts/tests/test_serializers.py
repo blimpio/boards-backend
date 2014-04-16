@@ -72,7 +72,8 @@ class ValidateSignupDomainsSerializerTestCase(BaseTestCase):
 
 class CheckSignupDomainSerializerTestCase(BaseTestCase):
     def setUp(self):
-        self.account = Account.personals.create(name='Acme')
+        self.create_user()
+        self.create_account()
 
     def test_serializer_empty_data(self):
         """
@@ -131,6 +132,7 @@ class CheckSignupDomainSerializerTestCase(BaseTestCase):
             'name': 'Acme',
             'slug': 'acme',
             'type': 'personal',
+            'created_by': self.account.created_by_id,
             'logo_color': '',
             'disqus_shortname': '',
             'date_created': self.account.date_created,

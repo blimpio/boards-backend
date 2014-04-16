@@ -19,16 +19,17 @@ class AccountTestCase(BaseTestCase):
             last_name='Pueblo'
         )
 
-        self.account = Account.personals.create(name='Acme')
+        self.account = Account.personals.create(
+            name='Acme', created_by=self.user)
 
     def test_model_should_have_expected_number_of_fields(self):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(Account._meta.fields), 9)
+        self.assertEqual(len(Account._meta.fields), 10)
 
     def test_create_new_account_sets_unique_slug(self):
-        account = Account.personals.create(name='Acme')
+        account = Account.personals.create(name='Acme', created_by=self.user)
 
         self.assertEqual(account.slug, 'acme-2')
 
@@ -84,7 +85,8 @@ class AccountCollaboratorTestCase(BaseTestCase):
             last_name='Pueblo'
         )
 
-        self.account = Account.personals.create(name='Acme')
+        self.account = Account.personals.create(
+            name='Acme', created_by=self.user)
 
     def test_model_should_have_expected_number_of_fields(self):
         """

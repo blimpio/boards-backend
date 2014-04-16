@@ -43,7 +43,9 @@ class BaseTestCase(TestCase):
         return user
 
     def create_account(self):
-        self.account = Account.personals.create(name='Acme')
+        self.account = Account.personals.create(
+            name='Acme', created_by=self.user)
+
         self.account_owner = AccountCollaborator.objects.create_owner(
             account=self.account, user=self.user)
 

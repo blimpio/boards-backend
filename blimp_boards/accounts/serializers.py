@@ -18,9 +18,10 @@ class AccountSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Account
-        read_only_fields = ('logo_color', )
-        fields = ('id', 'name', 'type', 'slug', 'disqus_shortname',
-                  'logo_color', 'date_created', 'date_modified')
+        read_only_fields = ('created_by', 'logo_color', )
+        fields = ('id', 'name', 'type', 'slug',
+                  'disqus_shortname', 'logo_color', 'created_by',
+                  'date_created', 'date_modified', )
 
 
 class CheckSignupDomainSerializer(serializers.Serializer):

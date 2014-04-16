@@ -105,13 +105,14 @@ class SignupSerializer(serializers.Serializer):
             password=password
         )
 
-    def create_account(self, attrs):
+    def create_account(self, attrs, user):
         account_name = attrs['username']
         logo_color = attrs['account_logo_color']
 
         account = Account.personals.create(
             name=account_name,
-            logo_color=logo_color
+            logo_color=logo_color,
+            created_by=user
         )
 
         return account
@@ -122,7 +123,7 @@ class SignupSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         user = self.create_user(attrs)
-        account = self.create_account(attrs)
+        account = self.create_account(attrs, user)
 
         self.create_account_owner(account, user)
 
@@ -160,7 +161,7 @@ class SignupInvitedUserSerializer(SignupSerializer):
 
     def validate(self, attrs):
         user = self.create_user(attrs)
-        account = self.create_account(attrs)
+        account = self.create_account(attrs, user)
 
         self.create_account_owner(account, user)
 

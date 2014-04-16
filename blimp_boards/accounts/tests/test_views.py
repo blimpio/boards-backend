@@ -71,14 +71,18 @@ class ValidateSignupDomainsAPIViewTestCase(BaseTestCase):
 class CheckSignupDomainAPIViewTestCase(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
+        self.create_user()
 
     def test_post_valid_data(self):
         """
         Tests that POST request with valid data to endpoint
         returns expected data.
         """
-        account = Account.personals.create(name='Acme', allow_signup=True)
+        account = Account.personals.create(
+            name='Acme', allow_signup=True, created_by=self.user)
+
         email_domain = EmailDomain.objects.create(domain_name='example.com')
+
         account.email_domains.add(email_domain)
 
         data = {
@@ -95,6 +99,7 @@ class CheckSignupDomainAPIViewTestCase(BaseTestCase):
             'logo_color': '',
             'type': 'personal',
             'disqus_shortname': '',
+            'created_by': account.created_by_id,
             'date_created': account.date_created,
             'date_modified': account.date_modified
         }
@@ -140,9 +145,7 @@ class AccountsForUserAPIViewTestCase(AuthenticatedAPITestCase):
     def setUp(self):
         super(AccountsForUserAPIViewTestCase, self).setUp()
 
-        self.account = Account.personals.create(name='Acme', slug='acme')
-        self.collaborator = AccountCollaborator.objects.create(
-            user=self.user, account=self.account)
+        self.create_account()
 
     def test_get_accounts_without_token_should_fail(self):
         self.client = APIClient()
@@ -166,6 +169,7 @@ class AccountsForUserAPIViewTestCase(AuthenticatedAPITestCase):
             'logo_color': '',
             'type': 'personal',
             'disqus_shortname': '',
+            'created_by': self.account.created_by_id,
             'date_created': self.account.date_created,
             'date_modified': self.account.date_modified
         }]
