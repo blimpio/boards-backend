@@ -37,9 +37,16 @@ class InvitedUserFullSerializer(serializers.ModelSerializer):
     created_by = UserSimpleSerializer()
     user = UserSimpleSerializer()
     board_collaborator = BoardCollaboratorSimpleSerializer()
+    signup_request_token = serializers.SerializerMethodField('get_token')
 
     class Meta:
         model = InvitedUser
+
+    def get_token(self, obj):
+        try:
+            return SignupRequest.objects.get(email=obj.email).token
+        except SignupRequest.DoesNotExist:
+            pass
 
 
 class InvitedUserSerializer(serializers.Serializer):

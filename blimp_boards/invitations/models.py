@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db.models.loading import get_model
 
 from ..utils.models import BaseModel
+from ..utils.decorators import autoconnect
 from ..users.models import User
 from ..users.utils import get_gravatar_url
 from ..notifications.signals import notify
@@ -50,6 +51,7 @@ class SignupRequest(BaseModel):
         )
 
 
+@autoconnect
 class InvitedUser(BaseModel):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
@@ -110,6 +112,13 @@ class InvitedUser(BaseModel):
 
         return super(InvitedUser, self).save(*args, **kwargs)
 
+    def post_save(self, created, *args, **kwargs):
+        """
+        Create a SignupRequest in case user wants to reject but signup.
+        """
+        if created and not self.user:
+            SignupRequest.objects.create(email=self.email)
+
     def get_email(self):
         return self.user.email if self.user else self.email
 
@@ -127,6 +136,7 @@ class InvitedUser(BaseModel):
         """
         - Create AccountCollaborator
         - Set user to BoardCollaborators
+        - Delete any SignupRequest
         - Delete invitation
         """
         AccountCollaborator = get_model('accounts', 'AccountCollaborator')
@@ -138,6 +148,8 @@ class InvitedUser(BaseModel):
             self.board_collaborator.user = user
             self.board_collaborator.invited_user = None
             self.board_collaborator.save()
+
+        SignupRequest.objects.filter(email=self.email).delete()
 
         self.delete()
 
