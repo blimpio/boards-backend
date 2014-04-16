@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 
+from ..accounts.models import Account
 from ..utils.response import ErrorResponse
 from ..utils.mixins import BulkCreateModelMixin
 from ..utils.viewsets import (ModelViewSet, CreateListRetrieveViewSet,
@@ -51,6 +52,21 @@ class BoardViewSet(ModelViewSet):
             boards = public_boards
 
         return boards
+
+    def filter_queryset(self, queryset):
+        user = self.request.user
+        account_id = self.request.QUERY_PARAMS.get('account')
+
+        if not account_id or not user.is_authenticated():
+            return queryset
+
+        try:
+            Account.personals.get(pk=account_id)
+            queryset = queryset.filter(boardcollaborator__user=user)
+        except Account.DoesNotExist:
+            pass
+
+        return queryset
 
     @action(methods=['GET', 'POST'])
     def collaborators(self, request, pk=None):
