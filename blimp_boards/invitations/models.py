@@ -93,6 +93,10 @@ class InvitedUser(BaseModel):
     def gravatar_url(self):
         return get_gravatar_url(self.email)
 
+    @property
+    def username(self):
+        return self.user.username if self.user else None
+
     def save(self, *args, **kwargs):
         """
         When saving a InvitedUser, try to set first_name,

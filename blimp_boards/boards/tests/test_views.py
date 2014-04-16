@@ -401,6 +401,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
                 'id': invited_user.id,
                 'first_name': '',
                 'last_name': '',
+                'username': invited_user.username,
                 'email': invited_user.email,
                 'gravatar_url': invited_user.gravatar_url,
                 'date_created': invited_user.date_created,

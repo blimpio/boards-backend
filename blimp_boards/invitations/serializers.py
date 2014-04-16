@@ -25,11 +25,12 @@ class SignupRequestSerializer(serializers.ModelSerializer):
 
 class InvitedUserSimpleSerializer(serializers.ModelSerializer):
     gravatar_url = serializers.Field(source='gravatar_url')
+    username = serializers.Field(source='username')
 
     class Meta:
         model = InvitedUser
-        fields = ('id', 'first_name', 'last_name', 'email', 'gravatar_url',
-                  'date_created', 'date_modified')
+        fields = ('id', 'first_name', 'last_name', 'username', 'email',
+                  'gravatar_url', 'date_created', 'date_modified')
 
 
 class InvitedUserFullSerializer(serializers.ModelSerializer):

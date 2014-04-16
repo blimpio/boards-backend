@@ -173,6 +173,7 @@ class BoardCollaboratorSerializerTestCase(BaseTestCase):
             'permission': serializer.object.permission,
             'user_data': {
                 'id': serializer.object.invited_user_id,
+                'username': serializer.object.invited_user.username,
                 'first_name': serializer.object.invited_user.first_name,
                 'last_name': serializer.object.invited_user.last_name,
                 'email': serializer.object.invited_user.email,
