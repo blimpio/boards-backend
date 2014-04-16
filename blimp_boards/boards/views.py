@@ -105,7 +105,8 @@ class BoardViewSet(ModelViewSet):
             else:
                 return ErrorResponse(serializer.errors)
         else:
-            self.object_list = BoardCollaborator.objects.filter(board=board)
+            self.object_list = BoardCollaborator.objects.select_related(
+                'user', 'invited_user').filter(board=board)
 
             for collaborator in self.object_list:
                 user_ids.append(collaborator.user_id)
