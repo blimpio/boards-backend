@@ -8,6 +8,9 @@ from django.db.models.loading import get_model
 from django.dispatch import receiver
 from django.db.models.signals import m2m_changed
 
+from jsonfield import JSONField
+from rest_framework.utils.encoders import JSONEncoder
+
 from ..utils.models import BaseModel
 from ..utils.decorators import autoconnect
 from ..utils.fields import ReservedKeywordsAutoSlugField
@@ -55,6 +58,9 @@ class Card(BaseModel):
     file_size = models.IntegerField(null=True, blank=True)
     mime_type = models.CharField(max_length=255, blank=True)
 
+    data = JSONField(blank=True, null=True, dump_kwargs={
+                     'cls': JSONEncoder, 'separators': (',', ':')})
+
     comments = generic.GenericRelation('comments.Comment')
 
     class Meta:
@@ -99,7 +105,7 @@ class Card(BaseModel):
         # Detect if new card is a file and request thumbnails.
         if created and self.type == 'file' and self.content:
             url = sign_s3_url(self.content)
-            sizes = ['200', '500', '800']
+            sizes = ['original', '200', '500', '800']
             metadata = {
                 'cardId': self.id
             }

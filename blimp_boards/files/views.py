@@ -64,7 +64,7 @@ class FilePreviewsWebhook(APIView):
         if not error:
             results = payload.get('results', [])
 
-            for result in results:
+            for result in results['thumbnails']:
                 size = result['size']
                 page = str(result['page'])
                 url = unquote(result['url'])
@@ -79,6 +79,7 @@ class FilePreviewsWebhook(APIView):
                     card.thumbnail_lg_path = url
 
             if results:
+                card.data = results
                 card.save()
 
         return Response(status=status.HTTP_200_OK)
