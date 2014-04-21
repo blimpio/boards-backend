@@ -35,6 +35,7 @@ class Common(Configuration):
         'south',
         'rest_framework',
         'django_extensions',
+        'reversion',
 
         'blimp_boards.utils',
         'blimp_boards.users',
