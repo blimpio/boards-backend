@@ -11,5 +11,7 @@ class CardAdmin(BaseModelAdmin):
         'slug': ('name', )
     }
 
+    search_fields = ('name', 'slug', 'board__name', 'created_by__username', )
+
 
 admin.site.register(Card, CardAdmin)
