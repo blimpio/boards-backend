@@ -17,7 +17,7 @@ django-reversion==1.8.0
 django-secure==1.0
 djangorestframework==2.3.13
 djangorestframework-jwt==0.1.4
-djrill==0.9.0
+djrill==1.0.0
 gunicorn==18.0
 jsonfield==0.9.20
 mock==1.0.1
