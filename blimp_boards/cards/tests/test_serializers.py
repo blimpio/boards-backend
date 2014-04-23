@@ -79,6 +79,7 @@ class CardSerializerTestCase(BaseTestCase):
 
         expected_data = {
             'created_by': serializer.object.created_by_id,
+            'modified_by': serializer.object.modified_by_id,
             'id': serializer.object.id,
             'position': serializer.object.position,
             'date_created': serializer.object.date_created,
@@ -133,6 +134,7 @@ class CardSerializerTestCase(BaseTestCase):
 
         expected_data = {
             'created_by': serializer.object.created_by_id,
+            'modified_by': serializer.object.modified_by_id,
             'id': serializer.object.id,
             'position': serializer.object.position,
             'date_created': serializer.object.date_created,
@@ -226,6 +228,7 @@ class StackSerializerTestCase(BaseTestCase):
 
         expected_data = {
             'created_by': serializer.object.created_by_id,
+            'modified_by': serializer.object.modified_by_id,
             'id': serializer.object.id,
             'position': serializer.object.position,
             'date_created': serializer.object.date_created,
@@ -272,6 +275,7 @@ class StackSerializerTestCase(BaseTestCase):
 
         expected_data = {
             'created_by': serializer.object.created_by_id,
+            'modified_by': serializer.object.modified_by_id,
             'id': serializer.object.id,
             'position': serializer.object.position,
             'date_created': serializer.object.date_created,

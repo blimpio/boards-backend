@@ -9,6 +9,7 @@ class CardSerializer(serializers.ModelSerializer):
     thumbnail_md_path = serializers.Field(source='get_thumbnail_md_path')
     thumbnail_lg_path = serializers.Field(source='get_thumbnail_lg_path')
     created_by = serializers.PrimaryKeyRelatedField(read_only=True)
+    modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Card
@@ -30,6 +31,8 @@ class CardSerializer(serializers.ModelSerializer):
 
         if not created:
             obj.created_by = user
+
+        obj.modified_by = user
 
         super(CardSerializer, self).save_object(obj, **kwargs)
 
