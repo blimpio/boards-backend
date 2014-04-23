@@ -258,6 +258,8 @@ class Testing(Development):
     # Debug Toolbar
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
+    ANNOUNCE_TEST_MODE = True
+
 
 class Staging(Common):
     """
