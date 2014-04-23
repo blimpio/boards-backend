@@ -50,6 +50,8 @@ class Account(BaseModel):
     disqus_shortname = models.CharField(max_length=255, blank=True)
 
     created_by = models.ForeignKey('users.User')
+    modified_by = models.ForeignKey('users.User',
+                                    related_name='%(class)s_modified_by')
 
     objects = models.Manager()
     personals = managers.PersonalAccountManager()
@@ -83,9 +85,13 @@ class Account(BaseModel):
 
     def save(self, *args, **kwargs):
         """
-        Performs all steps involved in validating  whenever
-        a model object is saved.
+        Performs all steps involved in validating before
+        model object is saved and sets modified_by
+        from created_by when creating.
         """
+        if not self.pk and not self.modified_by_id:
+            self.modified_by = self.created_by
+
         self.full_clean()
 
         return super(Account, self).save(*args, **kwargs)

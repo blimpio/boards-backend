@@ -100,6 +100,7 @@ class CheckSignupDomainAPIViewTestCase(BaseTestCase):
             'type': 'personal',
             'disqus_shortname': '',
             'created_by': account.created_by_id,
+            'modified_by': account.modified_by_id,
             'date_created': account.date_created,
             'date_modified': account.date_modified
         }
@@ -170,6 +171,7 @@ class AccountsForUserAPIViewTestCase(AuthenticatedAPITestCase):
             'type': 'personal',
             'disqus_shortname': '',
             'created_by': self.account.created_by_id,
+            'modified_by': self.account.modified_by_id,
             'date_created': self.account.date_created,
             'date_modified': self.account.date_modified
         }]

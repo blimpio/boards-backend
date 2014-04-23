@@ -26,7 +26,7 @@ class AccountTestCase(BaseTestCase):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(Account._meta.fields), 10)
+        self.assertEqual(len(Account._meta.fields), 11)
 
     def test_create_new_account_sets_unique_slug(self):
         account = Account.personals.create(name='Acme', created_by=self.user)

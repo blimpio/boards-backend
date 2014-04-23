@@ -18,10 +18,16 @@ class AccountSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Account
-        read_only_fields = ('created_by', 'logo_color', )
+        read_only_fields = ('created_by', 'modified_by', 'logo_color', )
         fields = ('id', 'name', 'type', 'slug',
                   'disqus_shortname', 'logo_color', 'created_by',
-                  'date_created', 'date_modified', )
+                  'modified_by', 'date_created', 'date_modified', )
+
+    def save_object(self, obj, **kwargs):
+        user = self.context['request'].user
+        obj.modified_by = user
+
+        super(AccountSerializer, self).save_object(obj, **kwargs)
 
 
 class CheckSignupDomainSerializer(serializers.Serializer):
