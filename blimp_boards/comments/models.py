@@ -11,6 +11,8 @@ class Comment(BaseModel):
     content = models.TextField()
 
     created_by = models.ForeignKey('users.User')
+    modified_by = models.ForeignKey('users.User',
+                                    related_name='%(class)s_modified_by')
 
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
@@ -30,3 +32,12 @@ class Comment(BaseModel):
     def serializer(self):
         from .serializers import CommentSerializer
         return CommentSerializer(self)
+
+    def save(self, *args, **kwargs):
+        """
+        Sets modified_by from created_by when creating.
+        """
+        if not self.pk and not self.modified_by_id:
+            self.modified_by = self.created_by
+
+        return super(Comment, self).save(*args, **kwargs)

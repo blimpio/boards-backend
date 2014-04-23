@@ -349,6 +349,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'id': comment.id,
             'content': 'A comment',
             'created_by': self.user.id,
+            'modified_by': self.user.id,
             'date_created': comment.date_created,
             'date_modified': comment.date_modified
         }]
@@ -370,6 +371,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'id': comment.id,
             'content': 'This is my comment.',
             'created_by': self.user.id,
+            'modified_by': self.user.id,
             'date_created': comment.date_created,
             'date_modified': comment.date_modified
         }
@@ -394,6 +396,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'id': comment.id,
             'content': 'This is my comment.',
             'created_by': self.user.id,
+            'modified_by': self.user.id,
             'date_created': comment.date_created,
             'date_modified': comment.date_modified
         }

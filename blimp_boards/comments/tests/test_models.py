@@ -7,4 +7,4 @@ class CommentTestCase(BaseTestCase):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(Comment._meta.fields), 7)
+        self.assertEqual(len(Comment._meta.fields), 8)

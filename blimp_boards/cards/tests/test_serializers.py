@@ -420,6 +420,7 @@ class CardCommentSerializerTestCase(BaseTestCase):
             'id': serializer.object.id,
             'content': 'A comment',
             'created_by': self.user.id,
+            'modified_by': self.user.id,
             'date_created': serializer.object.date_created,
             'date_modified': serializer.object.date_modified
         }

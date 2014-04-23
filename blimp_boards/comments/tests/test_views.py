@@ -71,6 +71,7 @@ class CommentViewSetTestCase(AuthenticatedAPITestCase):
             'id': comment.id,
             'content': 'A comment',
             'created_by': self.user.id,
+            'modified_by': self.user.id,
             'date_created': comment.date_created,
             'date_modified': comment.date_modified
         }
@@ -100,6 +101,7 @@ class CommentViewSetTestCase(AuthenticatedAPITestCase):
             'id': comment.id,
             'content': 'Updated the comment.',
             'created_by': self.user.id,
+            'modified_by': self.user.id,
             'date_created': comment.date_created,
             'date_modified': comment.date_modified
         }
