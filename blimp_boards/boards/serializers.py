@@ -11,6 +11,7 @@ from .models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 class BoardSerializer(serializers.ModelSerializer):
     created_by = serializers.PrimaryKeyRelatedField(read_only=True)
+    modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Board
@@ -32,8 +33,15 @@ class BoardSerializer(serializers.ModelSerializer):
         return attrs
 
     def save_object(self, obj, **kwargs):
-        obj.created_by = self.context['request'].user
-        return super(BoardSerializer, self).save_object(obj, **kwargs)
+        created = bool(obj.pk)
+        user = self.context['request'].user
+
+        if not created:
+            obj.created_by = user
+
+        obj.modified_by = user
+
+        super(BoardSerializer, self).save_object(obj, **kwargs)
 
 
 class BoardCollaboratorSimpleSerializer(serializers.ModelSerializer):

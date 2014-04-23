@@ -78,19 +78,6 @@ class Card(BaseModel):
             'board_slug': self.board.slug,
             'card_slug': self.slug})
 
-    def save(self, *args, **kwargs):
-        """
-        Performs all steps involved in validating before
-        model object is saved and sets modified_by
-        from created_by when creating.
-        """
-        if not self.pk and not self.modified_by_id:
-            self.modified_by = self.created_by
-
-        self.full_clean()
-
-        return super(Card, self).save(*args, **kwargs)
-
     @property
     def announce_room(self):
         return 'a{}'.format(self.board.account_id)
@@ -108,6 +95,19 @@ class Card(BaseModel):
             }
 
             return sign_s3_url(self.content, headers)
+
+    def save(self, *args, **kwargs):
+        """
+        Performs all steps involved in validating before
+        model object is saved and sets modified_by
+        from created_by when creating.
+        """
+        if not self.pk and not self.modified_by_id:
+            self.modified_by = self.created_by
+
+        self.full_clean()
+
+        return super(Card, self).save(*args, **kwargs)
 
     def post_save(self, created, *args, **kwargs):
         # Detect if new card is a file and request thumbnails.

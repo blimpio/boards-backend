@@ -20,6 +20,8 @@ class Board(BaseModel):
 
     account = models.ForeignKey('accounts.Account')
     created_by = models.ForeignKey('users.User')
+    modified_by = models.ForeignKey('users.User',
+                                    related_name='%(class)s_modified_by')
 
     is_shared = models.BooleanField(default=False)
 
@@ -46,6 +48,15 @@ class Board(BaseModel):
     def serializer(self):
         from .serializers import BoardSerializer
         return BoardSerializer(self)
+
+    def save(self, *args, **kwargs):
+        """
+        Sets modified_by from created_by when creating.
+        """
+        if not self.pk and not self.modified_by_id:
+            self.modified_by = self.created_by
+
+        return super(Board, self).save(*args, **kwargs)
 
     def post_save(self, created, *args, **kwargs):
         """

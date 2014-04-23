@@ -88,6 +88,7 @@ class BoardSerializerTestCase(BaseTestCase):
 
         expected_data = {
             'created_by': serializer.object.created_by_id,
+            'modified_by': serializer.object.modified_by_id,
             'id': serializer.object.id,
             'date_created': serializer.object.date_created,
             'date_modified': serializer.object.date_modified,

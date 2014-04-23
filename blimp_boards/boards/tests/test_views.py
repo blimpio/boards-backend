@@ -37,6 +37,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         response = self.client.get(self.base_url)
         expected_response = [{
             'created_by': self.board.created_by_id,
+            'modified_by': self.board.modified_by_id,
             'id': self.board.id,
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,
@@ -96,6 +97,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
 
         expected_response = {
             'created_by': self.board.created_by_id,
+            'modified_by': self.board.modified_by_id,
             'id': self.board.id,
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,
@@ -146,6 +148,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
 
         expected_response = {
             'created_by': board.created_by_id,
+            'modified_by': board.modified_by_id,
             'id': board.id,
             'date_created': board.date_created,
             'date_modified': board.date_modified,
@@ -178,6 +181,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
 
         expected_response = {
             'created_by': self.board.created_by_id,
+            'modified_by': self.board.modified_by_id,
             'id': self.board.id,
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,
@@ -220,6 +224,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
 
         expected_response = {
             'created_by': self.board.created_by_id,
+            'modified_by': self.board.modified_by_id,
             'id': self.board.id,
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,
@@ -248,6 +253,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
 
         expected_response = {
             'created_by': self.board.created_by_id,
+            'modified_by': self.board.modified_by_id,
             'id': self.board.id,
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,
