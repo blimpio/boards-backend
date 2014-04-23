@@ -34,7 +34,7 @@ class DomainNameValidator(object):
         if not value:
             raise ValidationError(self.message, code=self.code)
 
-        if (not value in self.domain_whitelist and
+        if (value not in self.domain_whitelist and
                 not self.domain_regex.match(value)):
             # Try for possible IDN domain-part
             try:

@@ -5,7 +5,6 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from ..utils.shortcuts import redirect_with_params
 from ..utils.response import ErrorResponse
 from ..invitations.models import SignupRequest, InvitedUser
 from .models import User
