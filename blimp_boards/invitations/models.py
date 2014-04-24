@@ -133,7 +133,7 @@ class InvitedUser(BaseModel):
         if created and not self.user:
             SignupRequest.objects.create(email=self.email)
 
-        super(SignupRequest, self).post_save(created, *args, **kwargs)
+        super(InvitedUser, self).post_save(created, *args, **kwargs)
 
     def get_email(self):
         return self.user.email if self.user else self.email
