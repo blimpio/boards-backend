@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..comments.models import Comment
+from ..comments.serializers import CommentSerializer
 from .models import Card
 
 
@@ -69,13 +69,7 @@ class StackSerializer(CardSerializer):
         return attrs
 
 
-class CardCommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        read_only_fields = ('created_by', 'modified_by', )
-        fields = ('id', 'content', 'created_by', 'modified_by',
-                  'date_created', 'date_modified')
-
+class CardCommentSerializer(CommentSerializer):
     def save_object(self, obj, **kwargs):
         created = bool(obj.pk)
         card = self.context['content_object']
