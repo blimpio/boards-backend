@@ -9,7 +9,8 @@ class NotificationBackend(BaseBackend):
     def deliver(self, recipient, sender, notice_type, extra_context):
         Notification = get_model('notifications', 'Notification')
 
-        context = extra_context
+        context = {}
+        context.update(extra_context)
 
         notification = Notification(
             recipient=recipient,
@@ -36,6 +37,6 @@ class NotificationBackend(BaseBackend):
             "notice": ugettext(notice_type['display']),
         })
 
-        notification.data = extra_context
+        notification.data = context
 
         notification.save()
