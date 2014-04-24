@@ -146,6 +146,21 @@ class BoardCollaboratorTestCase(BaseTestCase):
         self.assertEqual(cards, 0)
         self.assertEqual(comments, 0)
 
+    def test_save_should_make_sure_account_collaborator_exists(self):
+        user = self.create_another_user()
+
+        BoardCollaborator.objects.create(
+            board=self.board,
+            user=user,
+            created_by=self.user,
+            permission='write'
+        )
+
+        account_collaborators = AccountCollaborator.objects.filter(
+            account=self.account, user=self.user).count()
+
+        self.assertEqual(account_collaborators, 1)
+
 
 class BoardCollaboratorRequestTestCase(BaseTestCase):
     def setUp(self):

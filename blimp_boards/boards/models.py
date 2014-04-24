@@ -140,6 +140,13 @@ class BoardCollaborator(BaseModel):
         Performs all steps involved in validating  whenever
         a model object is saved.
         """
+        AccountCollaborator = get_model('accounts', 'AccountCollaborator')
+
+        if not self.pk and self.user_id:
+            # Make sure BoardCollaborator has an AccountCollaborator
+            AccountCollaborator.objects.get_or_create(
+                user=self.user, account=self.board.account)
+
         self.full_clean()
 
         return super(BoardCollaborator, self).save(
