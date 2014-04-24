@@ -57,6 +57,12 @@ class BaseModel(ModelDiffMixin, models.Model):
         """
         return self.serializer.data
 
+    def set_announce(self, boolean):
+        """
+        Allow overriding to turn on/off Meta.announce
+        """
+        self._meta.announce = bool(boolean)
+
     def announce(self, method):
         """
         Announces to SocketIO Redis store that a model has changed.

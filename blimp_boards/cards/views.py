@@ -59,6 +59,17 @@ class CardViewSet(ModelViewSet):
 
         return cards
 
+    def pre_delete(self, obj):
+        """
+        Set modified_by before deleting card.
+        """
+        obj.set_announce(False)
+
+        obj.modified_by = self.request.user
+        obj.save()
+
+        obj.set_announce(True)
+
     @action(methods=['GET', 'POST'], serializer_class=CardCommentSerializer)
     def comments(self, request, pk=None):
         card = self.get_object()

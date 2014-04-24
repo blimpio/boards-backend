@@ -67,6 +67,17 @@ class BoardViewSet(ModelViewSet):
 
         return queryset
 
+    def pre_delete(self, obj):
+        """
+        Set modified_by before deleting board.
+        """
+        obj.set_announce(False)
+
+        obj.modified_by = self.request.user
+        obj.save()
+
+        obj.set_announce(True)
+
     @action(methods=['GET', 'POST'])
     def collaborators(self, request, pk=None):
         self.serializer_class = BoardCollaboratorSerializer
