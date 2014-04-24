@@ -80,6 +80,8 @@ class Board(BaseModel):
                     permission=BoardCollaborator.WRITE_PERMISSION
                 )
 
+        super(Board, self).post_save(created, *args, **kwargs)
+
     def is_user_collaborator(self, user, permission=None):
         """
         Returns `True` if a user is a collaborator on this
