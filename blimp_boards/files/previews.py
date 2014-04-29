@@ -14,11 +14,7 @@ def queue_previews(url, sizes, metadata):
         'url': url,
         'sizes': sizes,
         'metadata': metadata,
-        'extra_data': {
-            'ocr': True,
-            'exif': True,
-            'psd': True
-        }
+        'extra_data': ['all']
     }
 
     token = jwt.encode(payload, settings.BLIMP_PREVIEWS_SECRET_KEY)
