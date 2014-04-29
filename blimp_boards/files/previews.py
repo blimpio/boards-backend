@@ -17,7 +17,7 @@ def queue_previews(url, sizes, metadata):
         'extra_data': {
             'ocr': True,
             'exif': True,
-            'psd_layers': True
+            'psd': True
         }
     }
 
