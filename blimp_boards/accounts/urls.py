@@ -22,3 +22,11 @@ api_urlpatterns += patterns(
         views.ValidateSignupDomainsAPIView.as_view(),
         name='auth-signup-domains-validate'),
 )
+
+urlpatterns = patterns(
+    # Prefix
+    '',
+
+    url(r'^(?P<account_slug>[-\w]+)/activity/$',
+        views.AccountActivityHTMLView.as_view(), name='account_activity'),
+)

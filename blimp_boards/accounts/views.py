@@ -1,8 +1,11 @@
 from django.contrib.contenttypes.models import ContentType
 
 from rest_framework import generics
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import link
+from rest_framework.views import APIView
+from rest_framework.renderers import TemplateHTMLRenderer
 
 from ..boards.models import Board
 from ..notifications.pagination import PaginatedNotificationSerializer
@@ -110,3 +113,16 @@ class AccountViewSet(ListRetrieveUpdateViewSet):
         serializer = PaginatedNotificationSerializer(page, context=context)
 
         return Response(serializer.data)
+
+
+class AccountActivityHTMLView(APIView):
+    authentication_classes = ()
+    permission_classes = ()
+    renderer_classes = (TemplateHTMLRenderer, )
+
+    def get(self, request, *args, **kwargs):
+        account_slug = kwargs['account_slug']
+
+        get_object_or_404(Account, slug=account_slug)
+
+        return Response(template_name='index.html')

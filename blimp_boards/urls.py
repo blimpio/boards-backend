@@ -22,6 +22,8 @@ urlpatterns = patterns(
 
     (r'', include('blimp_boards.users.urls')),
 
+    (r'', include('blimp_boards.accounts.urls')),
+
     (r'', include('blimp_boards.boards.urls')),
 
     # Catch all URL
