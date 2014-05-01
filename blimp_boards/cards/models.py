@@ -112,13 +112,7 @@ class Card(BaseModel):
     def post_save(self, created, *args, **kwargs):
         # Detect if new card is a file and request thumbnails.
         if created and self.type == 'file' and self.content:
-            url = sign_s3_url(self.content)
-            sizes = ['original', '200', '500', '800']
-            metadata = {
-                'cardId': self.id
-            }
-
-            queue_previews(url, sizes, metadata)
+            self.request_previews()
 
         # Notify card was created
         if created:
@@ -163,6 +157,15 @@ class Card(BaseModel):
 
     def get_thumbnail_lg_path(self):
         return self.get_signed_thumbnail('thumbnail_lg_path')
+
+    def request_previews(self):
+        url = sign_s3_url(self.content)
+        sizes = ['original', '200', '500', '800']
+        metadata = {
+            'cardId': self.id
+        }
+
+        return queue_previews(url, sizes, metadata)
 
     def notify_created(self):
         user = self.created_by
