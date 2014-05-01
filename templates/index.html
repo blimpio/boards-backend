@@ -7,7 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Beautifully Easy Project Management">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Blimp | Beautifully Easy Project Management</title>
+    {% if board %}
+      <title>{{ board.name }} - Blimp Boards</title>
+    {% else %}
+      <title>Blimp Boards - Organize anything, visually.</title>
+    {% endif %}
+    <meta name="description" content="Blimp Boards let's you share anything visually. ">
     <script>window.brunch = window.brunch || {};</script>
     <link rel="stylesheet" href="{% boards_web_static "css/app.css" %}">
   </head>
@@ -17,10 +22,10 @@
       window.App = {
         STATIC_URL: "{% boards_web_static %}",
         SOCKETS_URL: "{{ settings.BOARDS_SOCKETS_URL }}",
-        {% if board_is_shared %}
+        {% if board.is_shared %}
         PUBLIC_BOARD: {
-          id: {{ board_id }},
-          account: {{ board_account_id }},
+          id: {{ board.id }},
+          account: {{ board.account_id }},
           collaborator_users: {{ collaborator_users }}
         }
         {% else %}
