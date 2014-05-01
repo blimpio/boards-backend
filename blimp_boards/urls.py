@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.conf import settings
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 from django.contrib.sitemaps import views as sitemaps_views
 from django.views.decorators.cache import cache_page
 from django.contrib import admin
@@ -28,6 +28,9 @@ urlpatterns = patterns(
 
     # Catch all URL
     (r'^($|.*/$)', index_view),
+
+    url(r'^favicon.ico$',
+        RedirectView.as_view(url=settings.STATIC_URL + 'images/favicon.ico')),
 
     # Sitemap
     url(r'^sitemap\.xml$',

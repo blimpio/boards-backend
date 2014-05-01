@@ -80,6 +80,10 @@ class Common(Configuration):
 
     # Static files (CSS, JavaScript, Images)
     STATIC_URL = '/static/'
+    STATIC_ROOT = 'staticfiles'
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, 'static'),
+    )
 
     # Templates
     TEMPLATE_DIRS = (
@@ -293,13 +297,6 @@ class Staging(Common):
     EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
     MANDRILL_API_KEY = values.Value(environ_prefix=None)
     DEFAULT_FROM_EMAIL = values.Value(environ_prefix=None)
-
-    # Static asset settings
-    STATIC_ROOT = 'staticfiles'
-    STATIC_URL = '/static/'
-    STATICFILES_DIRS = (
-        os.path.join(Common.BASE_DIR, 'static'),
-    )
 
     # Django REST framework
     Common.REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
