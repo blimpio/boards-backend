@@ -39,8 +39,7 @@ class CardSerializerTestCase(BaseTestCase):
             'content': '',
             'is_shared': False,
             'file_size': 0,
-            'mime_type': '',
-            'data': None
+            'mime_type': ''
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -98,8 +97,7 @@ class CardSerializerTestCase(BaseTestCase):
             'thumbnail_md_path': None,
             'thumbnail_lg_path': None,
             'file_size': None,
-            'mime_type': '',
-            'data': None
+            'mime_type': ''
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -153,8 +151,7 @@ class CardSerializerTestCase(BaseTestCase):
             'thumbnail_md_path': None,
             'thumbnail_lg_path': None,
             'file_size': None,
-            'mime_type': '',
-            'data': None
+            'mime_type': ''
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -189,8 +186,7 @@ class StackSerializerTestCase(BaseTestCase):
             'board': None,
             'cards': [],
             'featured': False,
-            'is_shared': False,
-            'data': None
+            'is_shared': False
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -239,8 +235,7 @@ class StackSerializerTestCase(BaseTestCase):
             'board': self.data['board'],
             'cards': self.data['cards'],
             'featured': False,
-            'is_shared': False,
-            'data': None
+            'is_shared': False
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -286,8 +281,7 @@ class StackSerializerTestCase(BaseTestCase):
             'board': data['board'],
             'cards': data['cards'],
             'featured': False,
-            'is_shared': False,
-            'data': None
+            'is_shared': False
         }
 
         self.assertEqual(serializer.data, expected_data)

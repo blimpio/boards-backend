@@ -47,7 +47,7 @@ class StackSerializer(CardSerializer):
         read_only_fields = ('slug', )
         exclude = ('origin_url', 'content', 'thumbnail_sm_path',
                    'thumbnail_md_path', 'thumbnail_lg_path', 'file_size',
-                   'mime_type', 'stack')
+                   'mime_type', 'stack', 'data')
 
     def validate_cards(self, attrs, source):
         cards = attrs[source]

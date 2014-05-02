@@ -65,8 +65,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': None,
             'thumbnail_lg_path': None,
             'file_size': None,
-            'mime_type': '',
-            'data': None
+            'mime_type': ''
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -140,7 +139,6 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': None,
             'file_size': None,
             'mime_type': '',
-            'data': None
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -192,8 +190,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': None,
             'thumbnail_lg_path': None,
             'file_size': None,
-            'mime_type': '',
-            'data': None
+            'mime_type': ''
         }
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -233,8 +230,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': None,
             'thumbnail_lg_path': None,
             'file_size': None,
-            'mime_type': '',
-            'data': None
+            'mime_type': ''
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -283,8 +279,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': None,
             'thumbnail_lg_path': None,
             'file_size': None,
-            'mime_type': '',
-            'data': None
+            'mime_type': ''
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -325,8 +320,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': None,
             'thumbnail_lg_path': None,
             'file_size': None,
-            'mime_type': '',
-            'data': None
+            'mime_type': ''
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -436,8 +430,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': None,
             'thumbnail_lg_path': None,
             'file_size': None,
-            'mime_type': '',
-            'data': None,
+            'mime_type': ''
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -472,8 +465,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'board': card.board_id,
             'cards': [self.card.id],
             'featured': False,
-            'is_shared': False,
-            'data': None
+            'is_shared': False
         }
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
