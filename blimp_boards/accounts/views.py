@@ -115,7 +115,7 @@ class AccountViewSet(ListRetrieveUpdateViewSet):
         return Response(serializer.data)
 
 
-class AccountActivityHTMLView(APIView):
+class AccountHTMLView(APIView):
     authentication_classes = ()
     permission_classes = ()
     renderer_classes = (TemplateHTMLRenderer, )

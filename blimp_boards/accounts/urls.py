@@ -27,6 +27,9 @@ urlpatterns = patterns(
     # Prefix
     '',
 
-    url(r'^(?P<account_slug>[-\w]+)/activity/$',
-        views.AccountActivityHTMLView.as_view(), name='account_activity'),
+    url(r'^(?P<account_slug>[-\w]+)/$',
+        views.AccountHTMLView.as_view(), name='account_detail'),
+
+    url(r'^(?P<account_slug>[-\w]+)/activity/',
+        views.AccountHTMLView.as_view(), name='account_activity'),
 )

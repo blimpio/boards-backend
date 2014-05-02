@@ -16,11 +16,13 @@ class AccountSerializer(serializers.ModelSerializer):
     """
     Serializer for Accounts.
     """
+    html_url = serializers.Field()
+
     class Meta:
         model = Account
         read_only_fields = ('created_by', 'modified_by', 'logo_color', )
-        fields = ('id', 'name', 'type', 'slug',
-                  'disqus_shortname', 'logo_color', 'created_by',
+        fields = ('id', 'name', 'type', 'slug',  'disqus_shortname',
+                  'logo_color', 'created_by', 'html_url',
                   'modified_by', 'date_created', 'date_modified', )
 
     def save_object(self, obj, **kwargs):

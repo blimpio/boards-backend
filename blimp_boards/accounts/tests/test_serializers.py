@@ -137,7 +137,8 @@ class CheckSignupDomainSerializerTestCase(BaseTestCase):
             'logo_color': '',
             'disqus_shortname': '',
             'date_created': self.account.date_created,
-            'date_modified': self.account.date_modified
+            'date_modified': self.account.date_modified,
+            'html_url': self.account.html_url
         }
 
         self.assertEqual(serializer.object, expected_response)

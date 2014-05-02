@@ -102,7 +102,8 @@ class CheckSignupDomainAPIViewTestCase(BaseTestCase):
             'created_by': account.created_by_id,
             'modified_by': account.modified_by_id,
             'date_created': account.date_created,
-            'date_modified': account.date_modified
+            'date_modified': account.date_modified,
+            'html_url': account.html_url
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -173,7 +174,8 @@ class AccountsForUserAPIViewTestCase(AuthenticatedAPITestCase):
             'created_by': self.account.created_by_id,
             'modified_by': self.account.modified_by_id,
             'date_created': self.account.date_created,
-            'date_modified': self.account.date_modified
+            'date_modified': self.account.date_modified,
+            'html_url': self.account.html_url
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

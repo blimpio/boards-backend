@@ -4,6 +4,9 @@ import uuid
 from django.db import models
 from django.db.models.loading import get_model
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
+from django.utils.functional import cached_property
+from django.conf import settings
 
 from ..users.models import User
 from ..utils.models import BaseModel
@@ -62,6 +65,13 @@ class Account(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('account_detail', kwargs={'account_slug': self.slug})
+
+    @cached_property
+    def html_url(self):
+        return '{}{}'.format(settings.APPLICATION_URL, self.get_absolute_url())
 
     @property
     def announce_room(self):
