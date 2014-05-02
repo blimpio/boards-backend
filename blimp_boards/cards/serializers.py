@@ -14,6 +14,7 @@ class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
         read_only_fields = ('slug', 'stack', )
+        exclude = ('data', )
 
     def validate_content(self, attrs, source):
         content = attrs.get(source)
