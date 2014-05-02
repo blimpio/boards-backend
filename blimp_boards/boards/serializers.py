@@ -13,6 +13,8 @@ class BoardSerializer(serializers.ModelSerializer):
     created_by = serializers.PrimaryKeyRelatedField(read_only=True)
     modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
+    html_url = serializers.Field()
+
     class Meta:
         model = Board
         read_only_fields = ('slug', )

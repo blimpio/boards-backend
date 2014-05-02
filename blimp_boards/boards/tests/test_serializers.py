@@ -98,7 +98,8 @@ class BoardSerializerTestCase(BaseTestCase):
             'is_shared': False,
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
-            'thumbnail_lg_path': ''
+            'thumbnail_lg_path': '',
+            'html_url': serializer.object.html_url
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -160,7 +161,9 @@ class BoardCollaboratorSerializerTestCase(BaseTestCase):
             'board': self.board
         }
 
-        serializer = self.serializer_class(self.board_collaborator, data=self.data, context=context)
+        serializer = self.serializer_class(
+            self.board_collaborator, data=self.data, context=context)
+
         serializer.is_valid()
         serializer.save()
 

@@ -47,7 +47,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'is_shared': False,
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
-            'thumbnail_lg_path': ''
+            'thumbnail_lg_path': '',
+            'html_url': self.board.html_url
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -107,7 +108,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'is_shared': False,
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
-            'thumbnail_lg_path': ''
+            'thumbnail_lg_path': '',
+            'html_url': self.board.html_url
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -158,7 +160,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'is_shared': False,
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
-            'thumbnail_lg_path': ''
+            'thumbnail_lg_path': '',
+            'html_url': board.html_url
         }
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -191,7 +194,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'is_shared': False,
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
-            'thumbnail_lg_path': ''
+            'thumbnail_lg_path': '',
+            'html_url': self.board.html_url
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -234,7 +238,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'is_shared': False,
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
-            'thumbnail_lg_path': ''
+            'thumbnail_lg_path': '',
+            'html_url': self.board.html_url
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -263,7 +268,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'is_shared': True,
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
-            'thumbnail_lg_path': ''
+            'thumbnail_lg_path': '',
+            'html_url': self.board.html_url
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

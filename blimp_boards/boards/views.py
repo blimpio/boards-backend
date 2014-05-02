@@ -33,7 +33,7 @@ class BoardViewSet(ModelViewSet):
         public_boards = None
 
         if user.is_authenticated():
-            user_boards = user.boards
+            user_boards = user.boards.select_related('account')
 
         public_criteria = [
             (action == 'retrieve'),

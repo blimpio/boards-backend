@@ -12,7 +12,7 @@ class CardSerializer(serializers.ModelSerializer):
     thumbnail_md_path = serializers.Field(source='get_thumbnail_md_path')
     thumbnail_lg_path = serializers.Field(source='get_thumbnail_lg_path')
 
-    html_url = serializers.Field(source='html_url')
+    html_url = serializers.Field()
 
     class Meta:
         model = Card

@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 from django.db.models.loading import get_model
 from django.utils.functional import cached_property
+from django.conf import settings
 
 from ..utils.models import BaseModel
 from ..utils.fields import ReservedKeywordsAutoSlugField
@@ -41,11 +42,15 @@ class Board(BaseModel):
             'account_slug': self.account.slug,
             'board_slug': self.slug})
 
-    @property
+    @cached_property
+    def html_url(self):
+        return '{}{}'.format(settings.APPLICATION_URL, self.get_absolute_url())
+
+    @cached_property
     def announce_room(self):
         return 'a{}'.format(self.account_id)
 
-    @property
+    @cached_property
     def serializer(self):
         from .serializers import BoardSerializer
         return BoardSerializer(self)
