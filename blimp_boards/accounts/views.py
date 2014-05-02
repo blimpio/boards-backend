@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404
@@ -8,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.renderers import TemplateHTMLRenderer
 
 from ..boards.models import Board
+from ..cards.models import Card
 from ..notifications.pagination import PaginatedNotificationSerializer
 from ..notifications.models import Notification
 from ..utils.response import ErrorResponse
@@ -96,13 +98,18 @@ class AccountViewSet(ListRetrieveUpdateViewSet):
             boards = boards.filter(pk=board_id)
 
         board_ids = boards.values_list('id', flat=True)
+        card_ids = Card.objects.filter(board__pk__in=board_ids)
 
         board_type = ContentType.objects.get_for_model(Board)
+        card_type = ContentType.objects.get_for_model(Card)
 
         # Get notifications for account's boards.
         notifications = Notification.objects.filter(
-            target_content_type=board_type,
-            target_object_id__in=board_ids)
+            (Q(target_content_type=board_type) &
+             Q(target_object_id__in=board_ids)) |
+            (Q(target_content_type=card_type) &
+             Q(target_object_id__in=card_ids))
+        )
 
         page = self.paginate_queryset(notifications)
 
