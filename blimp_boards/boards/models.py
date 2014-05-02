@@ -58,17 +58,17 @@ class Board(BaseModel):
         return self.card_set.filter(type='file').first()
 
     @property
-    def thumbnail_sm_path(self):
+    def card_thumbnail_sm_path(self):
         if self.file_card:
             return self.file_card.get_thumbnail_sm_path()
 
     @property
-    def thumbnail_md_path(self):
+    def card_thumbnail_md_path(self):
         if self.file_card:
             return self.file_card.get_thumbnail_md_path()
 
     @property
-    def thumbnail_lg_path(self):
+    def card_thumbnail_lg_path(self):
         if self.file_card:
             return self.file_card.get_thumbnail_lg_path()
 
