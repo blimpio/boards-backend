@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 from django.db.models.loading import get_model
+from django.utils.functional import cached_property
 
 from ..utils.models import BaseModel
 from ..utils.fields import ReservedKeywordsAutoSlugField
@@ -48,6 +49,28 @@ class Board(BaseModel):
     def serializer(self):
         from .serializers import BoardSerializer
         return BoardSerializer(self)
+
+    @cached_property
+    def file_card(self):
+        """
+        Returns board's first card of type file.
+        """
+        return self.card_set.filter(type='file').first()
+
+    @property
+    def thumbnail_sm_path(self):
+        if self.file_card:
+            return self.file_card.get_thumbnail_sm_path()
+
+    @property
+    def thumbnail_md_path(self):
+        if self.file_card:
+            return self.file_card.get_thumbnail_md_path()
+
+    @property
+    def thumbnail_lg_path(self):
+        if self.file_card:
+            return self.file_card.get_thumbnail_lg_path()
 
     def save(self, *args, **kwargs):
         """

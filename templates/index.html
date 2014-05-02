@@ -5,14 +5,33 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Beautifully Easy Project Management">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     {% if board %}
       <title>{{ board.name }} - Blimp Boards</title>
     {% else %}
       <title>Blimp Boards - Organize anything, visually.</title>
     {% endif %}
-    <meta name="description" content="Blimp Boards let's you share anything visually. ">
+
+    <meta name="description" content="Blimp Boards let's you share anything visually.">
+
+    <!-- Open graph -->
+    {% if board %}
+      <meta property="og:title" content="{{ board.name }} - Blimp Boards"/>
+      {% if board.thumbnail_lg_path %}
+        <meta property="og:image" content="{{ board.thumbnail_lg_path }}"/>
+      {% endif %}
+    {% else %}
+      <meta property="og:title" content="Blimp Boards - Organize anything, visually."/>
+    {% endif %}
+
+    <meta property="og:url" content="{{ request.build_absolute_uri }}"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="Blimp Boards"/>
+    <meta property="fb:admins" content="502082211,501641940,682391390"/>
+    <meta property="fb:app_id" content="540343842749592"/>
+    <meta property="og:description" content="Blimp Boards let's you share anything visually."/>
+
     <script>window.brunch = window.brunch || {};</script>
     <link rel="stylesheet" href="{% boards_web_static "css/app.css" %}">
   </head>

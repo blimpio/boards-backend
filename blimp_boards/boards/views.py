@@ -201,15 +201,13 @@ class BoardHTMLView(APIView):
         if account_collaborator.account.type == Account.PERSONAL_ACCOUNT:
             boards = account_collaborator.user.boards
 
-        board = get_object_or_404(
-            boards.values('id', 'name', 'account_id', 'is_shared'),
-            slug=board_slug)
+        board = get_object_or_404(boards, slug=board_slug)
 
         collaborator_users = []
 
-        if board['is_shared']:
+        if board.is_shared:
             collaborator_users = BoardCollaborator.objects.filter(
-                board=board['id'], user__isnull=False
+                board_id=board.id, user__isnull=False
             ).values_list('user', flat=True)
 
         data = {
