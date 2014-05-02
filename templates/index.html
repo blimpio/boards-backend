@@ -7,23 +7,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {% if board %}
+    {% if board.is_shared %}
       <title>{{ board.name }} - Blimp Boards</title>
-    {% else %}
-      <title>Blimp Boards - Organize anything, visually.</title>
-    {% endif %}
-
-    <meta name="description" content="Blimp Boards let's you share anything visually.">
-
-    <!-- Open graph -->
-    {% if board %}
       <meta property="og:title" content="{{ board.name }} - Blimp Boards"/>
       {% if board.thumbnail_lg_path %}
         <meta property="og:image" content="{{ board.thumbnail_lg_path }}"/>
       {% endif %}
     {% else %}
+      <title>Blimp Boards - Organize anything, visually.</title>
       <meta property="og:title" content="Blimp Boards - Organize anything, visually."/>
     {% endif %}
+
+    <meta name="description" content="Blimp Boards let's you share anything visually.">
 
     <meta property="og:url" content="{{ request.build_absolute_uri }}"/>
     <meta property="og:type" content="website"/>
