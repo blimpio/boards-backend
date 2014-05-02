@@ -28,6 +28,7 @@ BLIMP_PREVIEWS_URL=
 
 ```
 $ ./manage.py syncdb --noinput
+$ ./manage.py migrate apps.users
 $ ./manage.py migrate
 $ ./manage.py loaddata blimp_boards/users/fixtures/users.json
 ```
