@@ -1,12 +1,14 @@
 import positions
 
 from django.db import models
+from django.dispatch import receiver
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes import generic
 from django.db.models.loading import get_model
-from django.dispatch import receiver
 from django.db.models.signals import m2m_changed
+from django.utils.functional import cached_property
 
 from jsonfield import JSONField
 from rest_framework.utils.encoders import JSONEncoder
@@ -78,11 +80,15 @@ class Card(BaseModel):
             'board_slug': self.board.slug,
             'card_slug': self.slug})
 
-    @property
+    @cached_property
+    def html_url(self):
+        return '{}{}'.format(settings.APPLICATION_URL, self.get_absolute_url())
+
+    @cached_property
     def announce_room(self):
         return 'a{}'.format(self.board.account_id)
 
-    @property
+    @cached_property
     def serializer(self):
         from .serializers import CardSerializer
         return CardSerializer(self)

@@ -7,8 +7,9 @@ from configurations import Configuration, values
 class Common(Configuration):
 
     # Application settings
-    ENVIRONMENT = values.Value(environ_prefix=None)
     HTTP_PROTOCOL = 'https'
+    ENVIRONMENT = values.Value(environ_prefix=None)
+    DOMAIN = values.Value(environ_prefix=None, default='localhost:8000')
 
     # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
     BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -180,6 +181,10 @@ class Common(Configuration):
     BOARDS_SOCKETS_URL = values.Value(environ_prefix=None)
     BOARDS_SOCKETS_REDIS_URL = values.Value(environ_prefix=None)
 
+    @property
+    def APPLICATION_URL(self):
+        return '{}://{}'.format(self.HTTP_PROTOCOL, self.DOMAIN)
+
 
 class Development(Common):
     """
@@ -187,9 +192,7 @@ class Development(Common):
     """
 
     # Application settings
-    DOMAIN = 'localhost:8000'
     HTTP_PROTOCOL = 'http'
-    APPLICATION_URL = '{}://{}'.format(HTTP_PROTOCOL, DOMAIN)
 
     # Debug Mode
     DEBUG = True
@@ -269,10 +272,6 @@ class Staging(Common):
     """
     The in-staging settings.
     """
-    # Application settings
-    DOMAIN = 'boards-backend-staging.herokuapp.com'
-    APPLICATION_URL = '{}://{}'.format(Common.HTTP_PROTOCOL, DOMAIN)
-
     # Installed Apps
     Common.INSTALLED_APPS += (
         'djrill',

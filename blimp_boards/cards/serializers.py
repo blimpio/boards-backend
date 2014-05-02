@@ -5,11 +5,14 @@ from .models import Card
 
 
 class CardSerializer(serializers.ModelSerializer):
+    created_by = serializers.PrimaryKeyRelatedField(read_only=True)
+    modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
+
     thumbnail_sm_path = serializers.Field(source='get_thumbnail_sm_path')
     thumbnail_md_path = serializers.Field(source='get_thumbnail_md_path')
     thumbnail_lg_path = serializers.Field(source='get_thumbnail_lg_path')
-    created_by = serializers.PrimaryKeyRelatedField(read_only=True)
-    modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    html_url = serializers.Field(source='html_url')
 
     class Meta:
         model = Card
