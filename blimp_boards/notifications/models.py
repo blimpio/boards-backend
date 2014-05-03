@@ -14,6 +14,7 @@ from jsonfield import JSONField
 from rest_framework.utils.encoders import JSONEncoder
 
 from ..utils.models import BaseModel
+from ..utils.date import timesince as timesince_
 from .signals import notify
 from .query import NotificationQuerySet
 from .types import NOTIFICATION_TYPES, get_notification_type
@@ -147,13 +148,8 @@ class Notification(BaseModel):
 
         return msg.format(**context)
 
-    def timesince(self, now=None):
-        """
-        Shortcut for the ``django.utils.timesince.timesince`` function of the
-        current timestamp.
-        """
-        from django.utils.timesince import timesince as timesince_
-        return timesince_(self.date_created, now)
+    def timesince(self):
+        return timesince_(self.date_created)
 
 
 class LanguageStoreNotAvailable(Exception):
