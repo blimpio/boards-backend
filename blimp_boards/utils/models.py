@@ -1,9 +1,6 @@
-try:
-    import urlparse
-except ImportError:
-    import urllib.parse as urlparse
+import reversion
 
-from django.db import models
+from django.db import models, transaction
 from django.conf import settings
 from django.utils.encoding import smart_text
 from django.utils.log import getLogger
@@ -14,6 +11,11 @@ from rest_framework import serializers
 
 from .fields import DateTimeCreatedField, DateTimeModifiedField
 from .mixins import ModelDiffMixin
+
+try:
+    import urlparse
+except ImportError:
+    import urllib.parse as urlparse
 
 
 logger = getLogger(__name__)
@@ -48,6 +50,13 @@ class BaseModel(ModelDiffMixin, models.Model):
                 model = self.__class__
 
         return ModelSerializer(self)
+
+    def save(self, *args, **kwargs):
+        """
+        Group any changes to models into a revision.
+        """
+        with transaction.atomic(), reversion.create_revision():
+            super(BaseModel, self).save(*args, **kwargs)
 
     def to_dict(self):
         """
