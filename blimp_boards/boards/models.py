@@ -47,6 +47,15 @@ class Board(BaseModel):
         return '{}{}'.format(settings.APPLICATION_URL, self.get_absolute_url())
 
     @cached_property
+    def activity_html_url(self):
+        activity_url = reverse('account_board_activity', kwargs={
+            'account_slug': self.account.slug,
+            'board_slug': self.slug,
+        })
+
+        return '{}{}'.format(settings.APPLICATION_URL, activity_url)
+
+    @cached_property
     def announce_room(self):
         return 'a{}'.format(self.account_id)
 

@@ -30,6 +30,9 @@ urlpatterns = patterns(
     url(r'^(?P<account_slug>[-\w]+)/$',
         views.AccountHTMLView.as_view(), name='account_detail'),
 
-    url(r'^(?P<account_slug>[-\w]+)/activity/',
+    url(r'^(?P<account_slug>[-\w]+)/activity/$',
         views.AccountHTMLView.as_view(), name='account_activity'),
+
+    url(r'^(?P<account_slug>[-\w]+)/activity/(?P<board_slug>[-\w]+)/$',
+        views.AccountHTMLView.as_view(), name='account_board_activity'),
 )

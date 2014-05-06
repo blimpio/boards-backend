@@ -14,6 +14,7 @@ class BoardSerializer(serializers.ModelSerializer):
     modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
     html_url = serializers.Field()
+    activity_html_url = serializers.Field()
 
     class Meta:
         model = Board
