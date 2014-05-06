@@ -9,6 +9,7 @@ from django.contrib.contenttypes import generic
 from django.db.models.loading import get_model
 from django.db.models.signals import m2m_changed
 from django.utils.functional import cached_property
+from django.contrib.contenttypes.models import ContentType
 
 from jsonfield import JSONField
 from rest_framework.utils.encoders import JSONEncoder
@@ -89,9 +90,13 @@ class Card(BaseModel):
         return 'a{}'.format(self.board.account_id)
 
     @cached_property
-    def serializer(self):
+    def serializer_class(self):
         from .serializers import CardSerializer
-        return CardSerializer(self)
+        return CardSerializer
+
+    @cached_property
+    def serializer(self):
+        return self.serializer_class(self)
 
     @property
     def download_url(self):
@@ -172,6 +177,27 @@ class Card(BaseModel):
         }
 
         return queue_previews(url, sizes, metadata)
+
+    def update_notification_data(self):
+        """
+        Updates thumbnail fields in notifications where this
+        card is an action_object.
+        """
+        Notification = get_model('notifications', 'Notification')
+
+        card_type = ContentType.objects.get_for_model(Card)
+        notifications = Notification.objects.filter(
+            action_object_content_type=card_type,
+            action_object_object_id=self.id)
+
+        update_fields = ('thumbnail_sm_path', 'thumbnail_md_path',
+                         'thumbnail_lg_path')
+
+        serializer = self.serializer_class(self, fields=update_fields)
+
+        for notification in notifications:
+            notification.data['action_object'].update(serializer.data)
+            notification.save()
 
     def notify_created(self):
         user = self.created_by

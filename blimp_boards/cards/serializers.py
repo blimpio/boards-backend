@@ -1,10 +1,11 @@
 from rest_framework import serializers
 
 from ..comments.serializers import CommentSerializer
+from ..utils.serializers import DynamicFieldsModelSerializer
 from .models import Card
 
 
-class CardSerializer(serializers.ModelSerializer):
+class CardSerializer(DynamicFieldsModelSerializer):
     created_by = serializers.PrimaryKeyRelatedField(read_only=True)
     modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
 

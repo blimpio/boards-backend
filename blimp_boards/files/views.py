@@ -95,4 +95,6 @@ class FilePreviewsWebhook(APIView):
             card.data = results
             card.save()
 
+            card.update_notification_data()
+
         return Response(status=status.HTTP_200_OK)
