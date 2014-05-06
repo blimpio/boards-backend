@@ -128,6 +128,10 @@ class Notification(BaseModel):
 
     objects = PassThroughManager.for_queryset_class(NotificationQuerySet)()
 
+    class Meta:
+        get_latest_by = 'date_created'
+        ordering = ('-date_created', )
+
     def __str__(self):
         context = {
             'actor': self.actor,
