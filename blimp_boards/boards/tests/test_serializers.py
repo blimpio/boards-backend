@@ -99,7 +99,8 @@ class BoardSerializerTestCase(BaseTestCase):
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
-            'html_url': serializer.object.html_url
+            'html_url': serializer.object.html_url,
+            'activity_html_url': serializer.object.activity_html_url
         }
 
         self.assertEqual(serializer.data, expected_data)

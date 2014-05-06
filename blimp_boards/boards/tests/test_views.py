@@ -48,7 +48,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
-            'html_url': self.board.html_url
+            'html_url': self.board.html_url,
+            'activity_html_url': self.board.activity_html_url,
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -109,7 +110,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
-            'html_url': self.board.html_url
+            'html_url': self.board.html_url,
+            'activity_html_url': self.board.activity_html_url,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -161,7 +163,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
-            'html_url': board.html_url
+            'html_url': board.html_url,
+            'activity_html_url': board.activity_html_url,
         }
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -195,7 +198,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
-            'html_url': self.board.html_url
+            'html_url': self.board.html_url,
+            'activity_html_url': self.board.activity_html_url,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -239,7 +243,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
-            'html_url': self.board.html_url
+            'html_url': self.board.html_url,
+            'activity_html_url': self.board.activity_html_url,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -269,7 +274,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
             'thumbnail_lg_path': '',
-            'html_url': self.board.html_url
+            'html_url': self.board.html_url,
+            'activity_html_url': self.board.activity_html_url,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
