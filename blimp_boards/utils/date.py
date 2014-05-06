@@ -19,8 +19,8 @@ def timesince(d):
     delta = _now - _date
     delta_midnight = today - _date
     days = delta.days
-    hours = round(delta.seconds / 3600., 0)
-    minutes = round(delta.seconds / 60., 0)
+    hours = int(round(delta.seconds / 3600., 0))
+    minutes = int(round(delta.seconds / 60., 0))
     chunks = (
         (365.0, lambda n: _('year', 'years', n)),
         (30.0, lambda n: _('month', 'months', n)),
@@ -32,14 +32,14 @@ def timesince(d):
         if hours == 0:
             if minutes > 0:
                 return _('1 minute ago',
-                         '{} minutes ago', minutes).format(minutes)
+                         '{} minutes ago'.format(minutes), minutes)
             else:
-                return "less than 1 minute ago"
+                return 'less than 1 minute ago'
         else:
-            return _('1 hour ago', '%(hours)d hours ago', hours).format(hours)
+            return _('1 hour ago', '{} hours ago', hours).format(hours)
 
     if delta_midnight.days == 0:
-        return "yesterday at %s" % _date.strftime("%I:%M%p")
+        return 'yesterday at {}'.format(_date.strftime('%I:%M%p'))
 
     count = 0
 
