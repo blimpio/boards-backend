@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from ...utils.tests import BaseTestCase, AuthenticatedAPITestCase
-from ...accounts.models import Account, AccountCollaborator, EmailDomain
+from ...accounts.models import Account, EmailDomain
 
 
 class ValidateSignupDomainsAPIViewTestCase(BaseTestCase):
@@ -19,7 +19,7 @@ class ValidateSignupDomainsAPIViewTestCase(BaseTestCase):
         }
 
         response = self.client.post(
-            '/api/auth/signup_domains/validate/', data, format='json')
+            '/api/v1/auth/signup_domains/validate/', data, format='json')
 
         expected_response = {
             'signup_domains': ['example.com']
@@ -33,7 +33,7 @@ class ValidateSignupDomainsAPIViewTestCase(BaseTestCase):
         Tests that POST request with invalid data to endpoint
         returns expected error.
         """
-        response = self.client.post('/api/auth/signup_domains/validate/')
+        response = self.client.post('/api/v1/auth/signup_domains/validate/')
 
         expected_response = {
             'error': {
@@ -54,7 +54,7 @@ class ValidateSignupDomainsAPIViewTestCase(BaseTestCase):
         }
 
         response = self.client.post(
-            '/api/auth/signup_domains/validate/', data, format='json')
+            '/api/v1/auth/signup_domains/validate/', data, format='json')
 
         expected_response = {
             'error': {
@@ -90,7 +90,7 @@ class CheckSignupDomainAPIViewTestCase(BaseTestCase):
         }
 
         response = self.client.post(
-            '/api/auth/signup_domains/check/', data, format='json')
+            '/api/v1/auth/signup_domains/check/', data, format='json')
 
         expected_response = {
             'id': account.id,
@@ -119,7 +119,7 @@ class CheckSignupDomainAPIViewTestCase(BaseTestCase):
         }
 
         response = self.client.post(
-            '/api/auth/signup_domains/check/', data, format='json')
+            '/api/v1/auth/signup_domains/check/', data, format='json')
 
         expected_response = {}
 
@@ -131,7 +131,7 @@ class CheckSignupDomainAPIViewTestCase(BaseTestCase):
         Tests that POST request with invalid data to endpoint
         returns expected error.
         """
-        response = self.client.post('/api/auth/signup_domains/check/')
+        response = self.client.post('/api/v1/auth/signup_domains/check/')
 
         expected_response = {
             'error': {
@@ -151,7 +151,7 @@ class AccountsForUserAPIViewTestCase(AuthenticatedAPITestCase):
 
     def test_get_accounts_without_token_should_fail(self):
         self.client = APIClient()
-        response = self.client.get('/api/accounts/')
+        response = self.client.get('/api/v1/accounts/')
 
         expected_response = {
             'error': 'Authentication credentials were not provided.',
@@ -162,7 +162,7 @@ class AccountsForUserAPIViewTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.data, expected_response)
 
     def test_get_account_with_token_should_work(self):
-        response = self.client.get('/api/accounts/')
+        response = self.client.get('/api/v1/accounts/')
 
         expected_response = [{
             'id': self.account.id,

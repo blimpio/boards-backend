@@ -9,7 +9,7 @@ class CommentViewSetTestCase(AuthenticatedAPITestCase):
     def setUp(self):
         super(CommentViewSetTestCase, self).setUp()
 
-        self.base_url = '/api/comments/'
+        self.base_url = '/api/v1/comments/'
 
         self.data = {
             'content': 'My content'

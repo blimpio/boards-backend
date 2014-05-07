@@ -13,7 +13,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         self.create_account()
         self.create_board()
 
-        self.base_url = '/api/boards/'
+        self.base_url = '/api/v1/boards/'
 
     def test_viewset_should_require_authentication(self):
         """
@@ -439,7 +439,7 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
         self.create_account()
         self.create_board()
 
-        self.base_url = '/api/boards/collaborators/'
+        self.base_url = '/api/v1/boards/collaborators/'
 
     def test_viewset_should_require_authentication(self):
         """
@@ -532,7 +532,7 @@ class BoardCollaboratorRequestViewSetTestCase(AuthenticatedAPITestCase):
         self.create_account()
         self.create_board()
 
-        self.base_url = '/api/boards/collaborators/requests/'
+        self.base_url = '/api/v1/boards/collaborators/requests/'
 
     def test_disallowed_methods(self):
         """

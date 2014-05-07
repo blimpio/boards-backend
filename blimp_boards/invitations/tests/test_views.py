@@ -24,7 +24,7 @@ class SignupRequestCreateAPIViewTestCase(BaseTestCase):
         }
 
         response = self.client.post(
-            '/api/auth/signup_request/', data, format='json')
+            '/api/v1/auth/signup_request/', data, format='json')
 
         signup_request = SignupRequest.objects.get(email=data['email'])
 
@@ -40,7 +40,7 @@ class SignupRequestCreateAPIViewTestCase(BaseTestCase):
         Tests that POST request with invalid data to endpoint
         returns expected error.
         """
-        response = self.client.post('/api/auth/signup_request/')
+        response = self.client.post('/api/v1/auth/signup_request/')
 
         expected_response = {
             'error': {
@@ -63,7 +63,7 @@ class SignupRequestCreateAPIViewTestCase(BaseTestCase):
         }]
 
         response = self.client.post(
-            '/api/auth/signup_request/', data, format='json')
+            '/api/v1/auth/signup_request/', data, format='json')
 
         expected_response = [{
             'email': 'ppueblo@example.com',
@@ -82,7 +82,7 @@ class SignupRequestCreateAPIViewTestCase(BaseTestCase):
 class InvitedUserCreateAPIViewTestCase(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
-        self.url = '/api/auth/signup_request/invite/'
+        self.url = '/api/v1/auth/signup_request/invite/'
 
     def test_post_valid_data(self):
         """

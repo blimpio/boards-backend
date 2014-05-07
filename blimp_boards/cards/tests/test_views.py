@@ -15,7 +15,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         self.create_board()
         self.create_card()
 
-        self.base_url = '/api/cards/'
+        self.base_url = '/api/v1/cards/'
 
         self.data = {
             'name': 'My Card',

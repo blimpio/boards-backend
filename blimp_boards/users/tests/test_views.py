@@ -34,7 +34,7 @@ class ValidateUsernameAPIViewTestCase(BaseTestCase):
         }
 
         response = self.client.post(
-            '/api/auth/username/validate/', data, format='json')
+            '/api/v1/auth/username/validate/', data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, data)
@@ -49,7 +49,7 @@ class ValidateUsernameAPIViewTestCase(BaseTestCase):
         }
 
         response = self.client.post(
-            '/api/auth/username/validate/', data, format='json')
+            '/api/v1/auth/username/validate/', data, format='json')
 
         expected_response = {
             'error': {
@@ -65,7 +65,7 @@ class ValidateUsernameAPIViewTestCase(BaseTestCase):
         Tests that POST request with invalid data to endpoint
         returns expected error.
         """
-        response = self.client.post('/api/auth/username/validate/')
+        response = self.client.post('/api/v1/auth/username/validate/')
 
         expected_response = {
             'error': {
@@ -104,7 +104,7 @@ class SignupAPIViewTestCase(BaseTestCase):
         }
 
         response = self.client.post(
-            '/api/auth/signup/', data, format='json')
+            '/api/v1/auth/signup/', data, format='json')
 
         user = User.objects.get(username='juan')
 
@@ -130,7 +130,7 @@ class SignupAPIViewTestCase(BaseTestCase):
         }
 
         response = self.client.post(
-            '/api/auth/signup/', data, format='json')
+            '/api/v1/auth/signup/', data, format='json')
 
         user = User.objects.get(username='juan')
 
@@ -144,7 +144,7 @@ class SignupAPIViewTestCase(BaseTestCase):
         Tests that POST request with invalid data to endpoint
         returns expected error.
         """
-        response = self.client.post('/api/auth/signup/')
+        response = self.client.post('/api/v1/auth/signup/')
 
         expected_response = {
             'error': {
@@ -175,7 +175,7 @@ class SignupAPIViewTestCase(BaseTestCase):
             'invited_user_token': 'invalidtoken'
         }
 
-        response = self.client.post('/api/auth/signup/', data, format='json')
+        response = self.client.post('/api/v1/auth/signup/', data, format='json')
 
         expected_response = {
             'error': {
@@ -216,7 +216,7 @@ class SignupAPIViewTestCase(BaseTestCase):
             'invited_user_token': invited_user.token
         }
 
-        response = self.client.post('/api/auth/signup/', data, format='json')
+        response = self.client.post('/api/v1/auth/signup/', data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue('token' in response.data)
@@ -249,7 +249,7 @@ class SigninAPIEndpoint(BaseTestCase):
         }
 
         response = self.client.post(
-            '/api/auth/signin/', data, format='json')
+            '/api/v1/auth/signin/', data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue('token' in response.data)
@@ -265,7 +265,7 @@ class SigninAPIEndpoint(BaseTestCase):
         }
 
         response = self.client.post(
-            '/api/auth/signin/', data, format='json')
+            '/api/v1/auth/signin/', data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue('token' in response.data)
@@ -275,7 +275,7 @@ class SigninAPIEndpoint(BaseTestCase):
         Tests that POST request with invalid data to endpoint
         returns expected error.
         """
-        response = self.client.post('/api/auth/signin/')
+        response = self.client.post('/api/v1/auth/signin/')
 
         expected_response = {
             'error': {
@@ -301,7 +301,7 @@ class SigninAPIEndpoint(BaseTestCase):
             'password': 'mypassword'
         }
 
-        response = self.client.post('/api/auth/signin/', data, format='json')
+        response = self.client.post('/api/v1/auth/signin/', data, format='json')
 
         expected_response = {
             'error': {
@@ -325,7 +325,7 @@ class SigninAPIEndpoint(BaseTestCase):
             'invited_user_token': 'invalidtoken'
         }
 
-        response = self.client.post('/api/auth/signin/', data, format='json')
+        response = self.client.post('/api/v1/auth/signin/', data, format='json')
 
         expected_response = {
             'error': {
@@ -355,7 +355,8 @@ class SigninAPIEndpoint(BaseTestCase):
             'invited_user_token': invited_user.token
         }
 
-        response = self.client.post('/api/auth/signin/', data, format='json')
+        response = self.client.post('/api/v1/auth/signin/',
+                                    data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue('token' in response.data)
@@ -480,7 +481,7 @@ class ForgotPasswordAPIViewTestCase(BaseTestCase):
             last_name='Pueblo'
         )
 
-        self.url = '/api/auth/forgot_password/'
+        self.url = '/api/v1/auth/forgot_password/'
 
     def test_post_valid_data(self):
         """
@@ -529,7 +530,7 @@ class ResetPasswordAPIViewTestCase(BaseTestCase):
             last_name='Pueblo'
         )
 
-        self.url = '/api/auth/reset_password/'
+        self.url = '/api/v1/auth/reset_password/'
 
     def test_post_valid_data(self):
         """
@@ -624,7 +625,7 @@ class UserSettingsAPIViewTestCase(AuthenticatedAPITestCase):
     def setUp(self):
         super(UserSettingsAPIViewTestCase, self).setUp()
 
-        self.url = '/api/users/me/'
+        self.url = '/api/v1/users/me/'
 
     def test_get_for_loggedin_user(self):
         """
@@ -698,7 +699,7 @@ class ChangePasswordAPIViewTestCase(AuthenticatedAPITestCase):
     def setUp(self):
         super(ChangePasswordAPIViewTestCase, self).setUp()
 
-        self.url = '/api/users/me/change_password/'
+        self.url = '/api/v1/users/me/change_password/'
 
     def test_post_for_loggedin_user_invalid_current_password(self):
         """
