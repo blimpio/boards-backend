@@ -89,8 +89,13 @@ class AccountViewSet(ListRetrieveUpdateViewSet):
 
     @link(paginate_by=10)
     def activity(self, request, pk=None):
+        user = self.request.user
         account = self.get_object()
-        boards = account.boards
+
+        if account.type == 'personal':
+            boards = user.boards
+        else:
+            boards = account.boards
 
         board_id = request.QUERY_PARAMS.get('board')
 
