@@ -12,13 +12,15 @@ admin.autodiscover()
 
 index_view = TemplateView.as_view(template_name='index.html')
 
+API_PATTERN = r'^api/{}/'.format(settings.BOARDS_API_VERSION)
+
 urlpatterns = patterns(
     # Prefix
     '',
 
     (r'^admin/', include(admin.site.urls)),
 
-    (r'^api/', include('blimp_boards.router')),
+    (API_PATTERN, include('blimp_boards.router')),
 
     (r'', include('blimp_boards.users.urls')),
 

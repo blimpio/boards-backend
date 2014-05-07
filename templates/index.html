@@ -36,6 +36,7 @@
     <div id="application"></div>
     <script>
       window.App = {
+        API_URL: "{{ settings.BOARDS_API_URL }}",
         STATIC_URL: "{% boards_web_static %}",
         SOCKETS_URL: "{{ settings.BOARDS_SOCKETS_URL }}",
         {% if board.is_shared %}

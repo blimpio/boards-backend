@@ -181,9 +181,16 @@ class Common(Configuration):
     BOARDS_SOCKETS_URL = values.Value(environ_prefix=None)
     BOARDS_SOCKETS_REDIS_URL = values.Value(environ_prefix=None)
 
+    BOARDS_API_VERSION = 'v1'
+
     @property
     def APPLICATION_URL(self):
         return '{}://{}'.format(self.HTTP_PROTOCOL, self.DOMAIN)
+
+    @property
+    def BOARDS_API_URL(self):
+        return '{}/api/{}'.format(
+            self.APPLICATION_URL, self.BOARDS_API_VERSION)
 
 
 class Development(Common):
