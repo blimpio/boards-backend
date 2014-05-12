@@ -31,4 +31,7 @@ class AccountPermission(permissions.IsAuthenticated):
         if is_safe and view.action == 'retrieve':
             return True
 
+        if not is_safe and obj.type == 'personal':
+            return obj.is_user_collaborator(request.user, is_owner=True)
+
         return obj.is_user_collaborator(request.user)

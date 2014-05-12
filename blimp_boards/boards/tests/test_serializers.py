@@ -21,6 +21,8 @@ class BoardSerializerTestCase(BaseTestCase):
 
         self.factory = APIRequestFactory()
 
+        super(BaseTestCase, self).setUp()
+
     def test_serializer_empty_data(self):
         """
         Tests that serializer.data doesn't return any data.
@@ -52,9 +54,38 @@ class BoardSerializerTestCase(BaseTestCase):
         self.assertEqual(serializer.errors, expected_errors)
 
     def test_serializer_should_return_error_if_not_a_collaborator(self):
-        self.account_owner.delete()
+        user = self.create_another_user()
+
+        AccountCollaborator.objects.create(user=user, account=self.account)
+
         request = self.factory.post('/')
-        request.user = self.user
+        request.user = user
+
+        context = {
+            'request': request,
+            'view': BoardViewSet.as_view()
+        }
+
+        serializer = self.serializer_class(data=self.data, context=context)
+        serializer.is_valid()
+
+        expected_errors = {
+            'account': ['You are not a collaborator in this account.']
+        }
+
+        self.assertEqual(serializer.errors, expected_errors)
+
+    def test_serializer_should_return_error_if_not_personal_owner(self):
+        """
+        Tests that serializer should relturn error if a user other than the
+        personal account owner is creating a board.
+        """
+        user = self.create_another_user()
+
+        AccountCollaborator.objects.create(user=user, account=self.account)
+
+        request = self.factory.post('/')
+        request.user = user
 
         context = {
             'request': request,
