@@ -98,7 +98,6 @@ class User(BaseModel, AbstractBaseUser):
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
-        announce = True
 
     def __str__(self):
         return self.username
