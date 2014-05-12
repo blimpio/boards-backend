@@ -753,3 +753,28 @@ class ChangePasswordAPIViewTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)
         self.assertTrue(self.user.check_password('mynewpassword'))
+
+
+class UserAutoCompleteAPIViewTestCase(AuthenticatedAPITestCase):
+    def setUp(self):
+        super(UserAutoCompleteAPIViewTestCase, self).setUp()
+
+        self.url = '/api/v1/autocomplete/users/'
+
+    def test_get_for_loggedin_user(self):
+        """
+        Tests that endpoint returns expected response for logged in user.
+        """
+        user = self.create_another_user()
+        response = self.client.get(self.url, {'search': 'j'})
+        expected_response = [{
+            'id': user.id,
+            'username': user.username,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'avatar_path': user.avatar_path,
+            'gravatar_url': user.gravatar_url
+        }]
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)

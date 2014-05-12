@@ -138,7 +138,7 @@ class UserAutoCompleteAPIView(generics.ListAPIView):
         if not params:
             return []
 
-        users = User.objects.all()
+        users = User.objects.exclude(pk=self.request.user.pk)
         queryset = super(UserAutoCompleteAPIView, self).filter_queryset(users)
 
         return queryset[:10]
