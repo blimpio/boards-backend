@@ -121,6 +121,12 @@ class User(BaseModel, AbstractBaseUser):
         if created:
             NotificationSetting.create_default_settings(self)
 
+        # Update personal account slug if username changes
+        if self.has_field_changed('username'):
+            account = self.account
+            account.slug = self.username
+            account.save()
+
         return super(User, self).post_save(created, *args, **kwargs)
 
     def has_perm(self, perm, obj=None):

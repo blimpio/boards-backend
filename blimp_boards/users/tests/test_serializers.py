@@ -881,6 +881,45 @@ class UserSettingsSerializerTestCase(BaseTestCase):
 
         self.assertEqual(serializer.data, expected_data)
 
+    def test_serializer_save_should_update_personal_account_slug(self):
+        """
+        Tests that serializer should update personal account slug
+        if username changes.
+        """
+
+        self.create_user()
+        self.create_account()
+
+        data = {
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'username': 'changed_username',
+            'email': self.user.email,
+        }
+
+        serializer = self.serializer_class(data=data, instance=self.user)
+        serializer.is_valid()
+        serializer.save()
+
+        expected_data = {
+            'id': self.user.id,
+            'username': data['username'],
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'email': self.user.email,
+            'avatar_path': '',
+            'gravatar_url': self.user.gravatar_url,
+            'timezone': 'UTC',
+            'date_created': self.user.date_created,
+            'date_modified': self.user.date_modified,
+            'token': self.user.token
+        }
+
+        account = self.user.account_set.all()[0]
+
+        self.assertEqual(serializer.data, expected_data)
+        self.assertEqual(account.slug, data['username'])
+
 
 class ChangePasswordSerializerTestCase(BaseTestCase):
     def setUp(self):

@@ -333,6 +333,7 @@ class UserSettingsSerializer(serializers.ModelSerializer):
 
     def validate_username(self, attrs, source):
         username = attrs[source].lower()
+        attrs[source] = username
         user = self.object
 
         if is_valid_email(username):

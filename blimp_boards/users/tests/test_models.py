@@ -68,3 +68,16 @@ class UserModelTestCase(BaseTestCase):
         self.user.save()
 
         self.assertFalse(gravatar_url == self.user.gravatar_url)
+
+    def test_user_update_username_updates_account_slug(self):
+        """
+        Tests that updating username updates personal account slug.
+        """
+        self.create_account()
+
+        self.user.username = 'changed_username'
+        self.user.save()
+
+        account = self.user.account_set.all()[0]
+
+        self.assertEqual(account.slug, self.user.username)
