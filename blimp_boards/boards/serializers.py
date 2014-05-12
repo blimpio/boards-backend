@@ -62,7 +62,7 @@ class BoardCollaboratorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BoardCollaborator
-        read_only_fields = ('board', 'created_by')
+        read_only_fields = ('board', 'created_by', 'modified_by',)
         fields = ('id', 'board', 'user', 'invited_user', 'permission',
                   'email', 'user_data', 'date_created', 'date_modified',)
 
@@ -118,12 +118,15 @@ class BoardCollaboratorSerializer(serializers.ModelSerializer):
     def save_object(self, obj, **kwargs):
         created = bool(obj.pk)
         board = self.context.get('board')
+        user = self.context['request'].user
 
         if not created and board:
             obj.board = board
 
         if not created:
-            obj.created_by = self.context['request'].user
+            obj.created_by = user
+
+        obj.modified_by = user
 
         super(BoardCollaboratorSerializer, self).save_object(obj, **kwargs)
 

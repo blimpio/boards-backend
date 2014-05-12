@@ -136,6 +136,17 @@ class BoardCollaboratorViewSet(BulkCreateModelMixin,
     serializer_class = BoardCollaboratorSerializer
     permission_classes = (BoardCollaboratorPermission, )
 
+    def pre_delete(self, obj):
+        """
+        Set modified_by before deleting board.
+        """
+        obj.set_announce(False)
+
+        obj.modified_by = self.request.user
+        obj.save()
+
+        obj.set_announce(True)
+
 
 class BoardCollaboratorRequestViewSet(CreateListRetrieveViewSet):
     model = BoardCollaboratorRequest

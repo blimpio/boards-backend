@@ -96,7 +96,7 @@ class BoardCollaboratorTestCase(BaseTestCase):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(BoardCollaborator._meta.fields), 8)
+        self.assertEqual(len(BoardCollaborator._meta.fields), 9)
 
     def test_user_or_invited_user_must_be_set_before_creating(self):
         """
@@ -105,7 +105,8 @@ class BoardCollaboratorTestCase(BaseTestCase):
         """
         with self.assertRaises(ValidationError):
             BoardCollaborator.objects.create(
-                board=self.board
+                board=self.board,
+                created_by=self.user
             )
 
     def test_setting_user_and_invited_user_should_raise_error(self):
@@ -131,7 +132,8 @@ class BoardCollaboratorTestCase(BaseTestCase):
             BoardCollaborator.objects.create(
                 board=self.board,
                 user=user,
-                invited_user=invited_user
+                invited_user=invited_user,
+                created_by=self.user
             )
 
     def test_delete_board_should_cascade(self):

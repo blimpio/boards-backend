@@ -150,15 +150,19 @@ class BoardCollaborator(BaseModel):
 
     board = models.ForeignKey('boards.Board')
     user = models.ForeignKey('users.User', blank=True, null=True)
-    invited_user = models.ForeignKey('invitations.InvitedUser',
-                                     blank=True, null=True)
+    invited_user = models.ForeignKey(
+        'invitations.InvitedUser', blank=True, null=True)
 
     created_by = models.ForeignKey(
         'users.User', related_name='%(class)s_created_by')
 
+    modified_by = models.ForeignKey(
+        'users.User', related_name='%(class)s_modified_by')
+
     permission = models.CharField(max_length=5, choices=PERMISSION_CHOICES)
 
     class Meta:
+        announce = True
         unique_together = (
             ('board', 'user'),
             ('board', 'invited_user'),
@@ -166,6 +170,15 @@ class BoardCollaborator(BaseModel):
 
     def __str__(self):
         return str(self.user) if self.user else str(self.invited_user)
+
+    @cached_property
+    def announce_room(self):
+        return 'a{}'.format(self.board.account_id)
+
+    @cached_property
+    def serializer(self):
+        from .serializers import BoardCollaboratorSerializer
+        return BoardCollaboratorSerializer(self)
 
     @property
     def email(self):
@@ -185,6 +198,9 @@ class BoardCollaborator(BaseModel):
             # Make sure BoardCollaborator has an AccountCollaborator
             AccountCollaborator.objects.get_or_create(
                 user=self.user, account=self.board.account)
+
+        if not self.pk and not self.modified_by_id:
+            self.modified_by = self.created_by
 
         self.full_clean()
 
