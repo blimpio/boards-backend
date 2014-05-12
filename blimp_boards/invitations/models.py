@@ -101,9 +101,9 @@ class InvitedUser(BaseModel):
     @property
     def invite_url(self):
         if self.user_id:
-            url = reverse('auth-signup')
-        else:
             url = reverse('auth-signin')
+        else:
+            url = reverse('auth-signup')
 
         return '{}?invite={}'.format(url, self.token)
 
