@@ -1,3 +1,5 @@
+import operator
+
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 
@@ -114,9 +116,20 @@ class AccountViewSet(ListRetrieveUpdateViewSet):
              Q(target_object_id__in=board_ids)) |
             (Q(target_content_type=card_type) &
              Q(target_object_id__in=card_ids))
+        ).order_by().distinct(
+            'target_content_type', 'target_object_id',
+            'action_object_content_type', 'action_object_object_id',
+            'actor_content_type', 'actor_object_id',
+            'verb', 'description'
         )
 
-        page = self.paginate_queryset(notifications)
+        sorted_notifications = sorted(
+            notifications,
+            key=operator.attrgetter('date_created'),
+            reverse=True
+        )
+
+        page = self.paginate_queryset(sorted_notifications)
 
         context = {
             'request': request
