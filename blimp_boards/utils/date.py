@@ -48,4 +48,4 @@ def timesince(d):
             count = round((delta_midnight.days + 1) / chunk, 0)
             break
 
-    return '{} {} ago'.format(count, name(count))
+    return '{} {} ago'.format(int(count), name(count))
