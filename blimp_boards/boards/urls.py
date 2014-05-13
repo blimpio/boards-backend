@@ -19,9 +19,5 @@ urlpatterns = patterns(
     # Prefix
     '',
 
-    url(r'^(?P<account_slug>[-\w]+)/(?P<board_slug>[-\w]+)/',
-        views.BoardHTMLView.as_view(), name='board_detail'),
-
-    url(r'^(?P<account_slug>[-\w]+)/(?P<board_slug>[-\w]+)/(?P<card_slug>[-\w]+)/',
-        views.BoardHTMLView.as_view(), name='card_detail')
+    url(r'', views.BoardHTMLView.as_view(), name='board_detail')
 )

@@ -1,7 +1,11 @@
+from django.shortcuts import redirect
+from django.http import HttpResponse, Http404
+
 from rest_framework import filters, status, permissions
 from rest_framework.decorators import action, link
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
+from rest_framework.views import APIView
 
 from ..utils.viewsets import ModelViewSet
 from ..utils.response import ErrorResponse
@@ -123,3 +127,40 @@ class CardViewSet(ModelViewSet):
         }
 
         return Response(data)
+
+
+class CardDownloadHTMLView(APIView):
+    authentication_classes = ()
+    permission_classes = ()
+
+    def get(self, request, *args, **kwargs):
+        account_slug = kwargs['account_slug']
+        board_slug = kwargs['board_slug']
+        card_slug = kwargs['card_slug']
+
+        token = request.QUERY_PARAMS.get('token')
+
+        if not token:
+            raise Http404
+
+        try:
+            card = Card.objects.get_from_download_token(
+                token, slug=card_slug, board__slug=board_slug,
+                board__account__slug=account_slug)
+        except Card.DoesNotExist:
+            raise Http404
+
+        if card.type == 'file':
+            return redirect(card.file_download_url)
+
+        if card.type == 'note':
+            response = HttpResponse(card.content, content_type='text/plain')
+
+            disposition = 'attachment; filename="{}"'.format(card.name)
+
+            response['Content-Disposition'] = disposition
+            response['Content-Length'] = len(card.content)
+
+            return response
+
+        raise Http404

@@ -1,4 +1,6 @@
+import jwt
 import positions
+import datetime
 
 from django.db import models
 from django.dispatch import receiver
@@ -10,6 +12,7 @@ from django.db.models.loading import get_model
 from django.db.models.signals import m2m_changed
 from django.utils.functional import cached_property
 from django.contrib.contenttypes.models import ContentType
+from django.utils.timezone import now
 
 from jsonfield import JSONField
 from rest_framework.utils.encoders import JSONEncoder
@@ -21,6 +24,7 @@ from ..notifications.signals import notify
 from ..files.previews import queue_previews
 from ..files.utils import sign_s3_url
 from .constants import CARD_RESERVED_KEYWORDS
+from .managers import CardManager
 
 
 @autoconnect
@@ -68,6 +72,8 @@ class Card(BaseModel):
 
     comments = generic.GenericRelation('comments.Comment')
 
+    objects = CardManager()
+
     class Meta:
         announce = True
         ordering = ['position']
@@ -100,6 +106,29 @@ class Card(BaseModel):
 
     @property
     def download_url(self):
+        expire_in = settings.AWS_SIGNATURE_EXPIRES_IN
+
+        payload = {
+            'type': 'CardDownload',
+            'id': self.id,
+            'exp': now() + datetime.timedelta(seconds=expire_in)
+        }
+
+        jwt_token = jwt.encode(payload, settings.SECRET_KEY)
+
+        absolute_url = reverse('card_download', kwargs={
+            'account_slug': self.board.account.slug,
+            'board_slug': self.board.slug,
+            'card_slug': self.slug})
+
+        return '{}{}?token={}'.format(
+            settings.APPLICATION_URL,
+            absolute_url,
+            jwt_token.decode('utf-8')
+        )
+
+    @property
+    def file_download_url(self):
         if self.type == 'file':
             headers = {
                 'response-content-disposition': 'attachment'

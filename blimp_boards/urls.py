@@ -26,7 +26,11 @@ urlpatterns = patterns(
 
     (r'', include('blimp_boards.accounts.urls')),
 
-    (r'', include('blimp_boards.boards.urls')),
+    (r'(?P<account_slug>[-\w]+)/(?P<board_slug>[-\w]+)/',
+     include('blimp_boards.cards.urls')),
+
+    (r'(?P<account_slug>[-\w]+)/(?P<board_slug>[-\w]+)/',
+     include('blimp_boards.boards.urls')),
 
     # Catch all URL
     (r'^($|.*/$)', index_view),
