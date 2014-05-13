@@ -269,9 +269,7 @@ class Card(BaseModel):
         )
 
     def notify_comment_created(self, user, comment):
-        User = get_model('users', 'User')
-        recipients = User.objects.filter(
-            boardcollaborator__board__id=self.board_id).exclude(id=user.id)
+        recipients = []
 
         actor = user
         recipients = recipients
