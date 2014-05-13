@@ -27,6 +27,8 @@ class Board(BaseModel):
 
     is_shared = models.BooleanField(default=False)
 
+    color = models.CharField(max_length=255, blank=True)
+
     thumbnail_sm_path = models.TextField(blank=True)
     thumbnail_md_path = models.TextField(blank=True)
     thumbnail_lg_path = models.TextField(blank=True)

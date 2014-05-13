@@ -16,7 +16,8 @@ class BoardSerializerTestCase(BaseTestCase):
         self.serializer_class = BoardSerializer
         self.data = {
             'name': 'My Board',
-            'account': self.account.id
+            'account': self.account.id,
+            'color': 'red'
         }
 
         self.factory = APIRequestFactory()
@@ -34,7 +35,8 @@ class BoardSerializerTestCase(BaseTestCase):
             'is_shared': False,
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',
-            'thumbnail_lg_path': ''
+            'thumbnail_lg_path': '',
+            'color': ''
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -49,6 +51,7 @@ class BoardSerializerTestCase(BaseTestCase):
         expected_errors = {
             'account': ['This field is required.'],
             'name': ['This field is required.'],
+            'color': ['This field is required.'],
         }
 
         self.assertEqual(serializer.errors, expected_errors)
@@ -126,6 +129,7 @@ class BoardSerializerTestCase(BaseTestCase):
             'name': self.data['name'],
             'slug': serializer.object.slug,
             'account': self.account.id,
+            'color': self.data['color'],
             'is_shared': False,
             'thumbnail_sm_path': '',
             'thumbnail_md_path': '',

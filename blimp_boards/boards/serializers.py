@@ -10,6 +10,7 @@ from .models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
 class BoardSerializer(serializers.ModelSerializer):
+    color = serializers.CharField()
     created_by = serializers.PrimaryKeyRelatedField(read_only=True)
     modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
 

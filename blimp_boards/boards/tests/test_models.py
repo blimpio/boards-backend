@@ -19,7 +19,7 @@ class BoardTestCase(BaseTestCase):
         """
         Tests the expected number of fields in model.
         """
-        self.assertEqual(len(Board._meta.fields), 12)
+        self.assertEqual(len(Board._meta.fields), 13)
 
     def test_is_user_collaborator_should_return_true_if_exists(self):
         """

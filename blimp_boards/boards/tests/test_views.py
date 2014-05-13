@@ -50,6 +50,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': '',
             'html_url': self.board.html_url,
             'activity_html_url': self.board.activity_html_url,
+            'color': '',
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -112,6 +113,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': '',
             'html_url': self.board.html_url,
             'activity_html_url': self.board.activity_html_url,
+            'color': '',
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -143,7 +145,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         """
         data = {
             'name': 'New Board Name',
-            'account': self.account.id
+            'account': self.account.id,
+            'color': 'red'
         }
 
         response = self.client.post(self.base_url, data, format='json')
@@ -165,6 +168,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': '',
             'html_url': board.html_url,
             'activity_html_url': board.activity_html_url,
+            'color': 'red',
         }
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -177,7 +181,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         data = {
             'name': 'New Board Name',
             'slug': 'the-board',
-            'account': self.account.id
+            'account': self.account.id,
+            'color': 'red',
         }
 
         response = self.client.put(
@@ -200,6 +205,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': '',
             'html_url': self.board.html_url,
             'activity_html_url': self.board.activity_html_url,
+            'color': 'red',
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -222,7 +228,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         data = {
             'name': 'New Board Name',
             'slug': 'the-board',
-            'account': self.account.id
+            'account': self.account.id,
+            'color': 'red'
         }
 
         response = self.client.patch(
@@ -245,6 +252,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': '',
             'html_url': self.board.html_url,
             'activity_html_url': self.board.activity_html_url,
+            'color': 'red',
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -276,6 +284,7 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': '',
             'html_url': self.board.html_url,
             'activity_html_url': self.board.activity_html_url,
+            'color': '',
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
