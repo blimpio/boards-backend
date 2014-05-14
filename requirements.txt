@@ -22,7 +22,7 @@ gunicorn==18.0
 jsonfield==0.9.20
 mock==1.0.1
 newrelic==2.18.1.15
-psycopg2==2.5.2
+psycopg2==2.5.3
 py==1.4.20
 pycrypto==2.6.1
 pystache==0.5.3
