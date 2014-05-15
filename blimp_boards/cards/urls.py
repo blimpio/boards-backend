@@ -16,9 +16,9 @@ urlpatterns = patterns(
     # Prefix
     '',
 
-    url(r'(?P<card_slug>[-\w]+)/download/$',
-        views.CardDownloadHTMLView.as_view(), name='card_download'),
-
-    url(r'(?P<card_slug>[-\w]+)/$',
+    url(r'^$',
         BoardHTMLView.as_view(), name='card_detail'),
+
+    url(r'^download/$',
+        views.CardDownloadHTMLView.as_view(), name='card_download'),
 )

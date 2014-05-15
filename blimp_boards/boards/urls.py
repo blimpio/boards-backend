@@ -19,5 +19,5 @@ urlpatterns = patterns(
     # Prefix
     '',
 
-    url(r'', views.BoardHTMLView.as_view(), name='board_detail')
+    url(r'^$', views.BoardHTMLView.as_view(), name='board_detail')
 )

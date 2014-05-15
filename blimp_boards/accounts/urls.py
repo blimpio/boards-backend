@@ -27,12 +27,12 @@ urlpatterns = patterns(
     # Prefix
     '',
 
-    url(r'$',
+    url(r'^$',
         views.AccountHTMLView.as_view(), name='account_detail'),
 
-    url(r'activity/$',
+    url(r'^activity/$',
         views.AccountHTMLView.as_view(), name='account_activity'),
 
-    url(r'activity/(?P<board_slug>[-\w]+)/$',
+    url(r'^activity/(?P<board_slug>[-\w]+)/$',
         views.AccountHTMLView.as_view(), name='account_board_activity'),
 )
