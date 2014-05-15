@@ -1,4 +1,6 @@
 from django.test import TestCase
+from django.conf import settings
+
 from rest_framework.test import APIClient
 
 from ...users.models import User
@@ -49,9 +51,23 @@ class BaseTestCase(TestCase):
         self.account_owner = AccountCollaborator.objects.create_owner(
             account=self.account, user=self.user)
 
+    def create_another_account(self, name='Example.com', user=None):
+        if not user and self.user:
+            user = self.user
+
+        account = Account.personals.create(
+            name=name, created_by=user)
+
+        account_owner = AccountCollaborator.objects.create_owner(
+            account=account, user=user)
+
+        return account, account_owner
+
     def create_board(self):
         self.board = Board.objects.create(
             name='The Board', account=self.account, created_by=self.user)
+
+        settings.BOARDS_DEMO_BOARD_ID = self.board.id
 
         self.board_collaborator = BoardCollaborator.objects.get(
             user=self.user, board=self.board)
@@ -61,11 +77,35 @@ class BaseTestCase(TestCase):
             name='The Card', type='note', content='abc123',
             board=self.board, created_by=self.user)
 
+    def create_anoter_card(self, name, board=None, created_by=None):
+        if not board and self.board:
+            board = self.board
+
+        if not created_by and self.user:
+            created_by = self.user
+
+        return Card.objects.create(
+            name=name, type='note', content='abc123',
+            board=board, created_by=created_by)
+
     def create_comment(self):
         self.comment = Comment.objects.create(
             content='A comment',
             content_object=self.card,
             created_by=self.user
+        )
+
+    def create_another_comment(self, content, obj=None, created_by=None):
+        if not obj:
+            obj = self.card
+
+        if not created_by:
+            created_by = self.user
+
+        return Comment.objects.create(
+            content=content,
+            content_object=obj,
+            created_by=created_by
         )
 
 

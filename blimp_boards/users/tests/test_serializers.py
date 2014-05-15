@@ -82,17 +82,9 @@ class ValidateUsernameSerializerTestCase(BaseTestCase):
 
 class SignupSerializerTestCase(BaseTestCase):
     def setUp(self):
-        self.username = 'jpueblo'
-        self.password = 'abc123'
-        self.email = 'jpueblo@example.com'
-
-        self.user = User.objects.create_user(
-            username=self.username,
-            email='jpueblo@example.com',
-            password=self.password,
-            first_name='Juan',
-            last_name='Pueblo'
-        )
+        self.create_user()
+        self.create_account()
+        self.create_board()
 
         self.signup_request = SignupRequest.objects.create(
             email='juan@example.com')
@@ -270,23 +262,22 @@ class SignupSerializerTestCase(BaseTestCase):
 
         self.assertFalse(signup_request.exists())
 
+    def test_signup_should_create_demo_board(self):
+        """
+        Tests that serializer.signup() should create demo board.
+        """
+        serializer = SignupSerializer(data=self.data)
+        serializer.is_valid()
+        user = User.objects.get(username=self.data['username'])
+
+        self.assertEqual(user.account.boards.count(), 1)
+
 
 class SignupInvitedUserSerializerTestCase(BaseTestCase):
     def setUp(self):
-        self.username = 'jpueblo'
-        self.password = 'abc123'
-        self.email = 'jpueblo@example.com'
-
-        self.user = User.objects.create_user(
-            username=self.username,
-            email='jpueblo@example.com',
-            password=self.password,
-            first_name='Juan',
-            last_name='Pueblo'
-        )
-
-        self.account = Account.personals.create(
-            name='Acme', created_by=self.user)
+        self.create_user()
+        self.create_account()
+        self.create_board()
 
         self.invited_user = InvitedUser.objects.create(
             first_name='Roberto', last_name='Pueblo',
@@ -360,6 +351,16 @@ class SignupInvitedUserSerializerTestCase(BaseTestCase):
         serializer.is_valid()
 
         self.assertTrue('token' in serializer.object)
+
+    def test_signup_should_create_demo_board(self):
+        """
+        Tests that serializer.signup() should create demo board.
+        """
+        serializer = SignupInvitedUserSerializer(data=self.data)
+        serializer.is_valid()
+        user = User.objects.get(username=self.data['username'])
+
+        self.assertEqual(user.account.boards.count(), 1)
 
 
 class SigninSerializerTestCase(BaseTestCase):

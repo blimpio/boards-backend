@@ -182,6 +182,7 @@ class Common(Configuration):
     BOARDS_SOCKETS_REDIS_URL = values.Value(environ_prefix=None)
 
     BOARDS_API_VERSION = 'v1'
+    BOARDS_DEMO_BOARD_ID = values.Value(environ_prefix=None)
 
     @property
     def APPLICATION_URL(self):

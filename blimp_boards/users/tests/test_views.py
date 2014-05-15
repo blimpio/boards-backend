@@ -81,6 +81,10 @@ class SignupAPIViewTestCase(BaseTestCase):
     def setUp(self):
         self.client = APIClient()
 
+        self.create_user()
+        self.create_account()
+        self.create_board()
+
         self.email = 'juan@example.com'
 
         self.signup_request = SignupRequest.objects.create(email=self.email)
@@ -90,6 +94,7 @@ class SignupAPIViewTestCase(BaseTestCase):
         Tests that POST request with valid data to endpoint
         returns expected data.
         """
+
         data = {
             'full_name': 'Juan Pueblo',
             'email': self.email,
@@ -191,20 +196,12 @@ class SignupAPIViewTestCase(BaseTestCase):
         Tests that POST request with an valid invited_user_token
         returns a token.
         """
-        user = User.objects.create_user(
-            username='jpueblo',
-            email='jpueblo@example.com',
-            password='abc123',
-            first_name='Juan',
-            last_name='Pueblo'
-        )
-
-        account = Account.personals.create(name='Acme', created_by=user)
+        account = Account.personals.create(name='Acme', created_by=self.user)
 
         invited_user = InvitedUser.objects.create(
             first_name='Roberto', last_name='Pueblo',
             email='rpueblo@example.com', account=account,
-            created_by=user
+            created_by=self.user
         )
 
         data = {
@@ -216,7 +213,7 @@ class SignupAPIViewTestCase(BaseTestCase):
             'invited_user_token': invited_user.token
         }
 
-        response = self.client.post('/api/v1/auth/signup/', data, format='json')
+        response = self.client.post('/api/v1/auth/signup/', data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue('token' in response.data)

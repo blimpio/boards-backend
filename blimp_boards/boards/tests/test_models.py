@@ -85,6 +85,37 @@ class BoardTestCase(BaseTestCase):
 
         self.assertEqual(collaborators.count(), 2)
 
+    def test_clone_board(self):
+        """
+        Tests that cloaning a board, clones its cards and comments into
+        the specified account using the specified user for User FKs.
+        """
+        user = self.create_another_user()
+        account, owner = self.create_another_account()
+
+        for i in range(5):
+            card = self.create_anoter_card('Card {}'.format(i))
+
+        comments = []
+
+        for i in range(2):
+            comments.append(self.create_another_comment(
+                'Comment {}'.format(i), obj=card))
+
+        with self.assertNumQueries(88):
+            cloned_board = self.board.clone(account, user)
+
+        cloned_cards = cloned_board.card_set.all()
+        cloned_comments = []
+
+        for card in cloned_cards:
+            cloned_comments.extend(list(card.comments.all()))
+
+        self.assertNotEqual(cloned_board.id, self.board.id)
+        self.assertNotEqual(cloned_board.date_created, self.board.date_created)
+        self.assertEqual(len(cloned_cards), self.board.card_set.count())
+        self.assertEqual(len(cloned_comments), len(comments))
+
 
 class BoardCollaboratorTestCase(BaseTestCase):
     def setUp(self):

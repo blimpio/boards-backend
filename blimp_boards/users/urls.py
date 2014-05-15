@@ -27,6 +27,11 @@ urlpatterns = patterns(
         views.SigninValidateTokenHTMLView.as_view(),
         name='auth-signin'),
 
+    url(r'signout/$',
+        'django.contrib.auth.views.logout',
+        {'next_page': '/signin/'},
+        name='auth-signout'),
+
     url(r'signup/',
         views.SignupValidateTokenHTMLView.as_view(),
         name='auth-signup'),

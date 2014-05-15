@@ -24,12 +24,12 @@ urlpatterns = patterns(
 
     (r'', include('blimp_boards.users.urls')),
 
-    (r'', include('blimp_boards.accounts.urls')),
+    (r'^(?P<account_slug>[-\w]+)/', include('blimp_boards.accounts.urls')),
 
-    (r'(?P<account_slug>[-\w]+)/(?P<board_slug>[-\w]+)/',
+    (r'^(?P<account_slug>[-\w]+)/(?P<board_slug>[-\w]+)/',
      include('blimp_boards.cards.urls')),
 
-    (r'(?P<account_slug>[-\w]+)/(?P<board_slug>[-\w]+)/',
+    (r'^(?P<account_slug>[-\w]+)/(?P<board_slug>[-\w]+)/',
      include('blimp_boards.boards.urls')),
 
     # Catch all URL

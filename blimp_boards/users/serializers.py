@@ -7,6 +7,7 @@ from ..utils.serializers import DynamicFieldsModelSerializer
 from ..utils.validators import is_valid_email
 from ..accounts.models import Account, AccountCollaborator
 from ..accounts.serializers import AccountSerializer
+from ..boards.models import Board
 from ..invitations.models import SignupRequest, InvitedUser
 from .models import User
 
@@ -129,6 +130,9 @@ class SignupSerializer(serializers.Serializer):
 
         self.signup_request.delete()
 
+        # Create Demo Board
+        Board.create_demo_board(account, user)
+
         return UserSerializer(user).data
 
 
@@ -166,6 +170,9 @@ class SignupInvitedUserSerializer(SignupSerializer):
         self.create_account_owner(account, user)
 
         self.invited_user.accept(user)
+
+        # Create Demo Board
+        Board.create_demo_board(account, user)
 
         return UserSerializer(user).data
 

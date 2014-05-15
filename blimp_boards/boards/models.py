@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from django.db import models
 from django.db.models import Q
 from django.core.urlresolvers import reverse
@@ -5,12 +7,16 @@ from django.core.exceptions import ValidationError
 from django.db.models.loading import get_model
 from django.utils.functional import cached_property
 from django.conf import settings
+from django.utils.log import getLogger
 
 from ..utils.models import BaseModel
 from ..utils.fields import ReservedKeywordsAutoSlugField
 from ..utils.decorators import autoconnect
 from ..notifications.signals import notify
 from .constants import BOARD_RESERVED_KEYWORDS
+
+
+logger = getLogger(__name__)
 
 
 @autoconnect
@@ -93,7 +99,7 @@ class Board(BaseModel):
         Sets modified_by from created_by when creating.
         """
         if not self.pk and not self.modified_by_id:
-            self.modified_by = self.created_by
+            self.modified_by_id = self.created_by_id
 
         return super(Board, self).save(*args, **kwargs)
 
@@ -107,15 +113,15 @@ class Board(BaseModel):
             BoardCollaborator.objects.create(
                 board=self,
                 user=account_owner,
-                created_by=self.created_by,
+                created_by_id=self.created_by_id,
                 permission=BoardCollaborator.WRITE_PERMISSION
             )
 
             if account_owner != self.created_by:
                 BoardCollaborator.objects.create(
                     board=self,
-                    user=self.created_by,
-                    created_by=self.created_by,
+                    user_id=self.created_by_id,
+                    created_by_id=self.created_by_id,
                     permission=BoardCollaborator.WRITE_PERMISSION
                 )
 
@@ -138,6 +144,52 @@ class Board(BaseModel):
             collaborators = collaborators.filter(permission=write_permission)
 
         return collaborators.exists()
+
+    @classmethod
+    def create_demo_board(cls, account, user):
+        try:
+            board = Board.objects.get(pk=settings.BOARDS_DEMO_BOARD_ID)
+        except Exception as e:
+            logger.exception(e)
+            return None
+
+        return board.clone(account, user)
+
+    def clone(self, account, user):
+        """
+        Clones a board to another account using a given user for User FKs.
+        """
+        board = deepcopy(self)
+        cards = board.card_set.all()
+
+        board.pk = None
+        board.id = None
+        board.account = account
+        board.created_by_id = user.id
+        board.modified_by_id = user.id
+        board.set_revisions(False)
+        board.save()
+
+        for card in cards:
+            comments = card.comments.all()
+            card.pk = None
+            card.id = None
+            card.board = board
+            card.created_by = user
+            card.modified_by = user
+            card.set_revisions(False)
+            card.save()
+
+            for comment in comments:
+                comment.pk = None
+                comment.id = None
+                comment.content_object = card
+                comment.created_by = user
+                comment.modified_by = user
+                comment.set_revisions(False)
+                comment.save()
+
+        return board
 
 
 @autoconnect
@@ -199,10 +251,10 @@ class BoardCollaborator(BaseModel):
         if not self.pk and self.user_id:
             # Make sure BoardCollaborator has an AccountCollaborator
             AccountCollaborator.objects.get_or_create(
-                user=self.user, account=self.board.account)
+                user_id=self.user_id, account_id=self.board.account_id)
 
         if not self.pk and not self.modified_by_id:
-            self.modified_by = self.created_by
+            self.modified_by_id = self.created_by_id
 
         self.full_clean()
 
@@ -213,14 +265,14 @@ class BoardCollaborator(BaseModel):
         """
         Validates that either a user or an invited_user is set.
         """
-        if self.user and self.invited_user:
+        if self.user_id and self.invited_user_id:
             raise ValidationError(
                 'Both user and invited_user cannot be set together.')
-        elif not self.user and not self.invited_user:
+        elif not self.user_id and not self.invited_user_id:
             raise ValidationError('Either user or invited_user must be set.')
 
     def post_save(self, created, *args, **kwargs):
-        if created and self.user and self.user != self.created_by:
+        if created and self.user_id and self.user_id != self.created_by_id:
             self.notify_created()
 
         super(BoardCollaborator, self).post_save(created, *args, **kwargs)

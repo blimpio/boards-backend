@@ -55,8 +55,16 @@ class BaseModel(ModelDiffMixin, models.Model):
         """
         Group any changes to models into a revision.
         """
-        with transaction.atomic(), reversion.create_revision():
-            super(BaseModel, self).save(*args, **kwargs)
+        revisions = getattr(self._meta, 'revisions', True)
+
+        try:
+            if revisions:
+                with transaction.atomic(), reversion.create_revision():
+                    return super(BaseModel, self).save(*args, **kwargs)
+        except AttributeError:
+            pass
+
+        return super(BaseModel, self).save(*args, **kwargs)
 
     def to_dict(self):
         """
@@ -65,6 +73,12 @@ class BaseModel(ModelDiffMixin, models.Model):
         on the model or defaults to a generic ModelSerializer.
         """
         return self.serializer.data
+
+    def set_revisions(self, boolean):
+        """
+        Allow overriding to turn on/off Meta.revisions
+        """
+        self._meta.revisions = bool(boolean)
 
     def set_announce(self, boolean):
         """

@@ -143,7 +143,7 @@ class Card(BaseModel):
         from created_by when creating.
         """
         if not self.pk and not self.modified_by_id:
-            self.modified_by = self.created_by
+            self.modified_by_id = self.created_by_id
 
         self.full_clean()
 

@@ -76,6 +76,16 @@ class DateTimeCreatedField(models.DateTimeField):
     def get_internal_type(self):
         return "DateTimeField"
 
+    def pre_save(self, model, add):
+        if not model.pk:
+            value = now()
+
+            setattr(model, self.attname, value)
+
+            return value
+
+        return super(DateTimeCreatedField, self).pre_save(model, add)
+
     def south_field_triple(self):
         """
         Returns a suitable description of this field for South.
