@@ -220,7 +220,7 @@ class BoardHTMLView(APIView):
             collaborator_users = BoardCollaborator.objects.filter(
                 board_id=board.id, user__isnull=False
             ).values_list('user', flat=True)
-        print(board.is_shared)
+
         data = {
             'board': board,
             'collaborator_users': collaborator_users
