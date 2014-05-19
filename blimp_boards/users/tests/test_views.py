@@ -640,7 +640,8 @@ class UserSettingsAPIViewTestCase(AuthenticatedAPITestCase):
             'timezone': 'UTC',
             'date_created': self.user.date_created,
             'date_modified': self.user.date_modified,
-            'token': self.user.token
+            'token': self.user.token,
+            'email_notifications': True,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -685,7 +686,8 @@ class UserSettingsAPIViewTestCase(AuthenticatedAPITestCase):
             'timezone': 'UTC',
             'date_created': self.user.date_created,
             'date_modified': self.user.date_modified,
-            'token': self.user.token
+            'token': self.user.token,
+            'email_notifications': True,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -744,7 +746,8 @@ class ChangePasswordAPIViewTestCase(AuthenticatedAPITestCase):
             'timezone': 'UTC',
             'date_created': self.user.date_created,
             'date_modified': self.user.date_modified,
-            'token': self.user.token
+            'token': self.user.token,
+            'email_notifications': True,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -322,8 +322,9 @@ class UserSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
-                  'avatar_path', 'gravatar_url',
-                  'timezone', 'date_created', 'date_modified', 'token', )
+                  'avatar_path', 'gravatar_url', 'timezone',
+                  'email_notifications', 'token',
+                  'date_created', 'date_modified', )
 
     def validate_email(self, attrs, source):
         email = attrs[source].lower()

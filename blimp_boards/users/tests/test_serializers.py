@@ -735,7 +735,8 @@ class UserSettingsSerializerTestCase(BaseTestCase):
             'email': '',
             'avatar_path': '',
             'gravatar_url': '',
-            'timezone': ''
+            'timezone': '',
+            'email_notifications': False,
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -774,7 +775,8 @@ class UserSettingsSerializerTestCase(BaseTestCase):
             'timezone': 'UTC',
             'date_created': self.user.date_created,
             'date_modified': self.user.date_modified,
-            'token': self.user.token
+            'token': self.user.token,
+            'email_notifications': True,
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -877,7 +879,8 @@ class UserSettingsSerializerTestCase(BaseTestCase):
             'timezone': 'UTC',
             'date_created': self.user.date_created,
             'date_modified': self.user.date_modified,
-            'token': self.user.token
+            'token': self.user.token,
+            'email_notifications': True,
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -913,7 +916,8 @@ class UserSettingsSerializerTestCase(BaseTestCase):
             'timezone': 'UTC',
             'date_created': self.user.date_created,
             'date_modified': self.user.date_modified,
-            'token': self.user.token
+            'token': self.user.token,
+            'email_notifications': True,
         }
 
         account = self.user.account_set.all()[0]

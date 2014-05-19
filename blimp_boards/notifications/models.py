@@ -79,6 +79,18 @@ class NotificationSetting(BaseModel):
 
         return NotificationSetting.objects.bulk_create(settings)
 
+    @classmethod
+    def toggle_user_settings(cls, user, send):
+        toggable = []
+
+        for notification_type in NOTIFICATION_TYPES:
+            if notification_type['toggable'] and notification_type['email']:
+                toggable.append(notification_type['label'])
+
+        NotificationSetting.objects.filter(
+            medium='email', user=user, notification_type__in=toggable
+        ).update(send=send)
+
 
 class Notification(BaseModel):
     """

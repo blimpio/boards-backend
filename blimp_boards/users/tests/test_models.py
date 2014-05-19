@@ -19,8 +19,7 @@ class UserModelTestCase(BaseTestCase):
         """
         Tests the expected number of fields in custom User model.
         """
-        expected_fields = 18
-        self.assertEqual(len(self.user._meta.fields), expected_fields)
+        self.assertEqual(len(self.user._meta.fields), 19)
 
     def test_get_full_name_should_concatenate_names(self):
         """
@@ -81,3 +80,18 @@ class UserModelTestCase(BaseTestCase):
         account = self.user.account_set.all()[0]
 
         self.assertEqual(account.slug, self.user.username)
+
+    def test_user_update_email_notifications_updates_settings(self):
+        """
+        Tests that updating email_notifcations toggles user's email
+        notification settings.
+        """
+
+        old_settings = self.user.notification_settings.filter(send=True)
+
+        self.user.email_notifications = False
+        self.user.save()
+
+        new_settings = self.user.notification_settings.filter(send=True)
+
+        self.assertNotEqual(old_settings, new_settings)

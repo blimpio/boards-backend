@@ -87,6 +87,8 @@ class User(BaseModel, AbstractBaseUser):
     timezone = models.CharField(
         max_length=255, default='UTC', choices=PRETTY_TIMEZONE_CHOICES)
 
+    email_notifications = models.BooleanField(default=True)
+
     token_version = models.CharField(
         max_length=36, default=str(uuid.uuid4()), unique=True, db_index=True)
 
@@ -126,6 +128,11 @@ class User(BaseModel, AbstractBaseUser):
             account = self.account
             account.slug = self.username
             account.save()
+
+        # Toggle notifications
+        if self.has_field_changed('email_notifications'):
+            NotificationSetting.toggle_user_settings(
+                user=self, send=self.email_notifications)
 
         return super(User, self).post_save(created, *args, **kwargs)
 
@@ -217,6 +224,13 @@ class User(BaseModel, AbstractBaseUser):
         Card = get_model('cards', 'Card')
 
         return Card.objects.filter(board__in=self.boards)
+
+    @property
+    def notification_settings(self):
+        """
+        Returns a list of all of the user's email notification settings.
+        """
+        return NotificationSetting.objects.filter(user=self, medium='email')
 
     @property
     def full_name(self):
