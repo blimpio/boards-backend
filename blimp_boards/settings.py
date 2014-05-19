@@ -184,6 +184,8 @@ class Common(Configuration):
     BOARDS_API_VERSION = 'v1'
     BOARDS_DEMO_BOARD_ID = values.Value(environ_prefix=None)
 
+    CAMO_URL = values.Value(environ_prefix=None)
+
     @property
     def APPLICATION_URL(self):
         return '{}://{}'.format(self.HTTP_PROTOCOL, self.DOMAIN)

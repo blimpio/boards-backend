@@ -37,7 +37,7 @@
     <script>
       window.App = {
         API_URL: "{{ settings.BOARDS_API_URL }}",
-        CAMO_URL: "http://localhost:8081/",
+        CAMO_URL: "{{ settings.CAMO_URL }}",
         STATIC_URL: "{% boards_web_static %}",
         SOCKETS_URL: "{{ settings.BOARDS_SOCKETS_URL }}",
         {% if board.is_shared %}
