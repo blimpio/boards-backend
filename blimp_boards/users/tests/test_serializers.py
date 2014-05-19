@@ -714,7 +714,9 @@ class UserSerializerTestCase(BaseTestCase):
         expected_keys = [
             'id', 'username', 'first_name', 'last_name', 'email',
             'avatar_path', 'gravatar_url', 'timezone',
-            'date_created', 'date_modified', 'token', 'accounts']
+            'email_notifications', 'token', 'accounts',
+            'date_created', 'date_modified'
+        ]
 
         self.assertEqual(data_keys, expected_keys)
 

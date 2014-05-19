@@ -296,7 +296,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
                   'avatar_path', 'gravatar_url', 'timezone',
-                  'date_created', 'date_modified', 'token', 'accounts', )
+                  'email_notifications', 'token', 'accounts',
+                  'date_created', 'date_modified', )
 
 
 class UserSimpleSerializer(DynamicFieldsModelSerializer):
