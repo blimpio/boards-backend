@@ -24,9 +24,9 @@ class NotificationBackend(BaseBackend):
         for opt in ('target', 'action_object'):
             obj = context.get(opt, None)
 
-            context[opt] = obj.serializer.data
-
             if obj is not None:
+                context[opt] = obj.serializer.data
+
                 setattr(notification, '{}_object_id'.format(opt), obj.pk)
                 setattr(notification, '{}_content_type'.format(opt),
                         ContentType.objects.get_for_model(obj))
