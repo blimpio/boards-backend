@@ -409,7 +409,7 @@ class SigninSerializerTestCase(BaseTestCase):
         is_valid = serializer.is_valid()
 
         expected_error = {
-            'non_field_errors': ['User account is disabled.']
+            'non_field_errors': ['Unable to login with provided credentials.']
         }
 
         self.assertFalse(is_valid)
@@ -483,7 +483,7 @@ class SigninInvitedUserSerializerTestCase(BaseTestCase):
         serializer.is_valid()
 
         expected_data = {
-            'non_field_errors': ['User account is disabled.']
+            'non_field_errors': ['Unable to login with provided credentials.']
         }
 
         self.assertEqual(serializer.errors, expected_data)

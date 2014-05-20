@@ -190,11 +190,7 @@ class SigninSerializer(serializers.Serializer):
 
         self.user = authenticate(username=username, password=password)
 
-        if self.user:
-            if not self.user.is_active:
-                msg = 'User account is disabled.'
-                raise serializers.ValidationError(msg)
-
+        if self.user and self.user.is_active:
             return UserSerializer(self.user).data
         else:
             msg = 'Unable to login with provided credentials.'
