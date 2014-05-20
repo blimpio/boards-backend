@@ -190,13 +190,13 @@ class Card(BaseModel):
             return sign_s3_url(field)
 
     def get_thumbnail_sm_path(self):
-        return self.get_signed_thumbnail('thumbnail_sm_path')
+        return self.get_signed_thumbnail('thumbnail_sm_path') or ''
 
     def get_thumbnail_md_path(self):
-        return self.get_signed_thumbnail('thumbnail_md_path')
+        return self.get_signed_thumbnail('thumbnail_md_path') or ''
 
     def get_thumbnail_lg_path(self):
-        return self.get_signed_thumbnail('thumbnail_lg_path')
+        return self.get_signed_thumbnail('thumbnail_lg_path') or ''
 
     def request_previews(self):
         url = sign_s3_url(self.content)
