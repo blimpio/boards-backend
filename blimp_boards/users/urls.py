@@ -17,6 +17,7 @@ api_urlpatterns = patterns(
 
     (r'users/me/$', views.UserSettingsAPIView.as_view()),
     (r'users/me/change_password/$', views.ChangePasswordAPIView.as_view()),
+    (r'users/me/cancel/$', views.CancelAccountAPIView.as_view()),
 )
 
 urlpatterns = patterns(

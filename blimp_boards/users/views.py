@@ -91,8 +91,8 @@ class ChangePasswordAPIView(generics.CreateAPIView):
     serializer_class = serializers.ChangePasswordSerializer
 
     def post(self, request):
-        serializer_class = serializers.ChangePasswordSerializer
-        serializer = serializer_class(data=request.DATA, instance=request.user)
+        serializer = self.serializer_class(
+            data=request.DATA, instance=request.user)
 
         if serializer.is_valid():
             data = serializers.UserSettingsSerializer(serializer.object).data
@@ -142,6 +142,21 @@ class UserAutoCompleteAPIView(generics.ListAPIView):
         queryset = super(UserAutoCompleteAPIView, self).filter_queryset(users)
 
         return queryset[:10]
+
+
+class CancelAccountAPIView(generics.CreateAPIView):
+    model = User
+    serializer_class = serializers.CancelAccountSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(
+            data=request.DATA, instance=request.user)
+
+        if serializer.is_valid():
+            self.object = serializer.save()
+            return Response(serializer.data)
+
+        return ErrorResponse(serializer.errors)
 
 
 class SigninValidateTokenHTMLView(APIView):

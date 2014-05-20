@@ -361,7 +361,7 @@ class UserSettingsSerializer(serializers.ModelSerializer):
 
 class ChangePasswordSerializer(serializers.ModelSerializer):
     """
-    Serializer that handles change pagssword in user settings endpoint.
+    Serializer that handles change password in user settings endpoint.
     """
     current_password = fields.PasswordField(write_only=True)
     password1 = fields.PasswordField(write_only=True)
@@ -399,3 +399,30 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
             return instance
 
         return User()
+
+
+class CancelAccountSerializer(serializers.ModelSerializer):
+    """
+    Serializer that handles cancel account in user settings endpoint.
+    """
+    current_password = fields.PasswordField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('current_password', )
+
+    def validate_current_password(self, attrs, source):
+        password = attrs[source]
+        user = self.object
+
+        if user and not user.check_password(password):
+            msg = 'Current password is invalid.'
+            raise serializers.ValidationError(msg)
+
+        del attrs[source]
+
+        return attrs
+
+    def save_object(self, obj, **kwargs):
+        obj.is_active = False
+        super(CancelAccountSerializer, self).save_object(obj, **kwargs)

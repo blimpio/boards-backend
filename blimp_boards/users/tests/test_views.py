@@ -778,3 +778,22 @@ class UserAutoCompleteAPIViewTestCase(AuthenticatedAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)
+
+
+class CancelAccountAPIViewTestCase(AuthenticatedAPITestCase):
+    def setUp(self):
+        super(CancelAccountAPIViewTestCase, self).setUp()
+
+        self.url = '/api/v1/users/me/cancel/'
+
+    def test_post_deactivates_user_account(self):
+        data = {
+            'current_password': self.password,
+        }
+
+        response = self.client.post(self.url, data)
+
+        user = User.objects.get(pk=self.user.pk)
+
+        self.assertFalse(user.is_active)
+        self.assertEqual(response.status_code, 200)
