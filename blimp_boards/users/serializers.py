@@ -363,7 +363,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
     """
     Serializer that handles change password in user settings endpoint.
     """
-    current_password = fields.PasswordField(write_only=True)
+    current_password = serializers.CharField(write_only=True)
     password1 = fields.PasswordField(write_only=True)
     password2 = fields.PasswordField(write_only=True)
 
@@ -405,7 +405,7 @@ class CancelAccountSerializer(serializers.ModelSerializer):
     """
     Serializer that handles cancel account in user settings endpoint.
     """
-    current_password = fields.PasswordField(write_only=True)
+    current_password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
