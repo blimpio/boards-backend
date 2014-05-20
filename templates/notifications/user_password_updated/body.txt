@@ -1,0 +1,8 @@
+Hi {{ recipient.short_name }},
+
+We wanted to let you know that your Blimp Boards password was changed.
+
+If you did not perform this action, please contact us: support@getblimp.com.
+
+Thanks,
+The Blimp Boards team

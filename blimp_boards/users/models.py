@@ -274,11 +274,13 @@ class User(BaseModel, AbstractBaseUser):
 
     def change_password(self, raw_password):
         """
-        Sets the user's password and changes token_version.
+        Sets the user's password, changes token_version, and notifies user.
         """
         self.set_password(raw_password)
         self.reset_token_version()
         self.save()
+
+        self.notify_password_updated()
 
     def reset_token_version(self):
         """
@@ -296,4 +298,17 @@ class User(BaseModel, AbstractBaseUser):
             recipients=recipients,
             label=label,
             override_backends=('email', )
+        )
+
+    def notify_password_updated(self):
+        user = self
+        label = 'user_password_updated'
+
+        actor = user
+        recipients = [user]
+
+        notify.send(
+            actor,
+            recipients=recipients,
+            label=label
         )

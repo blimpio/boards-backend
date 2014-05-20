@@ -74,6 +74,14 @@ NOTIFICATION_TYPES = [
         'notification': True,
         'toggable': True,
     },
+    {
+        'label': 'user_password_updated',
+        'display': _('Your password has changed'),
+        'description': _('password updated'),
+        'email': True,
+        'notification': False,
+        'toggable': False,
+    },
 ]
 
 
