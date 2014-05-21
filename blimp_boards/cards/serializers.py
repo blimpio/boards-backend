@@ -50,8 +50,9 @@ class StackSerializer(CardSerializer):
     class Meta:
         model = Card
         read_only_fields = ('slug', )
-        exclude = ('origin_url', 'content', 'thumbnail_sm_path',
-                   'thumbnail_md_path', 'thumbnail_lg_path', 'file_size',
+        exclude = ('origin_url', 'content', 'thumbnail_xs_path',
+                   'thumbnail_sm_path', 'thumbnail_md_path',
+                   'thumbnail_lg_path', 'file_size',
                    'mime_type', 'stack', 'data')
 
     def validate_cards(self, attrs, source):
