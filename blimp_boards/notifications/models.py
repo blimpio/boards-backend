@@ -234,6 +234,7 @@ def notify_handler(sender, **kwargs):
             class User(object):
                 pk = None
                 email = user
+                is_active = True
 
             user = User()
 

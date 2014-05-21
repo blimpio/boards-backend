@@ -8,10 +8,7 @@ class EmailBackend(BaseBackend):
     def can_send(self, user, notification_type):
         can_send = super(EmailBackend, self).can_send(user, notification_type)
 
-        if can_send and user.email:
-            return True
-
-        return False
+        return can_send and user.email and user.is_active
 
     def deliver(self, recipient, sender, notification_type, extra_context):
         context = self.default_context()
