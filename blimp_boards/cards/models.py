@@ -60,6 +60,7 @@ class Card(BaseModel):
 
     is_shared = models.BooleanField(default=False)
 
+    thumbnail_xs_path = models.TextField(blank=True)
     thumbnail_sm_path = models.TextField(blank=True)
     thumbnail_md_path = models.TextField(blank=True)
     thumbnail_lg_path = models.TextField(blank=True)
@@ -171,8 +172,8 @@ class Card(BaseModel):
             return None
 
         disallowed_fields = [
-            'origin_url', 'content', 'thumbnail_sm_path',
-            'thumbnail_md_path', 'thumbnail_lg_path',
+            'origin_url', 'content', 'thumbnail_xs_path',
+            'thumbnail_sm_path', 'thumbnail_md_path', 'thumbnail_lg_path',
             'file_size', 'mime_type']
 
         for field in disallowed_fields:
@@ -189,6 +190,9 @@ class Card(BaseModel):
         if field:
             return sign_s3_url(field)
 
+    def get_thumbnail_xs_path(self):
+        return self.get_signed_thumbnail('thumbnail_xs_path') or ''
+
     def get_thumbnail_sm_path(self):
         return self.get_signed_thumbnail('thumbnail_sm_path') or ''
 
@@ -200,7 +204,7 @@ class Card(BaseModel):
 
     def request_previews(self):
         url = sign_s3_url(self.content)
-        sizes = ['original', '200', '500', '800']
+        sizes = ['original', '42', '200', '500', '800']
         metadata = {
             'cardId': self.id
         }

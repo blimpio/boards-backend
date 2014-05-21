@@ -9,6 +9,7 @@ class CardSerializer(DynamicFieldsModelSerializer):
     created_by = serializers.PrimaryKeyRelatedField(read_only=True)
     modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
+    thumbnail_xs_path = serializers.Field(source='get_thumbnail_xs_path')
     thumbnail_sm_path = serializers.Field(source='get_thumbnail_sm_path')
     thumbnail_md_path = serializers.Field(source='get_thumbnail_md_path')
     thumbnail_lg_path = serializers.Field(source='get_thumbnail_lg_path')

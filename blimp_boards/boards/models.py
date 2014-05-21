@@ -35,6 +35,7 @@ class Board(BaseModel):
 
     color = models.CharField(max_length=255, blank=True)
 
+    thumbnail_xs_path = models.TextField(blank=True)
     thumbnail_sm_path = models.TextField(blank=True)
     thumbnail_md_path = models.TextField(blank=True)
     thumbnail_lg_path = models.TextField(blank=True)
@@ -78,6 +79,11 @@ class Board(BaseModel):
         Returns board's first card of type file.
         """
         return self.card_set.filter(type='file').first()
+
+    @property
+    def card_thumbnail_xs_path(self):
+        if self.file_card:
+            return self.file_card.get_thumbnail_xs_path()
 
     @property
     def card_thumbnail_sm_path(self):
