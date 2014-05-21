@@ -20,6 +20,9 @@ urlpatterns = patterns(
 
     (r'^admin/', include(admin.site.urls)),
 
+    # Index views
+    (r'^forgot_password/$', index_view),
+
     (API_PATTERN, include('blimp_boards.router')),
 
     (r'', include('blimp_boards.users.urls')),
