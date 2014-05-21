@@ -779,6 +779,22 @@ class UserAutoCompleteAPIViewTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)
 
+    def test_get_active_users(self):
+        """
+        Tests that endpoint returns expected response with
+        no inactive users.
+        """
+        user = self.create_another_user()
+        user.is_active = False
+        user.save()
+
+        response = self.client.get(self.url, {'search': 'j'})
+
+        expected_response = []
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
 
 class CancelAccountAPIViewTestCase(AuthenticatedAPITestCase):
     def setUp(self):
