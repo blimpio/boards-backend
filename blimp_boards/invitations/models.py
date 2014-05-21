@@ -131,7 +131,7 @@ class InvitedUser(BaseModel):
         Create a SignupRequest in case user wants to reject but signup.
         """
         if created and not self.user:
-            SignupRequest.objects.create(email=self.email)
+            SignupRequest.objects.get_or_create(email=self.email)
 
         super(InvitedUser, self).post_save(created, *args, **kwargs)
 
