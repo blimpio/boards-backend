@@ -95,3 +95,12 @@ class UserModelTestCase(BaseTestCase):
         new_settings = self.user.notification_settings.filter(send=True)
 
         self.assertNotEqual(old_settings, new_settings)
+
+    def test_active_user_manager(self):
+        """
+        Tests that active user manager returns active users.
+        """
+        self.user.is_active = False
+        self.user.save()
+
+        self.assertEqual(User.active.count(), 0)

@@ -18,7 +18,7 @@ from ..utils.decorators import autoconnect
 from ..notifications.models import NotificationSetting
 from ..notifications.signals import notify
 from .utils import get_gravatar_url
-from .managers import UserManager
+from .managers import UserManager, ActiveUserManager
 
 
 def update_last_ip(sender, user, request, **kwargs):
@@ -93,6 +93,7 @@ class User(BaseModel, AbstractBaseUser):
         max_length=36, default=str(uuid.uuid4()), unique=True, db_index=True)
 
     objects = UserManager()
+    active = ActiveUserManager()
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email', 'first_name', 'last_name']

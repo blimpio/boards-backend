@@ -40,3 +40,9 @@ class UserManager(SimpleUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
+
+
+class ActiveUserManager(UserManager):
+    def get_queryset(self):
+        queryset = super(ActiveUserManager, self).get_queryset()
+        return queryset.filter(is_active=True)
