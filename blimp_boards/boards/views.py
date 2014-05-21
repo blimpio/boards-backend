@@ -136,6 +136,18 @@ class BoardCollaboratorViewSet(BulkCreateModelMixin,
     serializer_class = BoardCollaboratorSerializer
     permission_classes = (BoardCollaboratorPermission, )
 
+    def get_serializer_context(self):
+        context = super(BoardCollaboratorViewSet,
+                        self).get_serializer_context()
+
+        board_collaborator = self.get_object()
+
+        context.update({
+            'board': board_collaborator.board
+        })
+
+        return context
+
     def pre_delete(self, obj):
         """
         Set modified_by before deleting board.
