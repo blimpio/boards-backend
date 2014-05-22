@@ -13,6 +13,7 @@ from ..utils.models import BaseModel
 from ..utils.fields import ReservedKeywordsAutoSlugField
 from ..utils.decorators import autoconnect
 from ..notifications.signals import notify
+from ..files.utils import sign_s3_url
 from .constants import BOARD_RESERVED_KEYWORDS
 
 
@@ -72,6 +73,26 @@ class Board(BaseModel):
     def serializer(self):
         from .serializers import BoardSerializer
         return BoardSerializer(self)
+
+    @property
+    def signed_thumbnail_xs_path(self):
+        if self.thumbnail_xs_path:
+            return sign_s3_url(self.thumbnail_xs_path)
+
+    @property
+    def signed_thumbnail_sm_path(self):
+        if self.thumbnail_sm_path:
+            return sign_s3_url(self.thumbnail_sm_path)
+
+    @property
+    def signed_thumbnail_md_path(self):
+        if self.thumbnail_md_path:
+            return sign_s3_url(self.thumbnail_md_path)
+
+    @property
+    def signed_thumbnail_lg_path(self):
+        if self.thumbnail_lg_path:
+            return sign_s3_url(self.thumbnail_lg_path)
 
     @cached_property
     def file_card(self):

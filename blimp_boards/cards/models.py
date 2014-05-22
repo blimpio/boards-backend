@@ -106,6 +106,26 @@ class Card(BaseModel):
         return self.serializer_class(self)
 
     @property
+    def signed_thumbnail_xs_path(self):
+        if self.thumbnail_xs_path:
+            return sign_s3_url(self.thumbnail_xs_path)
+
+    @property
+    def signed_thumbnail_sm_path(self):
+        if self.thumbnail_sm_path:
+            return sign_s3_url(self.thumbnail_sm_path)
+
+    @property
+    def signed_thumbnail_md_path(self):
+        if self.thumbnail_md_path:
+            return sign_s3_url(self.thumbnail_md_path)
+
+    @property
+    def signed_thumbnail_lg_path(self):
+        if self.thumbnail_lg_path:
+            return sign_s3_url(self.thumbnail_lg_path)
+
+    @property
     def download_url(self):
         expire_in = settings.AWS_SIGNATURE_EXPIRES_IN
 
@@ -188,27 +208,6 @@ class Card(BaseModel):
             if getattr(self, field):
                 msg = 'The `{}` field should not be set on a card stack.'
                 raise ValidationError(msg.format(field))
-
-    def get_signed_thumbnail(self, field_name):
-        """
-        Returns an AWS S3 signed URL with expiration.
-        """
-        field = getattr(self, field_name)
-
-        if field:
-            return sign_s3_url(field)
-
-    def get_thumbnail_xs_path(self):
-        return self.get_signed_thumbnail('thumbnail_xs_path')
-
-    def get_thumbnail_sm_path(self):
-        return self.get_signed_thumbnail('thumbnail_sm_path')
-
-    def get_thumbnail_md_path(self):
-        return self.get_signed_thumbnail('thumbnail_md_path')
-
-    def get_thumbnail_lg_path(self):
-        return self.get_signed_thumbnail('thumbnail_lg_path')
 
     def request_previews(self):
         url = sign_s3_url(self.content)

@@ -17,6 +17,18 @@ class BoardSerializer(serializers.ModelSerializer):
     html_url = serializers.Field()
     activity_html_url = serializers.Field()
 
+    thumbnail_xs_path = serializers.CharField(
+        required=False, source='signed_thumbnail_xs_path')
+
+    thumbnail_sm_path = serializers.CharField(
+        required=False, source='signed_thumbnail_sm_path')
+
+    thumbnail_md_path = serializers.CharField(
+        required=False, source='signed_thumbnail_md_path')
+
+    thumbnail_lg_path = serializers.CharField(
+        required=False, source='signed_thumbnail_lg_path')
+
     class Meta:
         model = Board
         read_only_fields = ('slug', )
