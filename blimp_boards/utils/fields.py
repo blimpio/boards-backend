@@ -119,6 +119,7 @@ class ReservedKeywordsAutoSlugField(AutoSlugField):
         super(ReservedKeywordsAutoSlugField, self).__init__(*args, **kwargs)
 
         def custom_slugify(value):
+            value = value.replace('.', '-')
             pre_slug = default_slugify(value)
 
             if pre_slug in reserved_keywords:
