@@ -7,7 +7,7 @@ import uuid
 import time
 
 from django.conf import settings
-from django.utils.six.moves.urllib.parse import urlencode, quote
+from django.utils.six.moves.urllib.parse import urlencode, quote, urlparse
 from django.utils.encoding import smart_bytes, smart_text
 from django.utils.timezone import now
 
@@ -123,6 +123,8 @@ class S3UrlSigner(object):
         if not url.startswith(self.endpoint):
             return None
 
+        url = urlparse(url)
+        url = '{}://{}{}'.format(url.scheme, url.netloc, url.path)
         url = url.replace(self.endpoint, '')
         parts = url.split('/')
         bucket = parts[1]
