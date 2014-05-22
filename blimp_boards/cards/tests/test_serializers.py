@@ -90,7 +90,7 @@ class CardSerializerTestCase(BaseTestCase):
             'stack': None,
             'cards': [],
             'featured': False,
-            'origin_url': '',
+            'origin_url': serializer.object.origin_url,
             'content': self.data['content'],
             'is_shared': False,
             'thumbnail_xs_path': serializer.object.thumbnail_xs_path,
@@ -98,7 +98,7 @@ class CardSerializerTestCase(BaseTestCase):
             'thumbnail_md_path': serializer.object.thumbnail_md_path,
             'thumbnail_lg_path': serializer.object.thumbnail_lg_path,
             'file_size': None,
-            'mime_type': '',
+            'mime_type': serializer.object.origin_url,
             'html_url': serializer.object.html_url
         }
 
@@ -146,15 +146,15 @@ class CardSerializerTestCase(BaseTestCase):
             'cards': [card.id],
             'stack': None,
             'featured': False,
-            'origin_url': '',
-            'content': '',
+            'origin_url': serializer.object.origin_url,
+            'content': serializer.object.content,
             'is_shared': False,
             'thumbnail_xs_path': serializer.object.thumbnail_xs_path,
             'thumbnail_sm_path': serializer.object.thumbnail_sm_path,
             'thumbnail_md_path': serializer.object.thumbnail_md_path,
             'thumbnail_lg_path': serializer.object.thumbnail_lg_path,
             'file_size': None,
-            'mime_type': '',
+            'mime_type': serializer.object.mime_type,
             'html_url': serializer.object.html_url
         }
 

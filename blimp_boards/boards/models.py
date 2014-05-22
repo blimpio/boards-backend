@@ -35,10 +35,10 @@ class Board(BaseModel):
 
     color = models.CharField(max_length=255, blank=True)
 
-    thumbnail_xs_path = models.TextField(blank=True)
-    thumbnail_sm_path = models.TextField(blank=True)
-    thumbnail_md_path = models.TextField(blank=True)
-    thumbnail_lg_path = models.TextField(blank=True)
+    thumbnail_xs_path = models.TextField(blank=True, null=True)
+    thumbnail_sm_path = models.TextField(blank=True, null=True)
+    thumbnail_md_path = models.TextField(blank=True, null=True)
+    thumbnail_lg_path = models.TextField(blank=True, null=True)
 
     class Meta:
         announce = True
@@ -108,6 +108,19 @@ class Board(BaseModel):
             self.modified_by_id = self.created_by_id
 
         return super(Board, self).save(*args, **kwargs)
+
+    def clean(self):
+        """
+        Sets nullable string fields back to empty strings
+        """
+        string_fields = [
+            'thumbnail_xs_path', 'thumbnail_sm_path',
+            'thumbnail_md_path', 'thumbnail_lg_path'
+        ]
+
+        for field in string_fields:
+            if field is None:
+                setattr(self, field, '')
 
     def post_save(self, created, *args, **kwargs):
         """

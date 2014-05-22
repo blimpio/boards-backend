@@ -58,7 +58,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'cards': [],
             'stack': None,
             'featured': False,
-            'origin_url': '',
+            'origin_url': self.card.origin_url,
             'content': self.card.content,
             'is_shared': False,
             'thumbnail_xs_path': self.card.thumbnail_xs_path,
@@ -66,7 +66,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': self.card.thumbnail_md_path,
             'thumbnail_lg_path': self.card.thumbnail_lg_path,
             'file_size': None,
-            'mime_type': '',
+            'mime_type': self.card.mime_type,
             'html_url': self.card.html_url
         }]
 
@@ -133,7 +133,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'cards': [],
             'stack': None,
             'featured': False,
-            'origin_url': '',
+            'origin_url': self.card.origin_url,
             'content': self.card.content,
             'is_shared': False,
             'thumbnail_xs_path': self.card.thumbnail_xs_path,
@@ -141,7 +141,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': self.card.thumbnail_md_path,
             'thumbnail_lg_path': self.card.thumbnail_lg_path,
             'file_size': None,
-            'mime_type': '',
+            'mime_type': self.card.mime_type,
             'html_url': self.card.html_url
         }
 
@@ -187,7 +187,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'cards': [],
             'stack': None,
             'featured': False,
-            'origin_url': '',
+            'origin_url': card.origin_url,
             'content': card.content,
             'is_shared': False,
             'thumbnail_xs_path': card.thumbnail_xs_path,
@@ -195,7 +195,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': card.thumbnail_md_path,
             'thumbnail_lg_path': card.thumbnail_lg_path,
             'file_size': None,
-            'mime_type': '',
+            'mime_type': card.mime_type,
             'html_url': card.html_url
         }
 
@@ -229,7 +229,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'cards': [],
             'stack': None,
             'featured': False,
-            'origin_url': '',
+            'origin_url': card.origin_url,
             'content': card.content,
             'is_shared': False,
             'thumbnail_xs_path': card.thumbnail_xs_path,
@@ -237,7 +237,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': card.thumbnail_md_path,
             'thumbnail_lg_path': card.thumbnail_lg_path,
             'file_size': None,
-            'mime_type': '',
+            'mime_type': card.mime_type,
             'html_url': card.html_url
         }
 
@@ -280,7 +280,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'cards': [],
             'stack': None,
             'featured': False,
-            'origin_url': '',
+            'origin_url': card.origin_url,
             'content': self.data['content'],
             'is_shared': False,
             'thumbnail_xs_path': card.thumbnail_xs_path,
@@ -288,7 +288,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': card.thumbnail_md_path,
             'thumbnail_lg_path': card.thumbnail_lg_path,
             'file_size': None,
-            'mime_type': '',
+            'mime_type': card.mime_type,
             'html_url': card.html_url
         }
 
@@ -323,7 +323,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'cards': [],
             'stack': None,
             'featured': False,
-            'origin_url': '',
+            'origin_url': self.card.origin_url,
             'content': self.card.content,
             'is_shared': False,
             'thumbnail_xs_path': self.card.thumbnail_xs_path,
@@ -331,7 +331,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': self.card.thumbnail_md_path,
             'thumbnail_lg_path': self.card.thumbnail_lg_path,
             'file_size': None,
-            'mime_type': '',
+            'mime_type': self.card.mime_type,
             'html_url': self.card.html_url
         }]
 
@@ -435,7 +435,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'cards': [],
             'stack': None,
             'featured': False,
-            'origin_url': '',
+            'origin_url': self.card.origin_url,
             'content': self.card.content,
             'is_shared': False,
             'thumbnail_xs_path': self.card.thumbnail_xs_path,
@@ -443,7 +443,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_md_path': self.card.thumbnail_md_path,
             'thumbnail_lg_path': self.card.thumbnail_lg_path,
             'file_size': None,
-            'mime_type': '',
+            'mime_type': self.card.mime_type,
             'html_url': self.card.html_url
         }]
 

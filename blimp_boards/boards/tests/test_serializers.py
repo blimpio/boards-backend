@@ -132,10 +132,10 @@ class BoardSerializerTestCase(BaseTestCase):
             'account': self.account.id,
             'color': self.data['color'],
             'is_shared': False,
-            'thumbnail_xs_path': '',
-            'thumbnail_sm_path': '',
-            'thumbnail_md_path': '',
-            'thumbnail_lg_path': '',
+            'thumbnail_xs_path': serializer.object.thumbnail_xs_path,
+            'thumbnail_sm_path': serializer.object.thumbnail_sm_path,
+            'thumbnail_md_path': serializer.object.thumbnail_md_path,
+            'thumbnail_lg_path': serializer.object.thumbnail_lg_path,
             'html_url': serializer.object.html_url,
             'activity_html_url': serializer.object.activity_html_url
         }

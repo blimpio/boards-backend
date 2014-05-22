@@ -55,18 +55,18 @@ class Card(BaseModel):
         'cards.Card', blank=True, null=True, related_name='+')
 
     featured = models.BooleanField(default=False)
-    origin_url = models.URLField(blank=True)
-    content = models.TextField(blank=True)
+    origin_url = models.URLField(blank=True, null=True)
+    content = models.TextField(blank=True, null=True)
 
     is_shared = models.BooleanField(default=False)
 
-    thumbnail_xs_path = models.TextField(blank=True)
-    thumbnail_sm_path = models.TextField(blank=True)
-    thumbnail_md_path = models.TextField(blank=True)
-    thumbnail_lg_path = models.TextField(blank=True)
+    thumbnail_xs_path = models.TextField(blank=True, null=True)
+    thumbnail_sm_path = models.TextField(blank=True, null=True)
+    thumbnail_md_path = models.TextField(blank=True, null=True)
+    thumbnail_lg_path = models.TextField(blank=True, null=True)
 
-    file_size = models.IntegerField(null=True, blank=True)
-    mime_type = models.CharField(max_length=255, blank=True)
+    file_size = models.IntegerField(blank=True, null=True)
+    mime_type = models.CharField(max_length=255, blank=True, null=True)
 
     data = JSONField(blank=True, null=True, dump_kwargs={
                      'cls': JSONEncoder, 'separators': (',', ':')})
@@ -165,6 +165,14 @@ class Card(BaseModel):
         """
         Validates when card is a stack, that card specific fields arent' set.
         """
+        string_fields = [
+            'thumbnail_xs_path', 'thumbnail_sm_path', 'thumbnail_md_path',
+            'thumbnail_lg_path', 'content', 'origin_url', 'mime_type']
+
+        for field in string_fields:
+            if field is None:
+                setattr(self, field, '')
+
         if self.type != 'stack':
             if not self.content:
                 raise ValidationError('The `content` field is required.')
@@ -191,16 +199,16 @@ class Card(BaseModel):
             return sign_s3_url(field)
 
     def get_thumbnail_xs_path(self):
-        return self.get_signed_thumbnail('thumbnail_xs_path') or ''
+        return self.get_signed_thumbnail('thumbnail_xs_path')
 
     def get_thumbnail_sm_path(self):
-        return self.get_signed_thumbnail('thumbnail_sm_path') or ''
+        return self.get_signed_thumbnail('thumbnail_sm_path')
 
     def get_thumbnail_md_path(self):
-        return self.get_signed_thumbnail('thumbnail_md_path') or ''
+        return self.get_signed_thumbnail('thumbnail_md_path')
 
     def get_thumbnail_lg_path(self):
-        return self.get_signed_thumbnail('thumbnail_lg_path') or ''
+        return self.get_signed_thumbnail('thumbnail_lg_path')
 
     def request_previews(self):
         url = sign_s3_url(self.content)
