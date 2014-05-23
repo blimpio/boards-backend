@@ -59,6 +59,21 @@ class BoardSerializer(serializers.ModelSerializer):
 
         super(BoardSerializer, self).save_object(obj, **kwargs)
 
+    def restore_object(self, attrs, instance=None):
+        """
+        Restore the model instance.
+        """
+        ignored_keys = [
+            'signed_thumbnail_xs_path', 'signed_thumbnail_sm_path',
+            'signed_thumbnail_md_path', 'signed_thumbnail_lg_path',
+        ]
+
+        for key in attrs.keys():
+            if key in ignored_keys:
+                del attrs[key]
+
+        return super(BoardSerializer, self).restore_object(attrs, instance)
+
 
 class BoardCollaboratorSimpleSerializer(serializers.ModelSerializer):
     board = BoardSerializer()
