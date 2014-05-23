@@ -47,7 +47,6 @@ class Card(BaseModel):
                                     related_name='%(class)s_modified_by')
 
     position = positions.PositionField(collection='board')
-    objects = positions.PositionManager()
 
     stack = models.ForeignKey(
         'cards.Card', blank=True, null=True, related_name='+')

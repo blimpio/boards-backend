@@ -1,10 +1,10 @@
 import jwt
+import positions
 
-from django.db import models
 from django.conf import settings
 
 
-class CardManager(models.Manager):
+class CardManager(positions.PositionManager):
     def get_from_download_token(self, token, **kwargs):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
