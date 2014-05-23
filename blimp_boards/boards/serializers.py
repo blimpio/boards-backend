@@ -68,7 +68,7 @@ class BoardSerializer(serializers.ModelSerializer):
             'signed_thumbnail_md_path', 'signed_thumbnail_lg_path',
         ]
 
-        for key in attrs.keys():
+        for key in list(attrs.keys()):
             if key in ignored_keys:
                 del attrs[key]
 
