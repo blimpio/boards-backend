@@ -312,3 +312,13 @@ class Staging(Common):
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     )
+
+
+class Production(Staging):
+    """
+    The in-production settings.
+    """
+    # Django REST framework
+    Common.REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
+        'rest_framework.renderers.JSONRenderer',
+    )
