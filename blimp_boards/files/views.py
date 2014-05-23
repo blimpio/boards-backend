@@ -93,9 +93,12 @@ class FilePreviewsWebhook(APIView):
                     card.thumbnail_lg_path = url
 
         if results:
-            card.data = results
-            card.save()
+            if card.data:
+                card.data.update(results)
+            else:
+                card.data = results
 
+            card.save()
             card.update_notification_data()
 
         return Response(status=status.HTTP_200_OK)
