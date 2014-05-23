@@ -67,7 +67,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': self.card.thumbnail_lg_path,
             'file_size': None,
             'mime_type': self.card.mime_type,
-            'html_url': self.card.html_url
+            'html_url': self.card.html_url,
+            'metadata': self.card.metadata,
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -142,7 +143,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': self.card.thumbnail_lg_path,
             'file_size': None,
             'mime_type': self.card.mime_type,
-            'html_url': self.card.html_url
+            'html_url': self.card.html_url,
+            'metadata': self.card.metadata,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -169,6 +171,13 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         """
         Tests that POST to viewset creates a card.
         """
+        self.data['metadata'] = {
+            'pattern': {
+                'shape': '01',
+                'color': '#000'
+            }
+        }
+
         response = self.client.post(self.base_url, self.data, format='json')
 
         card = Card.objects.get(pk=response.data['id'])
@@ -196,7 +205,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': card.thumbnail_lg_path,
             'file_size': None,
             'mime_type': card.mime_type,
-            'html_url': card.html_url
+            'html_url': card.html_url,
+            'metadata': self.data['metadata'],
         }
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -238,7 +248,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': card.thumbnail_lg_path,
             'file_size': None,
             'mime_type': card.mime_type,
-            'html_url': card.html_url
+            'html_url': card.html_url,
+            'metadata': card.metadata,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -289,7 +300,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': card.thumbnail_lg_path,
             'file_size': None,
             'mime_type': card.mime_type,
-            'html_url': card.html_url
+            'html_url': card.html_url,
+            'metadata': card.metadata,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -332,7 +344,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': self.card.thumbnail_lg_path,
             'file_size': None,
             'mime_type': self.card.mime_type,
-            'html_url': self.card.html_url
+            'html_url': self.card.html_url,
+            'metadata': self.card.metadata,
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -444,7 +457,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'thumbnail_lg_path': self.card.thumbnail_lg_path,
             'file_size': None,
             'mime_type': self.card.mime_type,
-            'html_url': self.card.html_url
+            'html_url': self.card.html_url,
+            'metadata': self.card.metadata,
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

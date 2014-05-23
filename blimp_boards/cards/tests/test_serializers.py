@@ -39,7 +39,8 @@ class CardSerializerTestCase(BaseTestCase):
             'content': '',
             'is_shared': False,
             'file_size': 0,
-            'mime_type': ''
+            'mime_type': '',
+            'metadata': '',
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -99,7 +100,8 @@ class CardSerializerTestCase(BaseTestCase):
             'thumbnail_lg_path': serializer.object.thumbnail_lg_path,
             'file_size': None,
             'mime_type': serializer.object.origin_url,
-            'html_url': serializer.object.html_url
+            'html_url': serializer.object.html_url,
+            'metadata': serializer.object.metadata
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -155,7 +157,8 @@ class CardSerializerTestCase(BaseTestCase):
             'thumbnail_lg_path': serializer.object.thumbnail_lg_path,
             'file_size': None,
             'mime_type': serializer.object.mime_type,
-            'html_url': serializer.object.html_url
+            'html_url': serializer.object.html_url,
+            'metadata': serializer.object.data,
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -287,7 +290,7 @@ class StackSerializerTestCase(BaseTestCase):
             'cards': data['cards'],
             'featured': False,
             'is_shared': False,
-            'html_url': serializer.object.html_url
+            'html_url': serializer.object.html_url,
         }
 
         self.assertEqual(serializer.data, expected_data)

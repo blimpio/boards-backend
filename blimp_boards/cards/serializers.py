@@ -16,10 +16,32 @@ class CardSerializer(DynamicFieldsModelSerializer):
 
     html_url = serializers.Field()
 
+    metadata = serializers.WritableField(required=False, source='metadata')
+
     class Meta:
         model = Card
         read_only_fields = ('slug', 'stack', )
         exclude = ('data', )
+
+    def validate_metadata(self, attrs, source):
+        metadata = attrs.get(source)
+        valid_metadata_keys = ['pattern']
+        validation_message = 'Invalid metadata.'
+        self.valid_metadata = {}
+
+        if not metadata:
+            return attrs
+
+        if not isinstance(metadata, dict):
+            raise serializers.ValidationError(validation_message)
+
+        for key in metadata.keys():
+            if key not in valid_metadata_keys:
+                raise serializers.ValidationError(validation_message)
+
+        self.valid_metadata = metadata
+
+        return attrs
 
     def validate_content(self, attrs, source):
         content = attrs.get(source)
@@ -40,10 +62,26 @@ class CardSerializer(DynamicFieldsModelSerializer):
 
         obj.modified_by = user
 
+        valid_metadata = getattr(self, 'valid_metadata', None)
+
+        if obj.data and valid_metadata:
+            obj.data.update(valid_metadata)
+        elif valid_metadata:
+            obj.data = valid_metadata
+
         super(CardSerializer, self).save_object(obj, **kwargs)
 
         if featured_diff and featured_diff[1]:
             obj.notify_featured(user)
+
+    def restore_object(self, attrs, instance=None):
+        """
+        Restore the model instance.
+        """
+        if 'metadata' in attrs:
+            del attrs['metadata']
+
+        return super(CardSerializer, self).restore_object(attrs, instance)
 
 
 class StackSerializer(CardSerializer):
@@ -53,7 +91,7 @@ class StackSerializer(CardSerializer):
         exclude = ('origin_url', 'content', 'thumbnail_xs_path',
                    'thumbnail_sm_path', 'thumbnail_md_path',
                    'thumbnail_lg_path', 'file_size',
-                   'mime_type', 'stack', 'data')
+                   'mime_type', 'stack', 'data', 'metadata')
 
     def validate_cards(self, attrs, source):
         cards = attrs[source]

@@ -156,6 +156,28 @@ class Card(BaseModel):
 
             return sign_s3_url(self.content, headers)
 
+    @property
+    def pattern(self):
+        if not self.data:
+            return None
+
+        pattern = self.data.get('pattern')
+
+        if pattern:
+            return {
+                'shape': pattern.get('shape'),
+                'color': pattern.get('color'),
+            }
+
+    @property
+    def metadata(self):
+        if not self.data:
+            return None
+
+        return {
+            'pattern': self.pattern
+        }
+
     def save(self, *args, **kwargs):
         """
         Performs all steps involved in validating before
