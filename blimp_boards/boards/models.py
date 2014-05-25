@@ -104,22 +104,22 @@ class Board(BaseModel):
     @property
     def card_thumbnail_xs_path(self):
         if self.file_card:
-            return self.file_card.get_thumbnail_xs_path()
+            return self.file_card.signed_thumbnail_xs_path
 
     @property
     def card_thumbnail_sm_path(self):
         if self.file_card:
-            return self.file_card.get_thumbnail_sm_path()
+            return self.file_card.signed_thumbnail_sm_path
 
     @property
     def card_thumbnail_md_path(self):
         if self.file_card:
-            return self.file_card.get_thumbnail_md_path()
+            return self.file_card.signed_thumbnail_md_path
 
     @property
     def card_thumbnail_lg_path(self):
         if self.file_card:
-            return self.file_card.get_thumbnail_lg_path()
+            return self.file_card.signed_thumbnail_lg_path
 
     def save(self, *args, **kwargs):
         """
