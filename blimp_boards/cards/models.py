@@ -192,10 +192,6 @@ class Card(BaseModel):
         return super(Card, self).save(*args, **kwargs)
 
     def post_save(self, created, *args, **kwargs):
-        # Detect if new card is a file and request thumbnails.
-        if created and self.type == 'file' and self.content:
-            self.request_previews()
-
         # Notify card was created
         if created:
             self.notify_created()

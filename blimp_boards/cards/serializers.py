@@ -71,6 +71,10 @@ class CardSerializer(DynamicFieldsModelSerializer):
 
         super(CardSerializer, self).save_object(obj, **kwargs)
 
+        # Detect if new card is a file and request thumbnails.
+        if not created and obj.type == 'file' and obj.content:
+            obj.request_previews()
+
         if featured_diff and featured_diff[1]:
             obj.notify_featured(user)
 
