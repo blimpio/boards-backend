@@ -17,17 +17,10 @@ class BoardSerializer(serializers.ModelSerializer):
     html_url = serializers.Field()
     activity_html_url = serializers.Field()
 
-    thumbnail_xs_path = serializers.CharField(
-        required=False, source='signed_thumbnail_xs_path')
-
-    thumbnail_sm_path = serializers.CharField(
-        required=False, source='signed_thumbnail_sm_path')
-
-    thumbnail_md_path = serializers.CharField(
-        required=False, source='signed_thumbnail_md_path')
-
-    thumbnail_lg_path = serializers.CharField(
-        required=False, source='signed_thumbnail_lg_path')
+    thumbnail_xs_path = serializers.Field(source='card_thumbnail_xs_path')
+    thumbnail_sm_path = serializers.Field(source='card_thumbnail_sm_path')
+    thumbnail_md_path = serializers.Field(source='card_thumbnail_md_path')
+    thumbnail_lg_path = serializers.Field(source='card_thumbnail_lg_path')
 
     class Meta:
         model = Board
