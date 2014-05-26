@@ -33,10 +33,6 @@ class BoardSerializerTestCase(BaseTestCase):
             'name': '',
             'account': None,
             'is_shared': False,
-            'thumbnail_xs_path': '',
-            'thumbnail_sm_path': '',
-            'thumbnail_md_path': '',
-            'thumbnail_lg_path': '',
             'color': ''
         }
 
