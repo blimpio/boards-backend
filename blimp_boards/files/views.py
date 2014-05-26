@@ -78,18 +78,18 @@ class FilePreviewsWebhook(APIView):
         results = payload.get('results', [])
 
         for result in results['thumbnails']:
-            size = result['size']
+            size = result['requested_size']
             page = str(result['page'])
             url = unquote(result['url'])
 
             if page == '1':
-                if size['width'] == '42':
+                if size == '42>':
                     card.thumbnail_xs_path = url
-                elif size['width'] == '200':
+                elif size == '200>':
                     card.thumbnail_sm_path = url
-                elif size['width'] == '500':
+                elif size == '500>':
                     card.thumbnail_md_path = url
-                elif size['width'] == '800':
+                elif size == '800>':
                     card.thumbnail_lg_path = url
 
         if results:

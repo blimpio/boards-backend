@@ -232,7 +232,7 @@ class Card(BaseModel):
 
     def request_previews(self):
         url = sign_s3_url(self.content)
-        sizes = ['original', '42', '200', '500', '800']
+        sizes = ['original', '42>', '200>', '500>', '800>']
         metadata = {
             'cardId': self.id
         }
