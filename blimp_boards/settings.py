@@ -222,12 +222,8 @@ class Development(Common):
     ) + Common.MIDDLEWARE_CLASSES
 
     # Email settings
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = values.Value(environ_prefix=None)
-    EMAIL_HOST_USER = values.Value(environ_prefix=None)
-    EMAIL_HOST_PASSWORD = values.Value(environ_prefix=None)
-    EMAIL_PORT = values.Value(environ_prefix=None)
-    EMAIL_USE_TLS = True
+    EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
+    MANDRILL_API_KEY = values.Value(environ_prefix=None)
     DEFAULT_FROM_EMAIL = values.Value(environ_prefix=None)
 
     # Django REST framework
