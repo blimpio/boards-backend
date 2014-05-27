@@ -16,6 +16,7 @@ class CardSerializer(DynamicFieldsModelSerializer):
 
     html_url = serializers.Field()
     download_html_url = serializers.Field()
+    original_html_url = serializers.Field()
 
     metadata = serializers.WritableField(required=False, source='metadata')
 
@@ -97,7 +98,7 @@ class StackSerializer(CardSerializer):
                    'thumbnail_sm_path', 'thumbnail_md_path',
                    'thumbnail_lg_path', 'file_size',
                    'mime_type', 'stack', 'data', 'metadata',
-                   'download_html_url')
+                   'download_html_url', 'original_html_url', )
 
     def validate_cards(self, attrs, source):
         cards = attrs[source]

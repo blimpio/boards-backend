@@ -96,6 +96,10 @@ class Card(BaseModel):
         return '{}?download'.format(self.html_url)
 
     @cached_property
+    def original_html_url(self):
+        return '{}?original'.format(self.html_url)
+
+    @cached_property
     def announce_room(self):
         return 'a{}'.format(self.board.account_id)
 
@@ -161,6 +165,28 @@ class Card(BaseModel):
             return sign_s3_url(self.content, headers)
 
     @property
+    def original_thumbnail_url(self):
+        if not self.data:
+            return None
+
+        thumbnails = self.data.get('thumbnails')
+
+        if not thumbnails:
+            return None
+
+        url = None
+
+        for thumbnail in thumbnails:
+            size = thumbnail.get('requested_size')
+            resized = thumbnail.get('resized')
+
+            if size == 'original' or not resized:
+                url = thumbnail.get('url')
+                break
+
+        return sign_s3_url(url) if url else None
+
+    @cached_property
     def pattern(self):
         if not self.data:
             return None
@@ -173,7 +199,7 @@ class Card(BaseModel):
                 'color': pattern.get('color'),
             }
 
-    @property
+    @cached_property
     def metadata(self):
         if not self.data:
             return None

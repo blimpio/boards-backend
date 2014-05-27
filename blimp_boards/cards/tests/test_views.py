@@ -69,6 +69,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'mime_type': self.card.mime_type,
             'html_url': self.card.html_url,
             'download_html_url': self.card.download_html_url,
+            'original_html_url': self.card.original_html_url,
             'metadata': self.card.metadata,
         }]
 
@@ -146,6 +147,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'mime_type': self.card.mime_type,
             'html_url': self.card.html_url,
             'download_html_url': self.card.download_html_url,
+            'original_html_url': self.card.original_html_url,
             'metadata': self.card.metadata,
         }
 
@@ -209,6 +211,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'mime_type': card.mime_type,
             'html_url': card.html_url,
             'download_html_url': card.download_html_url,
+            'original_html_url': card.original_html_url,
             'metadata': self.data['metadata'],
         }
 
@@ -253,6 +256,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'mime_type': card.mime_type,
             'html_url': card.html_url,
             'download_html_url': card.download_html_url,
+            'original_html_url': card.original_html_url,
             'metadata': card.metadata,
         }
 
@@ -306,6 +310,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'mime_type': card.mime_type,
             'html_url': card.html_url,
             'download_html_url': card.download_html_url,
+            'original_html_url': card.original_html_url,
             'metadata': card.metadata,
         }
 
@@ -351,6 +356,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'mime_type': self.card.mime_type,
             'html_url': self.card.html_url,
             'download_html_url': self.card.download_html_url,
+            'original_html_url': self.card.original_html_url,
             'metadata': self.card.metadata,
         }]
 
@@ -465,6 +471,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'mime_type': self.card.mime_type,
             'html_url': self.card.html_url,
             'download_html_url': self.card.download_html_url,
+            'original_html_url': self.card.original_html_url,
             'metadata': self.card.metadata,
         }]
 

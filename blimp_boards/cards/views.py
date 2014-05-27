@@ -49,6 +49,7 @@ class CardViewSet(ModelViewSet):
             (action == 'list' and board),
             (action == 'comments' and request_method == 'get'),
             (action == 'download' and request_method == 'get'),
+            (action == 'original_thumbnail' and request_method == 'get'),
         ]
 
         if any(public_criteria):
@@ -125,6 +126,16 @@ class CardViewSet(ModelViewSet):
 
         data = {
             'download_url': card.download_url
+        }
+
+        return Response(data)
+
+    @link()
+    def original_thumbnail(self, request, pk=None):
+        card = self.get_object()
+
+        data = {
+            'original_thumbnail_url': card.original_thumbnail_url
         }
 
         return Response(data)

@@ -15,14 +15,12 @@ class CardPermission(permissions.BasePermission):
         """
         is_authenticated = request.user and request.user.is_authenticated()
         is_safe = request.method in permissions.SAFE_METHODS
+        safe_actions = ['comments', 'download', 'original_thumbnail']
 
         if not is_authenticated and not is_safe:
             return False
 
-        if view.action == 'comments' and is_safe:
-            return True
-
-        if view.action == 'download' and is_safe:
+        if view.action in safe_actions and is_safe:
             return True
 
         if not is_authenticated and view.action == 'list':
