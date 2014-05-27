@@ -5,10 +5,11 @@ from rest_framework import filters, status, permissions
 from rest_framework.decorators import action, link
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
-from rest_framework.views import APIView
+from rest_framework.generics import get_object_or_404
 
 from ..utils.viewsets import ModelViewSet
 from ..utils.response import ErrorResponse
+from ..boards.views import BoardHTMLView
 from .models import Card
 from .serializers import CardSerializer, StackSerializer, CardCommentSerializer
 from .permissions import CardPermission
@@ -129,7 +130,7 @@ class CardViewSet(ModelViewSet):
         return Response(data)
 
 
-class CardDownloadHTMLView(APIView):
+class CardDownloadHTMLView(BoardHTMLView):
     authentication_classes = ()
     permission_classes = ()
 
@@ -141,7 +142,8 @@ class CardDownloadHTMLView(APIView):
         token = request.QUERY_PARAMS.get('token')
 
         if not token:
-            raise Http404
+            return super(CardDownloadHTMLView, self).get(
+                request, *args, **kwargs)
 
         try:
             card = Card.objects.get_from_download_token(

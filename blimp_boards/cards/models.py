@@ -92,6 +92,10 @@ class Card(BaseModel):
         return '{}{}'.format(settings.APPLICATION_URL, self.get_absolute_url())
 
     @cached_property
+    def download_html_url(self):
+        return '{}?download'.format(self.html_url)
+
+    @cached_property
     def announce_room(self):
         return 'a{}'.format(self.board.account_id)
 

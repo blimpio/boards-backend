@@ -101,6 +101,7 @@ class CardSerializerTestCase(BaseTestCase):
             'file_size': None,
             'mime_type': serializer.object.origin_url,
             'html_url': serializer.object.html_url,
+            'download_html_url': serializer.object.download_html_url,
             'metadata': serializer.object.metadata
         }
 
@@ -158,6 +159,7 @@ class CardSerializerTestCase(BaseTestCase):
             'file_size': None,
             'mime_type': serializer.object.mime_type,
             'html_url': serializer.object.html_url,
+            'download_html_url': serializer.object.download_html_url,
             'metadata': serializer.object.data,
         }
 
