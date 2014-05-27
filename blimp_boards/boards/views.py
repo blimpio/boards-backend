@@ -50,7 +50,7 @@ class BoardViewSet(ModelViewSet):
         elif public_boards:
             boards = public_boards
 
-        return boards
+        return boards.select_related('created_by', 'modified_by')
 
     def filter_queryset(self, queryset):
         user = self.request.user

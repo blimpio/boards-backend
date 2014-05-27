@@ -3,6 +3,7 @@ from rest_framework.test import APIClient
 
 from ...utils.tests import AuthenticatedAPITestCase
 from ...invitations.models import InvitedUser
+from ..serializers import BoardUserSerializer
 from ..models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
@@ -35,9 +36,12 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         Tests that viewset returns boards that the user can access.
         """
         response = self.client.get(self.base_url)
+        created_by = BoardUserSerializer.to_native(self.board.created_by)
+        modified_by = BoardUserSerializer.to_native(self.board.modified_by)
+
         expected_response = [{
-            'created_by': self.board.created_by_id,
-            'modified_by': self.board.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': self.board.id,
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,
@@ -99,9 +103,12 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         response = self.client.get(
             '{}{}/'.format(self.base_url, self.board.id))
 
+        created_by = BoardUserSerializer.to_native(self.board.created_by)
+        modified_by = BoardUserSerializer.to_native(self.board.modified_by)
+
         expected_response = {
-            'created_by': self.board.created_by_id,
-            'modified_by': self.board.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': self.board.id,
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,
@@ -154,10 +161,12 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         response = self.client.post(self.base_url, data, format='json')
 
         board = Board.objects.get(pk=response.data['id'])
+        created_by = BoardUserSerializer.to_native(board.created_by)
+        modified_by = BoardUserSerializer.to_native(board.modified_by)
 
         expected_response = {
-            'created_by': board.created_by_id,
-            'modified_by': board.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': board.id,
             'date_created': board.date_created,
             'date_modified': board.date_modified,
@@ -193,9 +202,12 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
 
         self.board = Board.objects.get(pk=self.board.id)
 
+        created_by = BoardUserSerializer.to_native(self.board.created_by)
+        modified_by = BoardUserSerializer.to_native(self.board.modified_by)
+
         expected_response = {
-            'created_by': self.board.created_by_id,
-            'modified_by': self.board.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': self.board.id,
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,
@@ -240,10 +252,12 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             '{}{}/'.format(self.base_url, self.board.id), data, format='json')
 
         self.board = Board.objects.get(pk=self.board.id)
+        created_by = BoardUserSerializer.to_native(self.board.created_by)
+        modified_by = BoardUserSerializer.to_native(self.board.modified_by)
 
         expected_response = {
-            'created_by': self.board.created_by_id,
-            'modified_by': self.board.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': self.board.id,
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,
@@ -274,9 +288,12 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         response = self.client.get(
             '{}{}/'.format(self.base_url, self.board.id))
 
+        created_by = BoardUserSerializer.to_native(self.board.created_by)
+        modified_by = BoardUserSerializer.to_native(self.board.modified_by)
+
         expected_response = {
-            'created_by': self.board.created_by_id,
-            'modified_by': self.board.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': self.board.id,
             'date_created': self.board.date_created,
             'date_modified': self.board.date_modified,

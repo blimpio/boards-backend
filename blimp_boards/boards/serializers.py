@@ -9,10 +9,14 @@ from ..users.serializers import UserSimpleSerializer
 from .models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
+BoardUserSerializer = UserSimpleSerializer(
+    fields=('id', 'username'), read_only=True)
+
+
 class BoardSerializer(serializers.ModelSerializer):
     color = serializers.CharField()
-    created_by = serializers.PrimaryKeyRelatedField(read_only=True)
-    modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
+    created_by = BoardUserSerializer
+    modified_by = BoardUserSerializer
 
     html_url = serializers.Field()
     activity_html_url = serializers.Field()
