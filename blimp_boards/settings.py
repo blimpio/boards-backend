@@ -186,6 +186,11 @@ class Common(Configuration):
 
     CAMO_URL = values.Value(environ_prefix=None)
 
+    # Email settings
+    EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
+    MANDRILL_API_KEY = values.Value(environ_prefix=None)
+    DEFAULT_FROM_EMAIL = values.Value(environ_prefix=None)
+
     @property
     def APPLICATION_URL(self):
         return '{}://{}'.format(self.HTTP_PROTOCOL, self.DOMAIN)
@@ -223,8 +228,6 @@ class Development(Common):
 
     # Email settings
     EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
-    MANDRILL_API_KEY = values.Value(environ_prefix=None)
-    DEFAULT_FROM_EMAIL = values.Value(environ_prefix=None)
 
     # Django REST framework
     Common.REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
@@ -267,7 +270,7 @@ class Testing(Development):
     )
 
     # Email Settings
-    EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+    EMAIL_BACKEND = 'blimp_boards.utils.backends.BrowsableEmailBackend'
 
     # South
     SOUTH_TESTS_MIGRATE = False
@@ -301,11 +304,6 @@ class Staging(Common):
 
     # Allow all host headers
     ALLOWED_HOSTS = ['*']
-
-    # Email settings
-    EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
-    MANDRILL_API_KEY = values.Value(environ_prefix=None)
-    DEFAULT_FROM_EMAIL = values.Value(environ_prefix=None)
 
     # Django REST framework
     Common.REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
