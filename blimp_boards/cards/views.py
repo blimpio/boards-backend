@@ -63,7 +63,8 @@ class CardViewSet(ModelViewSet):
         elif public_cards:
             cards = public_cards
 
-        return cards.select_related('board', 'board__account')
+        return cards.select_related(
+            'board', 'board__account', 'created_by', 'modified_by')
 
     def pre_delete(self, obj):
         """

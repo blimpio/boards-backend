@@ -4,6 +4,7 @@ from rest_framework.test import APIClient
 from ...utils.tests import AuthenticatedAPITestCase
 from ...boards.models import Board
 from ...comments.models import Comment
+from ..serializers import CardUserSerializer
 from ..models import Card
 
 
@@ -44,9 +45,13 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         Tests that viewset returns cards that the user can access.
         """
         response = self.client.get(self.base_url)
+
+        created_by = CardUserSerializer.to_native(self.card.created_by)
+        modified_by = CardUserSerializer.to_native(self.card.modified_by)
+
         expected_response = [{
-            'created_by': self.card.created_by_id,
-            'modified_by': self.card.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': self.card.id,
             'position': self.card.position,
             'date_created': self.card.date_created,
@@ -122,9 +127,12 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         response = self.client.get(
             '{}{}/'.format(self.base_url, self.card.id))
 
+        created_by = CardUserSerializer.to_native(self.card.created_by)
+        modified_by = CardUserSerializer.to_native(self.card.modified_by)
+
         expected_response = {
-            'created_by': self.card.created_by_id,
-            'modified_by': self.card.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': self.card.id,
             'position': self.card.position,
             'date_created': self.card.date_created,
@@ -185,10 +193,12 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         response = self.client.post(self.base_url, self.data, format='json')
 
         card = Card.objects.get(pk=response.data['id'])
+        created_by = CardUserSerializer.to_native(card.created_by)
+        modified_by = CardUserSerializer.to_native(card.modified_by)
 
         expected_response = {
-            'created_by': card.created_by_id,
-            'modified_by': card.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': card.id,
             'position': card.position,
             'date_created': card.date_created,
@@ -230,10 +240,12 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             self.data, format='json')
 
         card = Card.objects.get(pk=response.data['id'])
+        created_by = CardUserSerializer.to_native(card.created_by)
+        modified_by = CardUserSerializer.to_native(card.modified_by)
 
         expected_response = {
-            'created_by': card.created_by_id,
-            'modified_by': card.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': card.id,
             'date_created': card.date_created,
             'date_modified': card.date_modified,
@@ -284,10 +296,12 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             self.data, format='json')
 
         card = Card.objects.get(pk=response.data['id'])
+        created_by = CardUserSerializer.to_native(card.created_by)
+        modified_by = CardUserSerializer.to_native(card.modified_by)
 
         expected_response = {
-            'created_by': card.created_by_id,
-            'modified_by': card.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': card.id,
             'date_created': card.date_created,
             'date_modified': card.date_modified,
@@ -331,9 +345,12 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
 
         response = self.client.get(self.base_url, {'board': self.board.id})
 
+        created_by = CardUserSerializer.to_native(self.card.created_by)
+        modified_by = CardUserSerializer.to_native(self.card.modified_by)
+
         expected_response = [{
-            'created_by': self.card.created_by_id,
-            'modified_by': self.card.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': self.card.id,
             'position': self.card.position,
             'date_created': self.card.date_created,
@@ -446,9 +463,12 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         self.client = APIClient()
         response = self.client.get(self.base_url, {'board': self.board.id})
 
+        created_by = CardUserSerializer.to_native(self.card.created_by)
+        modified_by = CardUserSerializer.to_native(self.card.modified_by)
+
         expected_response = [{
-            'created_by': self.card.created_by_id,
-            'modified_by': self.card.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': self.card.id,
             'position': self.card.position,
             'date_created': self.card.date_created,
@@ -494,9 +514,12 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
 
         card = Card.objects.get(pk=response.data['id'])
 
+        created_by = CardUserSerializer.to_native(self.card.created_by)
+        modified_by = CardUserSerializer.to_native(self.card.modified_by)
+
         expected_response = {
-            'created_by': card.created_by_id,
-            'modified_by': card.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'id': card.id,
             'position': card.position,
             'date_created': card.date_created,

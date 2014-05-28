@@ -2,12 +2,17 @@ from rest_framework import serializers
 
 from ..comments.serializers import CommentSerializer
 from ..utils.serializers import DynamicFieldsModelSerializer
+from ..users.serializers import UserSimpleSerializer
 from .models import Card
 
 
+CardUserSerializer = UserSimpleSerializer(
+    fields=('id', 'username'), read_only=True)
+
+
 class CardSerializer(DynamicFieldsModelSerializer):
-    created_by = serializers.PrimaryKeyRelatedField(read_only=True)
-    modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
+    created_by = CardUserSerializer
+    modified_by = CardUserSerializer
 
     thumbnail_xs_path = serializers.Field(source='signed_thumbnail_xs_path')
     thumbnail_sm_path = serializers.Field(source='signed_thumbnail_sm_path')

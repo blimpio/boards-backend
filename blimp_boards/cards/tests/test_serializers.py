@@ -78,8 +78,8 @@ class CardSerializerTestCase(BaseTestCase):
         serializer.save()
 
         expected_data = {
-            'created_by': serializer.object.created_by_id,
-            'modified_by': serializer.object.modified_by_id,
+            'created_by': serializer.data['created_by'],
+            'modified_by': serializer.data['modified_by'],
             'id': serializer.object.id,
             'position': serializer.object.position,
             'date_created': serializer.object.date_created,
@@ -137,8 +137,8 @@ class CardSerializerTestCase(BaseTestCase):
         serializer.save()
 
         expected_data = {
-            'created_by': serializer.object.created_by_id,
-            'modified_by': serializer.object.modified_by_id,
+            'created_by': serializer.data['created_by'],
+            'modified_by': serializer.data['modified_by'],
             'id': serializer.object.id,
             'position': serializer.object.position,
             'date_created': serializer.object.date_created,
@@ -234,8 +234,8 @@ class StackSerializerTestCase(BaseTestCase):
         serializer.save()
 
         expected_data = {
-            'created_by': serializer.object.created_by_id,
-            'modified_by': serializer.object.modified_by_id,
+            'created_by': serializer.data['created_by'],
+            'modified_by': serializer.data['modified_by'],
             'id': serializer.object.id,
             'position': serializer.object.position,
             'date_created': serializer.object.date_created,
@@ -281,8 +281,8 @@ class StackSerializerTestCase(BaseTestCase):
         serializer.save()
 
         expected_data = {
-            'created_by': serializer.object.created_by_id,
-            'modified_by': serializer.object.modified_by_id,
+            'created_by': serializer.data['created_by'],
+            'modified_by': serializer.data['modified_by'],
             'id': serializer.object.id,
             'position': serializer.object.position,
             'date_created': serializer.object.date_created,
