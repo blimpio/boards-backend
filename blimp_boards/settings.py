@@ -226,8 +226,8 @@ class Development(Common):
         'blimp_boards.utils.middleware.QueryCountDebugMiddleware',
     ) + Common.MIDDLEWARE_CLASSES
 
-    # Email settings
-    EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
+    # Email Settings
+    EMAIL_BACKEND = 'blimp_boards.utils.backends.BrowsableEmailBackend'
 
     # Django REST framework
     Common.REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
@@ -268,9 +268,6 @@ class Testing(Development):
     PASSWORD_HASHERS = (
         'django.contrib.auth.hashers.MD5PasswordHasher',
     )
-
-    # Email Settings
-    EMAIL_BACKEND = 'blimp_boards.utils.backends.BrowsableEmailBackend'
 
     # South
     SOUTH_TESTS_MIGRATE = False
