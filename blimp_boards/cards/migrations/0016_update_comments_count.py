@@ -11,12 +11,9 @@ class Migration(DataMigration):
         ContentType = orm['contenttypes.ContentType']
         Comment = orm['comments.Comment']
 
-        card_type = ContentType.objects.get(
-            app_label='comments', model='comment')
-
-        for card in orm['cards.Card'].objects.all():
+        for card in Card.objects.all():
             comments = Comment.objects.filter(
-                content_type=card_type, object_id=card.id)
+                content_type__model='card', object_id=card.id)
             card.comments_count = comments.count()
             card.save()
 
