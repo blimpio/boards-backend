@@ -129,6 +129,19 @@ class BoardViewSet(ModelViewSet):
 
         return Response(serializer.data)
 
+    @action(methods=['POST'])
+    def leave(self, request, pk=None):
+        board = self.get_object
+        board_collaborators = BoardCollaborator.objects.exclude(
+            board__created_by=request.user)
+
+        board_collaborator = get_object_or_404(
+            board_collaborators, board=board, user=request.user)
+
+        board_collaborator.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class BoardCollaboratorViewSet(BulkCreateModelMixin,
                                RetrieveUpdateDestroyViewSet):

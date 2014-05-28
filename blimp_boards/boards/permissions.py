@@ -42,8 +42,7 @@ class BoardPermission(permissions.BasePermission):
         if not is_authenticated:
             return False
 
-        if action == 'comments':
-            # Any collaborator can work with permissions
+        if action in ['comments', 'leave']:
             permission = None
 
         return obj.is_user_collaborator(request.user, permission=permission)
