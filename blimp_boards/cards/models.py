@@ -9,7 +9,8 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes import generic
 from django.db.models.loading import get_model
-from django.db.models.signals import m2m_changed
+from django.db.models import F
+from django.db.models.signals import m2m_changed, post_save, post_delete
 from django.utils.functional import cached_property
 from django.contrib.contenttypes.models import ContentType
 from django.utils.timezone import now
@@ -23,6 +24,7 @@ from ..utils.fields import ReservedKeywordsAutoSlugField
 from ..notifications.signals import notify
 from ..files.previews import queue_previews
 from ..files.utils import sign_s3_url
+from ..comments.models import Comment
 from .constants import CARD_RESERVED_KEYWORDS
 from .managers import CardManager
 
@@ -70,6 +72,7 @@ class Card(BaseModel):
     data = JSONField(blank=True, null=True, dump_kwargs={
                      'cls': JSONEncoder, 'separators': (',', ':')})
 
+    comments_count = models.PositiveIntegerField(default=0)
     comments = generic.GenericRelation('comments.Comment')
 
     objects = CardManager()
@@ -362,3 +365,21 @@ def cards_changed(sender, **kwargs):
         Card.objects.filter(pk__in=pk_set, stack=instance).update(stack=None)
     elif action == 'post_clear':
         Card.objects.filter(stack=instance).update(stack=None)
+
+
+@receiver(post_save, sender=Comment)
+@receiver(post_delete, sender=Comment)
+def card_comments_count_change(sender, **kwargs):
+    """
+    """
+    instance = kwargs['instance']
+    created = kwargs.get('created')
+
+    if created:
+        # Increase count
+        instance.comments_count = F('comments_count') + 1
+        instance.save(update_fields=['comments_count'])
+    elif created is None:
+        # Decrease count
+        instance.comments_count = F('comments_count') - 1
+        instance.save(update_fields=['comments_count'])
