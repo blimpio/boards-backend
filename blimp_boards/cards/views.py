@@ -5,7 +5,6 @@ from rest_framework import filters, status, permissions
 from rest_framework.decorators import action, link
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
-from rest_framework.generics import get_object_or_404
 
 from ..utils.viewsets import ModelViewSet
 from ..utils.response import ErrorResponse

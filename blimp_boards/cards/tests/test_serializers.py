@@ -103,7 +103,8 @@ class CardSerializerTestCase(BaseTestCase):
             'html_url': serializer.object.html_url,
             'download_html_url': serializer.object.download_html_url,
             'original_html_url': serializer.object.original_html_url,
-            'metadata': serializer.object.metadata
+            'metadata': serializer.object.metadata,
+            'comments_count': serializer.object.comments_count,
         }
 
         self.assertEqual(serializer.data, expected_data)
@@ -163,6 +164,7 @@ class CardSerializerTestCase(BaseTestCase):
             'download_html_url': serializer.object.download_html_url,
             'original_html_url': serializer.object.original_html_url,
             'metadata': serializer.object.data,
+            'comments_count': serializer.object.comments_count,
         }
 
         self.assertEqual(serializer.data, expected_data)

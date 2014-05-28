@@ -27,7 +27,7 @@ class CardSerializer(DynamicFieldsModelSerializer):
 
     class Meta:
         model = Card
-        read_only_fields = ('slug', 'stack', )
+        read_only_fields = ('slug', 'stack', 'comments_count')
         exclude = ('data', )
 
     def validate_metadata(self, attrs, source):
@@ -103,7 +103,8 @@ class StackSerializer(CardSerializer):
                    'thumbnail_sm_path', 'thumbnail_md_path',
                    'thumbnail_lg_path', 'file_size',
                    'mime_type', 'stack', 'data', 'metadata',
-                   'download_html_url', 'original_html_url', )
+                   'download_html_url', 'original_html_url',
+                   'comments_count', )
 
     def validate_cards(self, attrs, source):
         cards = attrs[source]
@@ -142,3 +143,4 @@ class CardCommentSerializer(CommentSerializer):
 
         if not created:
             card.notify_comment_created(user, obj)
+            card.update_comments_count(count=1)

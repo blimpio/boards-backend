@@ -76,6 +76,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'download_html_url': self.card.download_html_url,
             'original_html_url': self.card.original_html_url,
             'metadata': self.card.metadata,
+            'comments_count': self.card.comments_count,
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -157,6 +158,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'download_html_url': self.card.download_html_url,
             'original_html_url': self.card.original_html_url,
             'metadata': self.card.metadata,
+            'comments_count': self.card.comments_count,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -223,6 +225,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'download_html_url': card.download_html_url,
             'original_html_url': card.original_html_url,
             'metadata': self.data['metadata'],
+            'comments_count': card.comments_count,
         }
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -270,6 +273,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'download_html_url': card.download_html_url,
             'original_html_url': card.original_html_url,
             'metadata': card.metadata,
+            'comments_count': card.comments_count,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -326,6 +330,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'download_html_url': card.download_html_url,
             'original_html_url': card.original_html_url,
             'metadata': card.metadata,
+            'comments_count': card.comments_count,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -375,6 +380,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'download_html_url': self.card.download_html_url,
             'original_html_url': self.card.original_html_url,
             'metadata': self.card.metadata,
+            'comments_count': self.card.comments_count,
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -493,6 +499,7 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             'download_html_url': self.card.download_html_url,
             'original_html_url': self.card.original_html_url,
             'metadata': self.card.metadata,
+            'comments_count': self.card.comments_count,
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
