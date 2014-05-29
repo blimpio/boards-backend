@@ -349,8 +349,19 @@ class Card(BaseModel):
         )
 
     def update_comments_count(self, count=1):
+        # Temporarily turn off announce
+        self.set_announce(False)
+
+        # Update comments count safely
         self.comments_count = F('comments_count') + count
         self.save()
+
+        # Turn on announce
+        self.set_announce(True)
+
+        # Reload object and trigger post_save/announce
+        card = Card.objects.get(pk=self.pk)
+        card.post_save(instance=card, created=False)
 
 
 @receiver(m2m_changed, sender=Card.cards.through)
