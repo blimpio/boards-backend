@@ -349,6 +349,12 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         url = '{}{}/collaborators/'.format(self.base_url, self.board.id)
         response = self.client.get(url)
 
+        created_by = NestedUserSerializer(
+            self.board_collaborator.created_by).data
+
+        modified_by = NestedUserSerializer(
+            self.board_collaborator.modified_by).data
+
         expected_response = [{
             'id': self.board_collaborator.id,
             'date_created': self.board_collaborator.date_created,
@@ -368,7 +374,9 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
                 'date_modified': self.board_collaborator.user.date_modified,
             },
             'invited_user': None,
-            'permission': self.board_collaborator.permission
+            'permission': self.board_collaborator.permission,
+            'created_by': created_by,
+            'modified_by': modified_by,
         }]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -386,8 +394,11 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         url = '{}{}/collaborators/'.format(self.base_url, self.board.id)
         response = self.client.get(url)
 
-        created_by = NestedUserSerializer(self.board.created_by).data
-        modified_by = NestedUserSerializer(self.board.modified_by).data
+        created_by = NestedUserSerializer(
+            self.board_collaborator.created_by).data
+
+        modified_by = NestedUserSerializer(
+            self.board_collaborator.modified_by).data
 
         expected_response = [{
             'id': self.board_collaborator.id,
@@ -444,6 +455,9 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         board_collaborator = BoardCollaborator.objects.get(
             invited_user=invited_user, board=self.board)
 
+        created_by = NestedUserSerializer(board_collaborator.created_by).data
+        modified_by = NestedUserSerializer(board_collaborator.modified_by).data
+
         expected_response = [{
             'id': board_collaborator.id,
             'date_created': board_collaborator.date_created,
@@ -461,16 +475,18 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
                 'gravatar_url': invited_user.gravatar_url,
                 'date_created': invited_user.date_created,
                 'date_modified': invited_user.date_modified,
-            }
+            },
+            'created_by': created_by,
+            'modified_by': modified_by,
         }]
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data, expected_response)
 
 
-class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
+class BoardCollaboratorViewSetTestCase(AuthenticatedAPITestCase):
     def setUp(self):
-        super(BoardCollaboratorViewSetViewSetTestCase, self).setUp()
+        super(BoardCollaboratorViewSetTestCase, self).setUp()
 
         self.create_account()
         self.create_board()
@@ -535,6 +551,9 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
         board_collaborator = BoardCollaborator.objects.get(
             pk=self.board_collaborator.id)
 
+        created_by = NestedUserSerializer(board_collaborator.created_by).data
+        modified_by = NestedUserSerializer(board_collaborator.modified_by).data
+
         expected_response = {
             'id': board_collaborator.id,
             'date_created': board_collaborator.date_created,
@@ -554,7 +573,9 @@ class BoardCollaboratorViewSetViewSetTestCase(AuthenticatedAPITestCase):
                 'timezone': board_collaborator.user.timezone,
                 'date_created': board_collaborator.user.date_created,
                 'date_modified': board_collaborator.user.date_modified,
-            }
+            },
+            'created_by': created_by,
+            'modified_by': modified_by,
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

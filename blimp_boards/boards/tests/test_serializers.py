@@ -202,6 +202,8 @@ class BoardCollaboratorSerializerTestCase(BaseTestCase):
         serializer.save()
 
         expected_data = {
+            'created_by': serializer.data['created_by'],
+            'modified_by': serializer.data['modified_by'],
             'board': serializer.object.board_id,
             'id': serializer.object.id,
             'date_created': serializer.object.date_created,

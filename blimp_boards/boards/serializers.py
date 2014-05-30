@@ -89,7 +89,8 @@ class BoardCollaboratorSerializer(serializers.ModelSerializer):
         model = BoardCollaborator
         read_only_fields = ('board', )
         fields = ('id', 'board', 'user', 'invited_user', 'permission',
-                  'email', 'user_data', 'date_created', 'date_modified',)
+                  'email', 'user_data', 'date_created', 'date_modified',
+                  'created_by', 'modified_by', )
 
     def get_user_data(self, obj):
         from ..invitations.serializers import InvitedUserSimpleSerializer

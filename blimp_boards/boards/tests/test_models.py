@@ -102,7 +102,7 @@ class BoardTestCase(BaseTestCase):
             comments.append(self.create_another_comment(
                 'Comment {}'.format(i), obj=card))
 
-        with self.assertNumQueries(75):
+        with self.assertNumQueries(76):
             cloned_board = self.board.clone(account, user)
 
         cloned_cards = cloned_board.card_set.all()
