@@ -3,6 +3,7 @@ from rest_framework.test import APIClient
 
 from ...utils.tests import BaseTestCase, AuthenticatedAPITestCase
 from ...accounts.models import Account, EmailDomain
+from ...users.serializers import NestedUserSerializer
 
 
 class ValidateSignupDomainsAPIViewTestCase(BaseTestCase):
@@ -92,6 +93,9 @@ class CheckSignupDomainAPIViewTestCase(BaseTestCase):
         response = self.client.post(
             '/api/v1/auth/signup_domains/check/', data, format='json')
 
+        created_by = NestedUserSerializer(account.created_by).data
+        modified_by = NestedUserSerializer(account.modified_by).data
+
         expected_response = {
             'id': account.id,
             'name': 'Acme',
@@ -99,8 +103,8 @@ class CheckSignupDomainAPIViewTestCase(BaseTestCase):
             'logo_color': '',
             'type': 'personal',
             'disqus_shortname': '',
-            'created_by': account.created_by_id,
-            'modified_by': account.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'date_created': account.date_created,
             'date_modified': account.date_modified,
             'html_url': account.html_url
@@ -164,6 +168,9 @@ class AccountsForUserAPIViewTestCase(AuthenticatedAPITestCase):
     def test_get_account_with_token_should_work(self):
         response = self.client.get('/api/v1/accounts/')
 
+        created_by = NestedUserSerializer(self.account.created_by).data
+        modified_by = NestedUserSerializer(self.account.modified_by).data
+
         expected_response = [{
             'id': self.account.id,
             'name': 'Acme',
@@ -171,8 +178,8 @@ class AccountsForUserAPIViewTestCase(AuthenticatedAPITestCase):
             'logo_color': '',
             'type': 'personal',
             'disqus_shortname': '',
-            'created_by': self.account.created_by_id,
-            'modified_by': self.account.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'date_created': self.account.date_created,
             'date_modified': self.account.date_modified,
             'html_url': self.account.html_url

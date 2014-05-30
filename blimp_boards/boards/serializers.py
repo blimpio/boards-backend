@@ -5,18 +5,15 @@ from rest_framework import serializers
 from ..accounts.models import AccountCollaborator
 from ..invitations.models import InvitedUser
 from ..accounts.permissions import AccountPermission
-from ..users.serializers import UserSimpleSerializer
+from ..users.serializers import NestedUserSerializer, UserSimpleSerializer
 from .models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
-BoardUserSerializer = UserSimpleSerializer(
-    fields=('id', 'username'), read_only=True)
-
-
 class BoardSerializer(serializers.ModelSerializer):
+    created_by = NestedUserSerializer(read_only=True)
+    modified_by = NestedUserSerializer(read_only=True)
+
     color = serializers.CharField()
-    created_by = BoardUserSerializer
-    modified_by = BoardUserSerializer
 
     html_url = serializers.Field()
     activity_html_url = serializers.Field()
@@ -82,12 +79,15 @@ class BoardCollaboratorSimpleSerializer(serializers.ModelSerializer):
 
 
 class BoardCollaboratorSerializer(serializers.ModelSerializer):
+    created_by = NestedUserSerializer(read_only=True)
+    modified_by = NestedUserSerializer(read_only=True)
+
     email = serializers.EmailField(write_only=True, required=False)
     user_data = serializers.SerializerMethodField('get_user_data')
 
     class Meta:
         model = BoardCollaborator
-        read_only_fields = ('board', 'created_by', 'modified_by',)
+        read_only_fields = ('board', )
         fields = ('id', 'board', 'user', 'invited_user', 'permission',
                   'email', 'user_data', 'date_created', 'date_modified',)
 

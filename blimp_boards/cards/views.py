@@ -102,7 +102,9 @@ class CardViewSet(ModelViewSet):
             else:
                 return ErrorResponse(serializer.errors)
         else:
-            comments = card.comments.all()
+            comments = card.comments.select_related(
+                'created_by', 'modified_by').all()
+
             serializer = CardCommentSerializer(comments, many=True)
 
         return Response(serializer.data)

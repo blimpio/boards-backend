@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from ...utils.tests import AuthenticatedAPITestCase
+from ...users.serializers import NestedUserSerializer
 from ..models import Comment
 
 
@@ -67,11 +68,14 @@ class CommentViewSetTestCase(AuthenticatedAPITestCase):
 
         response = self.client.get('{}{}/'.format(self.base_url, comment.id))
 
+        created_by = NestedUserSerializer(self.user).data
+        modified_by = NestedUserSerializer(self.user).data
+
         expected_response = {
             'id': comment.id,
             'content': 'A comment',
-            'created_by': self.user.id,
-            'modified_by': self.user.id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'date_created': comment.date_created,
             'date_modified': comment.date_modified
         }
@@ -97,11 +101,14 @@ class CommentViewSetTestCase(AuthenticatedAPITestCase):
 
         comment = Comment.objects.get(pk=comment.id)
 
+        created_by = NestedUserSerializer(self.user).data
+        modified_by = NestedUserSerializer(self.user).data
+
         expected_response = {
             'id': comment.id,
             'content': 'Updated the comment.',
-            'created_by': self.user.id,
-            'modified_by': self.user.id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'date_created': comment.date_created,
             'date_modified': comment.date_modified
         }

@@ -48,8 +48,8 @@ class CommentSerializerTestCase(BaseTestCase):
         expected_data = {
             'id': comment.id,
             'content': 'A comment',
-            'created_by': self.user.id,
-            'modified_by': self.user.id,
+            'created_by': serializer.data['created_by'],
+            'modified_by': serializer.data['modified_by'],
             'date_created': comment.date_created,
             'date_modified': comment.date_modified
         }
@@ -79,8 +79,8 @@ class CommentSerializerTestCase(BaseTestCase):
         expected_data = {
             'id': comment.id,
             'content': 'updated my comment.',
-            'created_by': self.user.id,
-            'modified_by': self.user.id,
+            'created_by': serializer.data['created_by'],
+            'modified_by': serializer.data['modified_by'],
             'date_created': comment.date_created,
             'date_modified': comment.date_modified
         }

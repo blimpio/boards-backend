@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from ..utils.fields import DomainNameField
+from ..users.serializers import NestedUserSerializer
 from .fields import SignupDomainsField
 from .models import Account
 
@@ -16,11 +17,14 @@ class AccountSerializer(serializers.ModelSerializer):
     """
     Serializer for Accounts.
     """
+    created_by = NestedUserSerializer(read_only=True)
+    modified_by = NestedUserSerializer(read_only=True)
+
     html_url = serializers.Field()
 
     class Meta:
         model = Account
-        read_only_fields = ('created_by', 'modified_by', 'logo_color', )
+        read_only_fields = ('logo_color', )
         fields = ('id', 'name', 'type', 'slug',  'disqus_shortname',
                   'logo_color', 'created_by', 'html_url',
                   'modified_by', 'date_created', 'date_modified', )

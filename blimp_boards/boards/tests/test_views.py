@@ -3,7 +3,7 @@ from rest_framework.test import APIClient
 
 from ...utils.tests import AuthenticatedAPITestCase
 from ...invitations.models import InvitedUser
-from ..serializers import BoardUserSerializer
+from ...users.serializers import NestedUserSerializer
 from ..models import Board, BoardCollaborator, BoardCollaboratorRequest
 
 
@@ -36,8 +36,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         Tests that viewset returns boards that the user can access.
         """
         response = self.client.get(self.base_url)
-        created_by = BoardUserSerializer.to_native(self.board.created_by)
-        modified_by = BoardUserSerializer.to_native(self.board.modified_by)
+        created_by = NestedUserSerializer(self.board.created_by).data
+        modified_by = NestedUserSerializer(self.board.modified_by).data
 
         expected_response = [{
             'created_by': created_by,
@@ -103,8 +103,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         response = self.client.get(
             '{}{}/'.format(self.base_url, self.board.id))
 
-        created_by = BoardUserSerializer.to_native(self.board.created_by)
-        modified_by = BoardUserSerializer.to_native(self.board.modified_by)
+        created_by = NestedUserSerializer(self.board.created_by).data
+        modified_by = NestedUserSerializer(self.board.modified_by).data
 
         expected_response = {
             'created_by': created_by,
@@ -161,8 +161,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         response = self.client.post(self.base_url, data, format='json')
 
         board = Board.objects.get(pk=response.data['id'])
-        created_by = BoardUserSerializer.to_native(board.created_by)
-        modified_by = BoardUserSerializer.to_native(board.modified_by)
+        created_by = NestedUserSerializer(board.created_by).data
+        modified_by = NestedUserSerializer(board.modified_by).data
 
         expected_response = {
             'created_by': created_by,
@@ -202,8 +202,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
 
         self.board = Board.objects.get(pk=self.board.id)
 
-        created_by = BoardUserSerializer.to_native(self.board.created_by)
-        modified_by = BoardUserSerializer.to_native(self.board.modified_by)
+        created_by = NestedUserSerializer(self.board.created_by).data
+        modified_by = NestedUserSerializer(self.board.modified_by).data
 
         expected_response = {
             'created_by': created_by,
@@ -252,8 +252,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             '{}{}/'.format(self.base_url, self.board.id), data, format='json')
 
         self.board = Board.objects.get(pk=self.board.id)
-        created_by = BoardUserSerializer.to_native(self.board.created_by)
-        modified_by = BoardUserSerializer.to_native(self.board.modified_by)
+        created_by = NestedUserSerializer(self.board.created_by).data
+        modified_by = NestedUserSerializer(self.board.modified_by).data
 
         expected_response = {
             'created_by': created_by,
@@ -288,8 +288,8 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         response = self.client.get(
             '{}{}/'.format(self.base_url, self.board.id))
 
-        created_by = BoardUserSerializer.to_native(self.board.created_by)
-        modified_by = BoardUserSerializer.to_native(self.board.modified_by)
+        created_by = NestedUserSerializer(self.board.created_by).data
+        modified_by = NestedUserSerializer(self.board.modified_by).data
 
         expected_response = {
             'created_by': created_by,
@@ -386,14 +386,17 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
         url = '{}{}/collaborators/'.format(self.base_url, self.board.id)
         response = self.client.get(url)
 
+        created_by = NestedUserSerializer(self.board.created_by).data
+        modified_by = NestedUserSerializer(self.board.modified_by).data
+
         expected_response = [{
             'id': self.board_collaborator.id,
             'date_created': self.board_collaborator.date_created,
             'date_modified': self.board_collaborator.date_modified,
             'board': self.board.id,
             'user': self.board_collaborator.user.id,
-            'created_by': self.board_collaborator.created_by_id,
-            'modified_by': self.board_collaborator.modified_by_id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'user_data': {
                 'id': self.board_collaborator.user.id,
                 'username': self.board_collaborator.user.username,

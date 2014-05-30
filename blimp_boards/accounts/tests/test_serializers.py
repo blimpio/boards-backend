@@ -1,5 +1,5 @@
 from ...utils.tests import BaseTestCase
-from ...accounts.models import Account, EmailDomain
+from ...accounts.models import EmailDomain
 from ..serializers import (ValidateSignupDomainsSerializer,
                            CheckSignupDomainSerializer)
 
@@ -132,8 +132,8 @@ class CheckSignupDomainSerializerTestCase(BaseTestCase):
             'name': 'Acme',
             'slug': 'acme',
             'type': 'personal',
-            'created_by': self.account.created_by_id,
-            'modified_by': self.account.modified_by_id,
+            'created_by': serializer.object['created_by'],
+            'modified_by': serializer.object['modified_by'],
             'logo_color': '',
             'disqus_shortname': '',
             'date_created': self.account.date_created,

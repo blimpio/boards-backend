@@ -4,7 +4,7 @@ from rest_framework.test import APIClient
 from ...utils.tests import AuthenticatedAPITestCase
 from ...boards.models import Board
 from ...comments.models import Comment
-from ..serializers import CardUserSerializer
+from ...users.serializers import NestedUserSerializer
 from ..models import Card
 
 
@@ -46,8 +46,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         """
         response = self.client.get(self.base_url)
 
-        created_by = CardUserSerializer.to_native(self.card.created_by)
-        modified_by = CardUserSerializer.to_native(self.card.modified_by)
+        created_by = NestedUserSerializer(self.card.created_by).data
+        modified_by = NestedUserSerializer(self.card.modified_by).data
 
         expected_response = [{
             'created_by': created_by,
@@ -128,8 +128,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         response = self.client.get(
             '{}{}/'.format(self.base_url, self.card.id))
 
-        created_by = CardUserSerializer.to_native(self.card.created_by)
-        modified_by = CardUserSerializer.to_native(self.card.modified_by)
+        created_by = NestedUserSerializer(self.card.created_by).data
+        modified_by = NestedUserSerializer(self.card.modified_by).data
 
         expected_response = {
             'created_by': created_by,
@@ -195,8 +195,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         response = self.client.post(self.base_url, self.data, format='json')
 
         card = Card.objects.get(pk=response.data['id'])
-        created_by = CardUserSerializer.to_native(card.created_by)
-        modified_by = CardUserSerializer.to_native(card.modified_by)
+        created_by = NestedUserSerializer(card.created_by).data
+        modified_by = NestedUserSerializer(card.modified_by).data
 
         expected_response = {
             'created_by': created_by,
@@ -243,8 +243,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             self.data, format='json')
 
         card = Card.objects.get(pk=response.data['id'])
-        created_by = CardUserSerializer.to_native(card.created_by)
-        modified_by = CardUserSerializer.to_native(card.modified_by)
+        created_by = NestedUserSerializer(card.created_by).data
+        modified_by = NestedUserSerializer(card.modified_by).data
 
         expected_response = {
             'created_by': created_by,
@@ -300,8 +300,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
             self.data, format='json')
 
         card = Card.objects.get(pk=response.data['id'])
-        created_by = CardUserSerializer.to_native(card.created_by)
-        modified_by = CardUserSerializer.to_native(card.modified_by)
+        created_by = NestedUserSerializer(card.created_by).data
+        modified_by = NestedUserSerializer(card.modified_by).data
 
         expected_response = {
             'created_by': created_by,
@@ -350,8 +350,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
 
         response = self.client.get(self.base_url, {'board': self.board.id})
 
-        created_by = CardUserSerializer.to_native(self.card.created_by)
-        modified_by = CardUserSerializer.to_native(self.card.modified_by)
+        created_by = NestedUserSerializer(self.card.created_by).data
+        modified_by = NestedUserSerializer(self.card.modified_by).data
 
         expected_response = [{
             'created_by': created_by,
@@ -399,11 +399,14 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         response = self.client.get(
             '{}{}/comments/'.format(self.base_url, self.card.id))
 
+        created_by = NestedUserSerializer(self.user).data
+        modified_by = NestedUserSerializer(self.user).data
+
         expected_response = [{
             'id': comment.id,
             'content': 'A comment',
-            'created_by': self.user.id,
-            'modified_by': self.user.id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'date_created': comment.date_created,
             'date_modified': comment.date_modified
         }]
@@ -421,11 +424,14 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
 
         comment = Comment.objects.get(pk=response.data['id'])
 
+        created_by = NestedUserSerializer(self.user).data
+        modified_by = NestedUserSerializer(self.user).data
+
         expected_response = {
             'id': comment.id,
             'content': 'This is my comment.',
-            'created_by': self.user.id,
-            'modified_by': self.user.id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'date_created': comment.date_created,
             'date_modified': comment.date_modified
         }
@@ -446,11 +452,14 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
 
         comment = Comment.objects.get(pk=response.data['id'])
 
+        created_by = NestedUserSerializer(self.user).data
+        modified_by = NestedUserSerializer(self.user).data
+
         expected_response = {
             'id': comment.id,
             'content': 'This is my comment.',
-            'created_by': self.user.id,
-            'modified_by': self.user.id,
+            'created_by': created_by,
+            'modified_by': modified_by,
             'date_created': comment.date_created,
             'date_modified': comment.date_modified
         }
@@ -469,8 +478,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
         self.client = APIClient()
         response = self.client.get(self.base_url, {'board': self.board.id})
 
-        created_by = CardUserSerializer.to_native(self.card.created_by)
-        modified_by = CardUserSerializer.to_native(self.card.modified_by)
+        created_by = NestedUserSerializer(self.card.created_by).data
+        modified_by = NestedUserSerializer(self.card.modified_by).data
 
         expected_response = [{
             'created_by': created_by,
@@ -521,8 +530,8 @@ class CardViewSetTestCase(AuthenticatedAPITestCase):
 
         card = Card.objects.get(pk=response.data['id'])
 
-        created_by = CardUserSerializer.to_native(self.card.created_by)
-        modified_by = CardUserSerializer.to_native(self.card.modified_by)
+        created_by = NestedUserSerializer(self.card.created_by).data
+        modified_by = NestedUserSerializer(self.card.modified_by).data
 
         expected_response = {
             'created_by': created_by,

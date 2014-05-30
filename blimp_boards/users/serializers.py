@@ -6,7 +6,6 @@ from ..utils import fields
 from ..utils.serializers import DynamicFieldsModelSerializer
 from ..utils.validators import is_valid_email
 from ..accounts.models import Account, AccountCollaborator
-from ..accounts.serializers import AccountSerializer
 from ..boards.models import Board
 from ..invitations.models import SignupRequest, InvitedUser
 from .models import User
@@ -286,7 +285,6 @@ class UserSerializer(serializers.ModelSerializer):
     Serializers used for User objects.
     """
     token = serializers.Field(source='token')
-    accounts = AccountSerializer(many=True, source='accounts')
 
     class Meta:
         model = User
@@ -294,6 +292,18 @@ class UserSerializer(serializers.ModelSerializer):
                   'avatar_path', 'gravatar_url', 'timezone',
                   'email_notifications', 'token', 'accounts',
                   'date_created', 'date_modified', )
+
+    def __init__(self, *args, **kwargs):
+        """
+        Workaround to avoid import loop.
+        """
+        from ..accounts.serializers import AccountSerializer
+
+        self.base_fields.update({
+            'accounts': AccountSerializer(many=True, source='accounts')
+        })
+
+        super(UserSerializer, self).__init__(*args, **kwargs)
 
 
 class UserSimpleSerializer(DynamicFieldsModelSerializer):
@@ -306,6 +316,16 @@ class UserSimpleSerializer(DynamicFieldsModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
                   'avatar_path', 'gravatar_url', 'timezone',
                   'date_created', 'date_modified', )
+
+
+class NestedUserSerializer(UserSimpleSerializer):
+    """
+    User serializer used for simple nested representation.
+    """
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'gravatar_url', )
 
 
 class UserSettingsSerializer(serializers.ModelSerializer):

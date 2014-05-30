@@ -87,7 +87,7 @@ class AccountViewSet(ListRetrieveUpdateViewSet):
         elif public_accounts:
             accounts = public_accounts
 
-        return accounts
+        return accounts.select_related('created_by', 'modified_by')
 
     @link(paginate_by=10)
     def activity(self, request, pk=None):

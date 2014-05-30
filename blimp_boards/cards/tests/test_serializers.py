@@ -428,8 +428,8 @@ class CardCommentSerializerTestCase(BaseTestCase):
         expected_data = {
             'id': serializer.object.id,
             'content': 'A comment',
-            'created_by': self.user.id,
-            'modified_by': self.user.id,
+            'created_by': serializer.data['created_by'],
+            'modified_by': serializer.data['modified_by'],
             'date_created': serializer.object.date_created,
             'date_modified': serializer.object.date_modified
         }
