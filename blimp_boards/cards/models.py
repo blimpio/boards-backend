@@ -23,7 +23,7 @@ from ..utils.decorators import autoconnect
 from ..utils.fields import ReservedKeywordsAutoSlugField
 from ..notifications.signals import notify
 from ..files.previews import queue_previews
-from ..files.utils import sign_s3_url
+from ..files.utils import sign_cloudfront_url, sign_s3_url
 from .constants import CARD_RESERVED_KEYWORDS
 from .managers import CardManager
 
@@ -117,22 +117,22 @@ class Card(BaseModel):
     @property
     def signed_thumbnail_xs_path(self):
         if self.thumbnail_xs_path:
-            return sign_s3_url(self.thumbnail_xs_path)
+            return sign_cloudfront_url(self.thumbnail_xs_path)
 
     @property
     def signed_thumbnail_sm_path(self):
         if self.thumbnail_sm_path:
-            return sign_s3_url(self.thumbnail_sm_path)
+            return sign_cloudfront_url(self.thumbnail_sm_path)
 
     @property
     def signed_thumbnail_md_path(self):
         if self.thumbnail_md_path:
-            return sign_s3_url(self.thumbnail_md_path)
+            return sign_cloudfront_url(self.thumbnail_md_path)
 
     @property
     def signed_thumbnail_lg_path(self):
         if self.thumbnail_lg_path:
-            return sign_s3_url(self.thumbnail_lg_path)
+            return sign_cloudfront_url(self.thumbnail_lg_path)
 
     @property
     def download_url(self):
@@ -186,7 +186,7 @@ class Card(BaseModel):
                 url = thumbnail.get('url')
                 break
 
-        return sign_s3_url(url) if url else None
+        return sign_cloudfront_url(url) if url else None
 
     @cached_property
     def pattern(self):

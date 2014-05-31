@@ -2,7 +2,7 @@ from django.utils.six.moves.urllib import parse
 
 from rest_framework import serializers
 
-from ..files.utils import sign_s3_url
+from ..files.utils import sign_cloudfront_url
 from .models import Notification
 
 
@@ -25,6 +25,7 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     def _data_with_signed_urls(self, data):
         thumbnail_keys = [
+            'thumbnail_xs_path',
             'thumbnail_sm_path',
             'thumbnail_md_path',
             'thumbnail_lg_path'
@@ -35,6 +36,6 @@ class NotificationSerializer(serializers.ModelSerializer):
                 split_results = list(tuple(parse.urlsplit(value)))
                 split_results[-2] = ''
                 cleaned_url = parse.unquote(parse.urlunsplit(split_results))
-                data[key] = sign_s3_url(cleaned_url)
+                data[key] = sign_cloudfront_url(cleaned_url)
 
         return data

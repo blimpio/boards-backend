@@ -5,11 +5,42 @@ import hmac
 import hashlib
 import uuid
 import time
+import Crypto.Hash.SHA
+import Crypto.PublicKey.RSA
+import Crypto.Signature.PKCS1_v1_5
 
 from django.conf import settings
+from django.utils.timezone import now
 from django.utils.six.moves.urllib.parse import urlencode, quote, urlparse
 from django.utils.encoding import smart_bytes, smart_text
-from django.utils.timezone import now
+
+
+def sign_s3_url(url, expires_in=None, response_headers=None):
+    if not expires_in:
+        expires_in = settings.AWS_SIGNATURE_EXPIRES_IN
+
+    signer = S3UrlSigner(settings.AWS_ACCESS_KEY_ID,
+                         settings.AWS_SECRET_ACCESS_KEY)
+
+    return signer.sign_url('GET', url, expires_in, response_headers)
+
+
+def sign_cloudfront_url(url, expires_in=None, response_headers=None):
+    """
+    If CLOUDFRONT_* settings are available return signed CloudFront URL,
+    if not fallback to returning signed S3 URL.
+    """
+    if not expires_in:
+        expires_in = settings.AWS_SIGNATURE_EXPIRES_IN
+
+    try:
+        signer = CloudFrontSigner(settings.CLOUDFRONT_SUBDOMAIN,
+                                  settings.CLOUDFRONT_KEY_PAIR_ID,
+                                  settings.CLOUDFRONT_PRIVATE_KEY)
+
+        return signer.sign_url(url, expires_in)
+    except:
+        return sign_s3_url(url, expires_in)
 
 
 def generate_policy(bucket, mime_type, file_size):
@@ -61,15 +92,6 @@ def generate_file_key(name=None, user=None):
     TODO: Generate correct key depending on what object the file belongs.
     """
     return 'cards/{}/{}'.format(uuid.uuid4(), name)
-
-
-def sign_s3_url(url, response_headers=None):
-    signer = S3UrlSigner(settings.AWS_ACCESS_KEY_ID,
-                         settings.AWS_SECRET_ACCESS_KEY)
-
-    expires_in = settings.AWS_SIGNATURE_EXPIRES_IN
-
-    return signer.sign_url('GET', url, expires_in, response_headers)
 
 
 class S3UrlSigner(object):
@@ -135,3 +157,86 @@ class S3UrlSigner(object):
 
         return self.generate_url(verb, key, bucket, expires_in,
                                  response_headers)
+
+
+class CloudFrontSigner(object):
+    def __init__(self, subdomain, key_pair_id, private_key):
+        self.s3_endpoint = 'https://s3.amazonaws.com'
+        self.cf_endpoint = 'https://{}.cloudfront.net'.format(subdomain)
+        self.key_pair_id = key_pair_id
+
+        if private_key.startswith == '-----BEGIN RSA PRIVATE KEY-----':
+            self.private_key = private_key
+        elif private_key.endswith('.pem'):
+            self.private_key = open(private_key, 'r').read()
+
+    def _generate_signature(self, message):
+        key = Crypto.PublicKey.RSA.importKey(self.private_key)
+        signer = Crypto.Signature.PKCS1_v1_5.new(key)
+        sha1_hash = Crypto.Hash.SHA.new()
+
+        sha1_hash.update(smart_bytes(message))
+
+        return signer.sign(sha1_hash)
+
+    def _generate_encoded_signature(self, message):
+        encoded = smart_text(base64.b64encode(smart_bytes(message)))
+
+        return encoded.replace('+', '-').replace('=', '_').replace('/', '~')
+
+    def _generate_url(self, url, expires_in, encoded_signature):
+        params = urlencode({
+            'Expires': expires_in,
+            'Signature': encoded_signature,
+            'Key-Pair-Id': self.key_pair_id
+        })
+
+        return url + '?' + params
+
+    def _generate_canned_policy_url(self, url, expires_in):
+        canned_policy = {
+            'Statement': [{
+                'Resource': url,
+                'Condition': {
+                    'DateLessThan': {
+                        'AWS:EpochTime': expires_in
+                    }
+                }
+            }]
+        }
+
+        json_canned_policy = json.dumps(canned_policy, separators=(',', ':'))
+        signature = self._generate_signature(json_canned_policy)
+        encoded_signature = self._generate_encoded_signature(signature)
+
+        return self._generate_url(url, expires_in, encoded_signature)
+
+    def sign_url(self, url, expires_in_seconds):
+        """
+        Returns a full signed URL from a given url, and expires_in_seconds.
+        """
+        expires = int(time.time() + expires_in_seconds)
+
+        if url.startswith(self.s3_endpoint):
+            return self.sign_s3_url(url, expires_in_seconds)
+
+        return self._generate_canned_policy_url(url, expires)
+
+    def sign_s3_url(self, url, expires_in_seconds):
+        """
+        Returns a signed CloudFront URL from a given
+        S3 URL and expires_in_seconds.
+        """
+        url = urlparse(url)
+        url = '{}://{}{}'.format(url.scheme, url.netloc, url.path)
+        url = url.replace(self.s3_endpoint, '')
+        parts = url.split('/')
+        bucket = parts[1]
+
+        parts.remove(bucket)
+
+        key = quote('/'.join(parts))
+
+        cloudfront_url = '{}{}'.format(self.cf_endpoint, key)
+
+        return self.sign_url(cloudfront_url, expires_in_seconds)
