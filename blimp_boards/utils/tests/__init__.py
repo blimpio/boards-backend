@@ -123,3 +123,21 @@ class AuthenticatedAPITestCase(BaseTestCase):
         self.client = APIClient()
         self.client.credentials(
             HTTP_AUTHORIZATION='JWT {0}'.format(self.token))
+
+
+class FuzzyInt(int):
+    """
+    Useful for fuzzy testing with assertNumQueries.
+    From: http://lukeplant.me.uk/blog/posts/fuzzy-testing-with-assertnumqueries
+    """
+    def __new__(cls, lowest, highest):
+        obj = super(FuzzyInt, cls).__new__(cls, highest)
+        obj.lowest = lowest
+        obj.highest = highest
+        return obj
+
+    def __eq__(self, other):
+        return other >= self.lowest and other <= self.highest
+
+    def __repr__(self):
+        return "[%d..%d]" % (self.lowest, self.highest)

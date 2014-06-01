@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 
-from ...utils.tests import BaseTestCase
+from ...utils.tests import BaseTestCase, FuzzyInt
 from ...users.models import User
 from ...cards.models import Card
 from ...comments.models import Comment
@@ -102,7 +102,7 @@ class BoardTestCase(BaseTestCase):
             comments.append(self.create_another_comment(
                 'Comment {}'.format(i), obj=card))
 
-        with self.assertNumQueries(74):
+        with self.assertNumQueries(FuzzyInt(70, 80)):
             cloned_board = self.board.clone(account, user)
 
         cloned_cards = cloned_board.card_set.all()
