@@ -13,6 +13,10 @@ from django.conf import settings
 from django.utils.timezone import now
 from django.utils.six.moves.urllib.parse import urlencode, quote, urlparse
 from django.utils.encoding import smart_bytes, smart_text
+from django.utils.log import getLogger
+
+
+logger = getLogger(__name__)
 
 
 def sign_s3_url(url, expires_in=None, response_headers=None):
@@ -33,11 +37,15 @@ def sign_cloudfront_url(url, expires_in=None, response_headers=None):
     if not expires_in:
         expires_in = settings.AWS_SIGNATURE_EXPIRES_IN
 
-    signer = CloudFrontSigner(settings.CLOUDFRONT_SUBDOMAIN,
-                              settings.CLOUDFRONT_KEY_PAIR_ID,
-                              settings.CLOUDFRONT_PRIVATE_KEY)
+    try:
+        signer = CloudFrontSigner(settings.CLOUDFRONT_SUBDOMAIN,
+                                  settings.CLOUDFRONT_KEY_PAIR_ID,
+                                  settings.CLOUDFRONT_PRIVATE_KEY)
 
-    return signer.sign_url(url, expires_in)
+        return signer.sign_url(url, expires_in)
+    except Exception as e:
+        logger.exception(e)
+        return sign_s3_url(url, expires_in)
 
 
 def generate_policy(bucket, mime_type, file_size):
