@@ -33,14 +33,11 @@ def sign_cloudfront_url(url, expires_in=None, response_headers=None):
     if not expires_in:
         expires_in = settings.AWS_SIGNATURE_EXPIRES_IN
 
-    try:
-        signer = CloudFrontSigner(settings.CLOUDFRONT_SUBDOMAIN,
-                                  settings.CLOUDFRONT_KEY_PAIR_ID,
-                                  settings.CLOUDFRONT_PRIVATE_KEY)
+    signer = CloudFrontSigner(settings.CLOUDFRONT_SUBDOMAIN,
+                              settings.CLOUDFRONT_KEY_PAIR_ID,
+                              settings.CLOUDFRONT_PRIVATE_KEY)
 
-        return signer.sign_url(url, expires_in)
-    except:
-        return sign_s3_url(url, expires_in)
+    return signer.sign_url(url, expires_in)
 
 
 def generate_policy(bucket, mime_type, file_size):
@@ -165,7 +162,7 @@ class CloudFrontSigner(object):
         self.cf_endpoint = 'https://{}.cloudfront.net'.format(subdomain)
         self.key_pair_id = key_pair_id
 
-        if private_key.startswith == '-----BEGIN RSA PRIVATE KEY-----':
+        if private_key.startswith('-----BEGIN RSA PRIVATE KEY-----'):
             self.private_key = private_key
         elif private_key.endswith('.pem'):
             self.private_key = open(private_key, 'r').read()
