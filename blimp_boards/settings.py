@@ -292,6 +292,10 @@ class Staging(Common):
         'raven.contrib.django.raven_compat',
     )
 
+    MIDDLEWARE_CLASSES = (
+        'blimp_boards.utils.middleware.QueryCountDebugMiddleware',
+    ) + Common.MIDDLEWARE_CLASSES
+
     # django-secure
     SESSION_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
