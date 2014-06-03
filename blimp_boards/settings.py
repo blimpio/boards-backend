@@ -167,9 +167,6 @@ class Common(Configuration):
     AWS_SECRET_ACCESS_KEY = values.Value(environ_prefix=None)
     AWS_STORAGE_BUCKET_NAME = values.Value(environ_prefix=None)
     AWS_SIGNATURE_EXPIRES_IN = 60 * 60 * 3
-    CLOUDFRONT_KEY_PAIR_ID = values.Value(environ_prefix=None)
-    CLOUDFRONT_PRIVATE_KEY = values.Value(environ_prefix=None)
-    CLOUDFRONT_SUBDOMAIN = values.Value(environ_prefix=None)
 
     # boards-web
     BOARDS_WEB_STATIC_URL = values.Value(environ_prefix=None)
