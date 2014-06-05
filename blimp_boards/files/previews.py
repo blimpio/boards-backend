@@ -61,7 +61,13 @@ def queue_previews(url, sizes, metadata):
         'sizes': sizes,
         'metadata': metadata,
         'extra_data': ['all'],
-        'format': guess_output_format(url)
+        'format': guess_output_format(url),
+        'uploader': {
+            'headers': {
+                'Cache-Control': 'max-age=315360000, no-transform, private',
+                'x-amz-acl': 'private'
+            }
+        }
     }
 
     token = jwt.encode(payload, settings.BLIMP_PREVIEWS_SECRET_KEY)
