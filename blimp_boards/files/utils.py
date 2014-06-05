@@ -8,7 +8,7 @@ import time
 
 from django.conf import settings
 from django.utils.timezone import now
-from django.utils.six.moves.urllib.parse import urlencode, quote, urlparse
+from django.utils.six.moves import urllib
 from django.utils.encoding import smart_bytes, smart_text
 from django.utils.log import getLogger
 
@@ -89,7 +89,7 @@ class S3UrlSigner(object):
         Returns a full signed URL from a given verb, key,
         bucket, and expires_in_seconds.
         """
-        key = quote(key)
+        key = urllib.parse.quote(key)
 
         expires = int(time.time() + expires_in_seconds)
 
@@ -105,7 +105,7 @@ class S3UrlSigner(object):
         str = '{}{}'.format(str, key)
 
         if response_headers:
-            str = '{}?{}'.format(str, urlencode(response_headers))
+            str = '{}?{}'.format(str, urllib.parse.urlencode(response_headers))
 
         signature = smart_text(generate_signature(str, self.secret_key))
 
@@ -118,7 +118,7 @@ class S3UrlSigner(object):
         if response_headers:
             params.update(response_headers)
 
-        return '{}?{}'.format(url, urlencode(params))
+        return '{}?{}'.format(url, urllib.parse.urlencode(params))
 
     def sign_url(self, verb, url, expires_in, response_headers=None):
         """
@@ -128,7 +128,7 @@ class S3UrlSigner(object):
         if not url.startswith(self.endpoint):
             return None
 
-        url = urlparse(url)
+        url = urllib.parse.urlparse(url)
         url = '{}://{}{}'.format(url.scheme, url.netloc, url.path)
         url = url.replace(self.endpoint, '')
         parts = url.split('/')
@@ -136,7 +136,7 @@ class S3UrlSigner(object):
 
         parts.remove(bucket)
 
-        key = '/'.join(parts)
+        key = urllib.parse.unquote('/'.join(parts))
 
         return self.generate_url(verb, key, bucket, expires_in,
                                  response_headers)
