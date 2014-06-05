@@ -15,6 +15,7 @@ from ..utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
 from ..utils.validators import username_validator
 from ..utils.models import BaseModel
 from ..utils.decorators import autoconnect
+from ..utils.request import get_ip_address
 from ..notifications.models import NotificationSetting
 from ..notifications.signals import notify
 from .utils import get_gravatar_url
@@ -26,7 +27,7 @@ def update_last_ip(sender, user, request, **kwargs):
     A signal receiver which updates the last_ip for
     the user logging in.
     """
-    user.last_ip = request.META.get('REMOTE_ADDR', '0.0.0.0')
+    user.last_ip = get_ip_address(request)
     user.save()
 user_logged_in.connect(update_last_ip)
 
