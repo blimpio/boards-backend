@@ -164,7 +164,7 @@ class Card(BaseModel):
                 'response-content-disposition': 'attachment'
             }
 
-            return sign_s3_url(self.content, headers)
+            return sign_s3_url(self.content, response_headers=headers)
 
     @property
     def original_thumbnail_url(self):
