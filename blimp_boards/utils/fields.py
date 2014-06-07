@@ -74,7 +74,7 @@ class DateTimeCreatedField(models.DateTimeField):
         super(DateTimeCreatedField, self).__init__(*args, **kwargs)
 
     def get_internal_type(self):
-        return "DateTimeField"
+        return 'DateTimeField'
 
     def pre_save(self, model, add):
         if not model.pk:
@@ -92,7 +92,7 @@ class DateTimeCreatedField(models.DateTimeField):
         """
         from south.modelsinspector import introspector
 
-        field_class = "django.db.models.fields.DateTimeField"
+        field_class = 'django.db.models.fields.DateTimeField'
         args, kwargs = introspector(self)
 
         return (field_class, args, kwargs)
