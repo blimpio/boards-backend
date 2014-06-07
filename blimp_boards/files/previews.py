@@ -56,7 +56,7 @@ def guess_output_format(url):
 
 def queue_previews(url, sizes, metadata):
     payload = {
-        'account_key': settings.BLIMP_PREVIEWS_ACCOUNT_ID,
+        'api_key': settings.BLIMP_PREVIEWS_API_KEY,
         'url': url,
         'sizes': sizes,
         'metadata': metadata,

@@ -173,7 +173,7 @@ class Common(Configuration):
     BOARDS_WEB_CLIENT_VERSION = values.Value(environ_prefix=None)
 
     # blimp-previews
-    BLIMP_PREVIEWS_ACCOUNT_ID = values.Value(environ_prefix=None)
+    BLIMP_PREVIEWS_API_KEY = values.Value(environ_prefix=None)
     BLIMP_PREVIEWS_SECRET_KEY = values.Value(environ_prefix=None)
     BLIMP_PREVIEWS_URL = values.Value(environ_prefix=None)
 
