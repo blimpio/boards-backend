@@ -9,9 +9,14 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 
 import os
 import newrelic.agent
+import dotenv
 
+
+dotenv.read_dotenv(
+    os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
 
 ENVIRONMENT = os.getenv('ENVIRONMENT')
+NEW_RELIC_LICENSE_KEY = os.getenv('NEW_RELIC_LICENSE_KEY')
 
 if ENVIRONMENT == 'STAGING':
     settings = 'staging'
@@ -27,4 +32,6 @@ from configurations.wsgi import get_wsgi_application
 from dj_static import Cling
 
 application = Cling(get_wsgi_application())
-application = newrelic.agent.WSGIApplicationWrapper(application)
+
+if NEW_RELIC_LICENSE_KEY:
+    application = newrelic.agent.WSGIApplicationWrapper(application)

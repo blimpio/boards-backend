@@ -229,6 +229,10 @@ class Development(Common):
     # Email Settings
     EMAIL_BACKEND = 'blimp_boards.utils.backends.BrowsableEmailBackend'
 
+    # Django Debug Toolbar
+    DEBUG_TOOLBAR_PATCH_SETTINGS = values.BooleanValue(
+        environ_prefix=None, default=True)
+
     # Django REST framework
     Common.REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
         'rest_framework.renderers.JSONRenderer',
