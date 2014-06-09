@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('date_created', self.gf('django.db.models.fields.DateTimeField')(blank=True, default=datetime.datetime.now)),
             ('date_modified', self.gf('django.db.models.fields.DateTimeField')(blank=True, default=datetime.datetime.now)),
-            ('domain_name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
+            ('domain_name', self.gf('django.db.models.fields.CharField')(max_length=255, unique=True)),
         ))
         db.send_create_signal('accounts', ['EmailDomain'])
 
@@ -23,9 +23,13 @@ class Migration(SchemaMigration):
             ('date_created', self.gf('django.db.models.fields.DateTimeField')(blank=True, default=datetime.datetime.now)),
             ('date_modified', self.gf('django.db.models.fields.DateTimeField')(blank=True, default=datetime.datetime.now)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=50)),
-            ('image_url', self.gf('django.db.models.fields.files.ImageField')(blank=True, max_length=100)),
+            ('slug', self.gf('autoslug.fields.AutoSlugField')(blank=True, max_length=50, populate_from='name', unique=True, unique_with=())),
+            ('type', self.gf('django.db.models.fields.CharField')(max_length=10)),
             ('allow_signup', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('logo_color', self.gf('django.db.models.fields.CharField')(blank=True, max_length=255)),
+            ('disqus_shortname', self.gf('django.db.models.fields.CharField')(blank=True, max_length=255)),
+            ('created_by', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.User'])),
+            ('modified_by', self.gf('django.db.models.fields.related.ForeignKey')(related_name='account_modified_by', to=orm['users.User'])),
         ))
         db.send_create_signal('accounts', ['Account'])
 
@@ -72,15 +76,19 @@ class Migration(SchemaMigration):
 
     models = {
         'accounts.account': {
-            'Meta': {'object_name': 'Account', 'ordering': "('-date_modified', '-date_created')"},
+            'Meta': {'object_name': 'Account'},
             'allow_signup': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['users.User']"}),
             'date_created': ('django.db.models.fields.DateTimeField', [], {'blank': 'True', 'default': 'datetime.datetime.now'}),
             'date_modified': ('django.db.models.fields.DateTimeField', [], {'blank': 'True', 'default': 'datetime.datetime.now'}),
-            'email_domains': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'to': "orm['accounts.EmailDomain']", 'symmetrical': 'False', 'null': 'True'}),
+            'disqus_shortname': ('django.db.models.fields.CharField', [], {'blank': 'True', 'max_length': '255'}),
+            'email_domains': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'null': 'True', 'symmetrical': 'False', 'to': "orm['accounts.EmailDomain']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image_url': ('django.db.models.fields.files.ImageField', [], {'blank': 'True', 'max_length': '100'}),
+            'logo_color': ('django.db.models.fields.CharField', [], {'blank': 'True', 'max_length': '255'}),
+            'modified_by': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'account_modified_by'", 'to': "orm['users.User']"}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '50'})
+            'slug': ('autoslug.fields.AutoSlugField', [], {'blank': 'True', 'max_length': '50', 'populate_from': "'name'", 'unique': 'True', 'unique_with': '()'}),
+            'type': ('django.db.models.fields.CharField', [], {'max_length': '10'})
         },
         'accounts.accountcollaborator': {
             'Meta': {'object_name': 'AccountCollaborator', 'unique_together': "(('account', 'user'),)"},
@@ -95,37 +103,30 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'EmailDomain', 'ordering': "('-date_modified', '-date_created')"},
             'date_created': ('django.db.models.fields.DateTimeField', [], {'blank': 'True', 'default': 'datetime.datetime.now'}),
             'date_modified': ('django.db.models.fields.DateTimeField', [], {'blank': 'True', 'default': 'datetime.datetime.now'}),
-            'domain_name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
+            'domain_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'unique': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
-        },
-        'contenttypes.contenttype': {
-            'Meta': {'object_name': 'ContentType', 'unique_together': "(('app_label', 'model'),)", 'ordering': "('name',)", 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'users.user': {
             'Meta': {'object_name': 'User'},
-            'aim_username': ('django.db.models.fields.CharField', [], {'blank': 'True', 'max_length': '255'}),
-            'avatar': ('django.db.models.fields.files.ImageField', [], {'blank': 'True', 'max_length': '255'}),
+            'avatar_path': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'date_created': ('django.db.models.fields.DateTimeField', [], {'blank': 'True', 'default': 'datetime.datetime.now'}),
             'date_modified': ('django.db.models.fields.DateTimeField', [], {'blank': 'True', 'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'unique': 'True', 'max_length': '254'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
+            'email': ('django.db.models.fields.EmailField', [], {'max_length': '254', 'unique': 'True'}),
+            'email_notifications': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'first_name': ('django.db.models.fields.CharField', [], {'blank': 'True', 'max_length': '30'}),
             'gravatar_url': ('django.db.models.fields.URLField', [], {'blank': 'True', 'max_length': '200'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'job_title': ('django.db.models.fields.CharField', [], {'blank': 'True', 'max_length': '255'}),
-            'last_ip': ('django.db.models.fields.IPAddressField', [], {'blank': 'True', 'default': "'127.0.0.1'", 'max_length': '15', 'null': 'True'}),
+            'last_ip': ('django.db.models.fields.IPAddressField', [], {'blank': 'True', 'null': 'True', 'max_length': '15', 'default': "'127.0.0.1'"}),
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
+            'last_name': ('django.db.models.fields.CharField', [], {'blank': 'True', 'max_length': '30'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'timezone': ('django.db.models.fields.CharField', [], {'default': "'UTC'", 'max_length': '255'}),
-            'token_version': ('django.db.models.fields.CharField', [], {'unique': 'True', 'default': "'96a9b464-d940-4f16-a3ca-b474744ee307'", 'max_length': '36', 'db_index': 'True'}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'}),
+            'timezone': ('django.db.models.fields.CharField', [], {'max_length': '255', 'default': "'UTC'"}),
+            'token_version': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '36', 'unique': 'True', 'default': "'58594147-1611-40cd-a331-88cdee1db8f1'"}),
+            'username': ('django.db.models.fields.CharField', [], {'max_length': '30', 'unique': 'True'})
         }
     }
 
