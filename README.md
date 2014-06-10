@@ -1,6 +1,6 @@
 # Blimp Boards Backend
 
-![wercker status](https://app.wercker.com/status/24f70b41859e7084501e7e4bf4ad3c18 "wercker status")
+[![Build Status](https://travis-ci.org/GetBlimp/boards-backend.svg?branch=dev)](https://travis-ci.org/GetBlimp/boards-backend)
 
 ## Install
 
