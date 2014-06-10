@@ -1,6 +1,3 @@
-import os
-import uuid
-
 from django.db import models
 from django.db.models.loading import get_model
 from django.core.exceptions import ValidationError
@@ -14,12 +11,6 @@ from ..utils.decorators import autoconnect
 from ..utils.fields import ReservedKeywordsAutoSlugField
 from .constants import ACCOUNT_RESERVED_KEYWORDS
 from . import managers
-
-
-def get_company_upload_path(instance, filename):
-    identifier = str(uuid.uuid4())
-    return os.path.join(
-        'uploads', 'companies', str(instance.pk), identifier, filename)
 
 
 class EmailDomain(BaseModel):
