@@ -18,6 +18,7 @@ django-secure==1.0
 djangorestframework==2.3.13
 djangorestframework-jwt==0.1.5
 djrill==1.1.0
+freezegun==0.1.18
 gunicorn==18.0
 jsonfield==0.9.20
 mock==1.0.1
@@ -26,6 +27,7 @@ psycopg2==2.5.3
 py==1.4.20
 pycrypto==2.6.1
 pystache==0.5.3
+python-dateutil==2.2
 pytz==2014.1
 raven==5.0.0
 redis==2.9.1

@@ -1,3 +1,5 @@
+from freezegun import freeze_time
+
 from ...accounts.models import Account, AccountCollaborator
 from ...invitations.models import SignupRequest, InvitedUser
 from ...utils.tests import BaseTestCase
@@ -104,18 +106,20 @@ class SignupSerializerTestCase(BaseTestCase):
         serializer = SignupSerializer()
         self.assertEqual(serializer.object, None)
 
+    @freeze_time("2012-01-14")
     def test_serializer_should_return_expected_data_if_valid(self):
         """
         Tests that serializer.object should return expected data when valid.
         """
         serializer = SignupSerializer(data=self.data)
         serializer.is_valid()
+        serializer_data = serializer.object
 
         user = User.objects.get(username='juan')
 
         expected_data = UserSerializer(user).data
 
-        self.assertEqual(serializer.object, expected_data)
+        self.assertEqual(serializer_data, expected_data)
 
     def test_serializer_should_validate_token_not_found(self):
         """
