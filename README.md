@@ -1,6 +1,6 @@
 # Blimp Boards Backend
 
-[![Build Status](https://travis-ci.org/GetBlimp/boards-backend.svg?branch=dev)](https://travis-ci.org/GetBlimp/boards-backend)
+[![Build Status](https://travis-ci.org/GetBlimp/boards-backend.svg?branch=dev)](https://travis-ci.org/GetBlimp/boards-backend) [![Dependency Status](https://gemnasium.com/GetBlimp/boards-backend.svg)](https://gemnasium.com/GetBlimp/boards-backend)
 
 ## Install
 
