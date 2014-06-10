@@ -1,3 +1,4 @@
+from freezegun import freeze_time
 from rest_framework import status
 from rest_framework.test import APIClient
 
@@ -89,6 +90,7 @@ class SignupAPIViewTestCase(BaseTestCase):
 
         self.signup_request = SignupRequest.objects.create(email=self.email)
 
+    @freeze_time("2012-01-14")
     def test_post_valid_data(self):
         """
         Tests that POST request with valid data to endpoint
@@ -118,6 +120,7 @@ class SignupAPIViewTestCase(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_response)
 
+    @freeze_time("2012-01-14")
     def test_post_valid_data_simple(self):
         """
         Tests that POST request with valid data to endpoint
