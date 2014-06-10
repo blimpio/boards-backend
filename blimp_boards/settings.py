@@ -239,9 +239,6 @@ class Development(Common):
         'rest_framework.renderers.BrowsableAPIRenderer',
     )
 
-    # boards-web
-    BOARDS_WEB_STATIC_URL = 'http://localhost:3333/'
-
 
 class Testing(Development):
     LOGGING_CONFIG = None
