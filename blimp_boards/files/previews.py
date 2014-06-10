@@ -11,17 +11,7 @@ from django.utils.six.moves.urllib.parse import urlparse
 logger = getLogger(__name__)
 
 
-def guess_output_format(url):
-    output_format = 'png'
-    url_path = urlparse(url).path
-    file_extension = os.path.splitext(url_path)[1].lower()
-    file_mimetype, file_encoding = mimetypes.guess_type(url_path)
-
-    if not file_mimetype:
-        return output_format
-
-    file_type = file_mimetype.split('/')[0]
-
+def is_raw_image(extension):
     raw_image_extensions = [
         '.arw', '.crw', '.cr2', '.nef'
         '.3fr',
@@ -42,10 +32,41 @@ def guess_output_format(url):
         '.x3f'
     ]
 
+    return extension in raw_image_extensions
+
+
+def get_parsed_file_from_url(url):
+    """
+    Returns a URL's file extension, mimetype, encoding, and type.
+    """
+    url_path = urlparse(url).path
+    file_extension = os.path.splitext(url_path)[1].lower()
+    file_mimetype, file_encoding = mimetypes.guess_type(url_path)
+    file_type = file_mimetype.split('/')[0]
+
+    return {
+        'extension': file_extension,
+        'mimetype': file_mimetype,
+        'encoding': file_encoding,
+        'type': file_type,
+    }
+
+
+def guess_output_format(url):
+    """
+    Returns the suggested FilePreviews.io thumbnail output format
+    depending on the file.
+    """
+    output_format = 'png'
+    parsed_file = get_parsed_file_from_url(url)
+
+    if not parsed_file['mimetype']:
+        return output_format
+
     jpg_conditions = [
-        file_type == 'video',
-        file_extension in ['.jpg', '.jpeg', '.tiff', '.tif'],
-        file_extension in raw_image_extensions
+        parsed_file['type'] == 'video',
+        parsed_file['extension'] in ['.jpg', '.jpeg', '.tiff', '.tif'],
+        is_raw_image(parsed_file['extension']),
     ]
 
     if any(jpg_conditions):
@@ -54,14 +75,53 @@ def guess_output_format(url):
     return output_format
 
 
+def guess_extra_data(url, output_format):
+    """
+    Returns unique list of suggested FilePreviews.io extra_data
+    options for uploaded file.
+    """
+    extra_data = ['checksum']
+    parsed_file = get_parsed_file_from_url(url)
+
+    if parsed_file['type'] == 'image':
+        extra_data.append('exif')
+
+    if parsed_file['type'] in ['image', 'video']:
+        extra_data.append('multimedia')
+
+    psd_conditions = [
+        parsed_file['mimetype'] == 'image/x-photoshop',
+        parsed_file['mimetype'] == 'image/vnd.adobe.photoshop',
+        parsed_file['extension'] == '.psd'
+    ]
+
+    if any(psd_conditions):
+        extra_data.append('psd')
+
+    if output_format != 'jpg':
+        extra_data.append('ocr')
+
+    if is_raw_image(parsed_file['extension']):
+        extra_data.append('raw')
+
+    return list(set(extra_data))
+
+
 def queue_previews(url, sizes, metadata):
+    """
+    Requests preview from FilePreviews.io.
+    extra_data: all, exif, psd, ocr, checksum, multimedia, raw
+    """
+    output_format = guess_output_format(url)
+    extra_data = guess_extra_data(url, output_format)
+
     payload = {
         'api_key': settings.BLIMP_PREVIEWS_API_KEY,
         'url': url,
         'sizes': sizes,
         'metadata': metadata,
-        'extra_data': ['all'],
-        'format': guess_output_format(url),
+        'extra_data': extra_data,
+        'format': output_format,
         'uploader': {
             'headers': {
                 'Cache-Control': 'max-age=315360000, no-transform, private',
