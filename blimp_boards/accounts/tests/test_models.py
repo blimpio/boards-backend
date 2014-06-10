@@ -1,8 +1,7 @@
 from ...utils.tests import BaseTestCase
 from ...users.models import User
 from ...invitations.models import InvitedUser
-from ..models import (Account, AccountCollaborator, EmailDomain,
-                      get_company_upload_path)
+from ..models import Account, AccountCollaborator, EmailDomain
 
 
 class AccountTestCase(BaseTestCase):
@@ -50,26 +49,6 @@ class AccountTestCase(BaseTestCase):
             email=data['email'], account=self.account)
 
         self.assertEqual(invited_user_tuple, (invited_user, True))
-
-    def test_get_company_upload_path_should_have_expected_segments(self):
-        """
-        Tests that get_company_upload_path returns the expected
-        number of segments.
-        """
-        path = get_company_upload_path(self.account, 'myfile.jpg')
-        segments = path.split('/')
-        expected_segments = 5
-
-        self.assertEqual(len(segments), expected_segments)
-
-    def test_get_company_upload_path_should_not_rename_file(self):
-        """
-        Tests that get_company_upload_path does not rename file name.
-        """
-        path = get_company_upload_path(self.account, 'myfile.jpg')
-        segments = path.split('/')
-
-        self.assertEqual('myfile.jpg', segments[-1])
 
 
 class AccountCollaboratorTestCase(BaseTestCase):
