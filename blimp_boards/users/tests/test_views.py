@@ -627,6 +627,7 @@ class UserSettingsAPIViewTestCase(AuthenticatedAPITestCase):
 
         self.url = '/api/v1/users/me/'
 
+    @freeze_time("2012-01-14")
     def test_get_for_loggedin_user(self):
         """
         Tests that endpoint returns expected response for logged in user.
@@ -666,6 +667,7 @@ class UserSettingsAPIViewTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data, expected_response)
 
+    @freeze_time("2012-01-14")
     def test_update_should_update_logged_in_user(self):
         """
         Tests that endpoint can be used to update logged in user's data.
@@ -724,6 +726,7 @@ class ChangePasswordAPIViewTestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data, expected_response)
 
+    @freeze_time("2012-01-14")
     def test_post_for_loggedin_user_valid_current_password(self):
         """
         Tests that endpoint changes user's password.

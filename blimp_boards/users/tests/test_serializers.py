@@ -761,6 +761,7 @@ class UserSettingsSerializerTestCase(BaseTestCase):
 
         self.assertEqual(serializer.errors, expected_errors)
 
+    @freeze_time("2012-01-14")
     def test_serializer_with_user_instance(self):
         """
         Tests serializer's expected data with user instance.
@@ -856,6 +857,7 @@ class UserSettingsSerializerTestCase(BaseTestCase):
 
         self.assertEqual(serializer.errors, expected_error)
 
+    @freeze_time("2012-01-14")
     def test_serializer_save_should_update_user(self):
         """
         Tests serializer save should update user.
@@ -891,6 +893,7 @@ class UserSettingsSerializerTestCase(BaseTestCase):
 
         self.assertEqual(serializer.data, expected_data)
 
+    @freeze_time("2012-01-14")
     def test_serializer_save_should_update_personal_account_slug(self):
         """
         Tests that serializer should update personal account slug
