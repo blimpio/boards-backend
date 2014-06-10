@@ -1,8 +1,8 @@
 language: python
 
 python:
-  - "2.7"
-  - "3.3"
+  - '2.7'
+  - '3.3'
 
 env:
   global:
@@ -25,3 +25,11 @@ matrix:
   exclude:
     - env: TOXENV=py27
     - env: TOXENV=py33
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+  hipchat:
+    rooms:
+      secure: oHinMi1k33ZF/oSXF3o0Whi8rOohcvj+SkiFEgOrmlSR1wQBhlg03ETgZtKPaI000EVxMwBQCzXMweqO7F49Z2ofm/DTPD2aPRG/BAUetg67b/VmZkYhoDpUBV2ovdWa4jSAOd73kkstWqZRU5cQh5RV1OsLBXda/MubrIS1p90=
