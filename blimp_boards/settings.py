@@ -244,26 +244,12 @@ class Testing(Development):
     LOGGING_CONFIG = None
 
     # Database Settings
-    WERCKER_POSTGRESQL_DATABASE = os.getenv('WERCKER_POSTGRESQL_DATABASE')
-
-    if WERCKER_POSTGRESQL_DATABASE:
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME': WERCKER_POSTGRESQL_DATABASE,
-                'USER': os.getenv('WERCKER_POSTGRESQL_USERNAME'),
-                'PASSWORD': os.getenv('WERCKER_POSTGRESQL_PASSWORD'),
-                'HOST': os.getenv('WERCKER_POSTGRESQL_HOST'),
-                'PORT': os.getenv('WERCKER_POSTGRESQL_PORT'),
-            }
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(Common.BASE_DIR, 'testing_db.sqlite3'),
         }
-    else:
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': os.path.join(Common.BASE_DIR, 'testing_db.sqlite3'),
-            }
-        }
+    }
 
     # Password Hashers
     PASSWORD_HASHERS = (
