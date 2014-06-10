@@ -11,18 +11,7 @@ $ pip install -r requirements.txt
 ```
 
 ## Environment
-Create an .env file in the root of the project.
-
-```
-ENVIRONMENT=DEVELOPMENT
-DJANGO_SECRET_KEY=
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_STORAGE_BUCKET_NAME=
-BLIMP_PREVIEWS_ACCOUNT_ID=
-BLIMP_PREVIEWS_SECRET_KEY=
-BLIMP_PREVIEWS_URL=
-```
+Create an `.env` file in the root of the project based on `.env.example`.
 
 ## First time setup
 
