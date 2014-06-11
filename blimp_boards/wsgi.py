@@ -12,8 +12,11 @@ import newrelic.agent
 import dotenv
 
 
-dotenv.read_dotenv(
-    os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
+try:
+    dotenv.read_dotenv(
+        os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
+except:
+    pass
 
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 NEW_RELIC_LICENSE_KEY = os.getenv('NEW_RELIC_LICENSE_KEY')
