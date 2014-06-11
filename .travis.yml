@@ -8,22 +8,15 @@ env:
   global:
     - DJANGO_SECRET_KEY=my-secret-key-for-testing
   matrix:
-    - TOXENV=py27
-    - TOXENV=py33
     - DJANGO="django==1.6.5"
     - DJANGO="django==1.5.8"
     - DJANGO="django==1.4.13"
 
 install:
-  - pip install tox --use-mirrors
+  - pip install -r requirements.txt --use-mirrors
 
 script:
-  - tox
-
-matrix:
-  exclude:
-    - env: TOXENV=py27
-    - env: TOXENV=py33
+  - python manage.py test --configuration=Testing --verbosity=3 --noinput
 
 notifications:
   email:
