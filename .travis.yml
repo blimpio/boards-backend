@@ -13,7 +13,7 @@ env:
     - DJANGO="django==1.4.13"
 
 install:
-  - pip install -r requirements.txt --use-mirrors
+  - pip install -r requirements.txt
 
 script:
   - python manage.py test --configuration=Testing --verbosity=3 --noinput
