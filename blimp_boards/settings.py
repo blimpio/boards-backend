@@ -192,7 +192,7 @@ class Common(Configuration):
     DEFAULT_FROM_EMAIL = values.Value(environ_prefix=None)
 
     # Sentry
-    SENTRY_DSN = values.Value(environ_prefix=None)
+    SENTRY_PUBLIC_DSN = values.Value(environ_prefix=None)
 
     @property
     def APPLICATION_URL(self):

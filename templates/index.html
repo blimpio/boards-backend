@@ -66,7 +66,7 @@
     </script>
 
     <!-- Sentry -->
-    {% if settings.SENTRY_DSN %}
+    {% if settings.SENTRY_PUBLIC_DSN %}
       <script src="//cdn.ravenjs.com/1.1.15/jquery,native/raven.min.js"></script>
       <script>
         var options = {
@@ -76,7 +76,7 @@
             }
         };
 
-        Raven.config('{{ settings.SENTRY_DSN }}', options).install();
+        Raven.config('{{ settings.SENTRY_PUBLIC_DSN }}', options).install();
       </script>
     {% endif %}
     <script src="{{ settings.BOARDS_SOCKETS_URL }}socket.io/socket.io.js"></script>
