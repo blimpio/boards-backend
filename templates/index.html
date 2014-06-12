@@ -52,8 +52,6 @@
         {% endif %}
       };
     </script>
-    <script src="{{ settings.BOARDS_SOCKETS_URL }}socket.io/socket.io.js"></script>
-    <script src="{% boards_web_static "js/app.js" %}" onload="require('application');"></script>
 
     <!-- Google Analytics -->
     <script>
@@ -66,5 +64,8 @@
       ga('send', 'pageview');
 
     </script>
+
+    <script src="{{ settings.BOARDS_SOCKETS_URL }}socket.io/socket.io.js"></script>
+    <script src="{% boards_web_static "js/app.js" %}" onload="require('application');"></script>
   </body>
 </html>
