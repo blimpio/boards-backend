@@ -65,6 +65,20 @@
 
     </script>
 
+    <!-- Sentry -->
+    {% if settings.SENTRY_DSN %}
+      <script src="//cdn.ravenjs.com/1.1.15/jquery,native/raven.min.js"></script>
+      <script>
+        var options = {
+            logger: 'javascript',
+            tags: {
+              git_commit: '{{ settings.BOARDS_WEB_CLIENT_VERSION }}'
+            }
+        };
+
+        Raven.config('{{ settings.SENTRY_DSN }}', options).install();
+      </script>
+    {% endif %}
     <script src="{{ settings.BOARDS_SOCKETS_URL }}socket.io/socket.io.js"></script>
     <script src="{% boards_web_static "js/app.js" %}" onload="require('application');"></script>
   </body>

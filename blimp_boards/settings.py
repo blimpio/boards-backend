@@ -191,6 +191,9 @@ class Common(Configuration):
     MANDRILL_API_KEY = values.Value(environ_prefix=None)
     DEFAULT_FROM_EMAIL = values.Value(environ_prefix=None)
 
+    # Sentry
+    SENTRY_DSN = values.Value(environ_prefix=None)
+
     @property
     def APPLICATION_URL(self):
         return '{}://{}'.format(self.HTTP_PROTOCOL, self.DOMAIN)
