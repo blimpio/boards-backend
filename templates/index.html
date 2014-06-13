@@ -37,6 +37,7 @@
     <div id="application"></div>
     <script>
       window.App = {
+        DEBUG: {{ settings.DEBUG|yesno:"true,false" }},
         API_URL: "{{ settings.BOARDS_API_URL }}",
         CAMO_URL: "{{ settings.CAMO_URL }}",
         STATIC_URL: "{% boards_web_static %}",
@@ -66,7 +67,7 @@
     </script>
 
     <!-- Sentry -->
-    {% if settings.SENTRY_PUBLIC_DSN %}
+    {% if not settings.DEBUG and settings.SENTRY_PUBLIC_DSN %}
       <script src="//cdn.ravenjs.com/1.1.15/jquery,native/raven.min.js"></script>
       <script>
         var options = {
