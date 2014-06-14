@@ -16,7 +16,7 @@ django-model-utils==2.0.3
 django-positions==0.5.1
 django-reversion==1.8.1
 django-secure==1.0
-djangorestframework==2.3.14
+djangorestframework==2.3.13
 djangorestframework-jwt==0.1.5
 djrill==1.1.1
 freezegun==0.1.18
