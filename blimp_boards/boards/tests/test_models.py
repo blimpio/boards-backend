@@ -194,6 +194,12 @@ class BoardCollaboratorTestCase(BaseTestCase):
 
         self.assertEqual(account_collaborators, 1)
 
+    def test_unicode_slugs(self):
+        board = Board.objects.create(
+            name='自転車', account=self.account, created_by=self.user)
+
+        self.assertEqual(board.slug, 'zi-zhuan-che')
+
 
 class BoardCollaboratorRequestTestCase(BaseTestCase):
     def setUp(self):

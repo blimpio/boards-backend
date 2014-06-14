@@ -1,6 +1,7 @@
 Django==1.6.5
 PyJWT==0.2.1
 South==0.8.4
+Unidecode==0.04.16
 Werkzeug==0.9.6
 coverage==3.7.1
 dj-database-url==0.3.0
