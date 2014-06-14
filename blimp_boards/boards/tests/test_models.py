@@ -1,3 +1,5 @@
+# -*- coding: utf8 -*-
+
 from django.core.exceptions import ValidationError
 
 from ...utils.tests import BaseTestCase, FuzzyInt
