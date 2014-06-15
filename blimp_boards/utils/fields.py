@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 
 from rest_framework import serializers
 from autoslug import AutoSlugField
+from slugify import slugify as awesome_slugify
 from autoslug.settings import slugify as default_slugify
 
 from .validators import validate_list, validate_domain_name
@@ -119,7 +120,8 @@ class ReservedKeywordsAutoSlugField(AutoSlugField):
         super(ReservedKeywordsAutoSlugField, self).__init__(*args, **kwargs)
 
         def custom_slugify(value):
-            value = value.replace('.', '-')
+            pre_slug = awesome_slugify(value, to_lower=True)
+            value = value.replace('.', '-').replace('_', '-')
             pre_slug = default_slugify(value)
 
             if pre_slug in reserved_keywords:

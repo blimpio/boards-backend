@@ -79,7 +79,7 @@ class UserModelTestCase(BaseTestCase):
 
         account = self.user.account_set.all()[0]
 
-        self.assertEqual(account.slug, self.user.username)
+        self.assertEqual(account.slug, 'changed-username')
 
     def test_user_update_email_notifications_updates_settings(self):
         """

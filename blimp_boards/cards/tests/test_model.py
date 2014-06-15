@@ -90,3 +90,10 @@ class CardTestCase(BaseTestCase):
         self.card = Card.objects.get(pk=self.card.pk)
 
         self.assertEqual(self.card.stack, None)
+
+    def test_model_slug_from_file_name(self):
+        card = Card.objects.create(
+            name='My_File.jpg', type='file', content='abc',
+            board=self.board, created_by=self.user)
+
+        self.assertEqual(card.slug, 'my-file-jpg')

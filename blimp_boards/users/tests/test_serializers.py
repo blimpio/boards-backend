@@ -932,7 +932,7 @@ class UserSettingsSerializerTestCase(BaseTestCase):
         account = self.user.account_set.all()[0]
 
         self.assertEqual(serializer.data, expected_data)
-        self.assertEqual(account.slug, data['username'])
+        self.assertEqual(account.slug, 'changed-username')
 
 
 class ChangePasswordSerializerTestCase(BaseTestCase):
