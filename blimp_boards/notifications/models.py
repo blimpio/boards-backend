@@ -1,22 +1,23 @@
-from django.db import models
 from django.conf import settings
-from django.dispatch import receiver
-from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.translation import get_language, activate
+from django.db import models
+from django.dispatch import receiver
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.log import getLogger
+from django.utils.translation import get_language, activate
+from django.utils.translation import ugettext_lazy as _
 
+from jsonfield import JSONField
 from model_utils import Choices
 from model_utils.managers import PassThroughManager
-from jsonfield import JSONField
 from rest_framework.utils.encoders import JSONEncoder
 
-from ..utils.models import BaseModel
 from ..utils.date import timesince as timesince_
-from .signals import notify
+from ..utils.models import BaseModel
 from .query import NotificationQuerySet
+from .signals import notify
 from .types import NOTIFICATION_TYPES, get_notification_type
 from . import backends
 
@@ -31,6 +32,7 @@ NOTIFICATION_MEDIA, NOTIFICATION_MEDIA_DEFAULTS = \
     backends.load_media_defaults(backends=NOTIFICATION_BACKENDS)
 
 
+@python_2_unicode_compatible
 class NotificationSetting(BaseModel):
     """
     Indicates, for a given user, whether to send notifications
@@ -92,6 +94,7 @@ class NotificationSetting(BaseModel):
         ).update(send=send)
 
 
+@python_2_unicode_compatible
 class Notification(BaseModel):
     """
     Action model describing the actor acting out a verb

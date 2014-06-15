@@ -1,25 +1,26 @@
-import pytz
-import uuid
 import datetime
+import uuid
 import jwt
+import pytz
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.signals import user_logged_in
 from django.core.mail import send_mail
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.signals import user_logged_in
-from django.conf import settings
 from django.db.models.loading import get_model
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _
 
-from ..utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
-from ..utils.validators import username_validator
-from ..utils.models import BaseModel
-from ..utils.decorators import autoconnect
-from ..utils.request import get_ip_address
 from ..notifications.models import NotificationSetting
 from ..notifications.signals import notify
-from .utils import get_gravatar_url
+from ..utils.decorators import autoconnect
+from ..utils.jwt_handlers import jwt_payload_handler, jwt_encode_handler
+from ..utils.models import BaseModel
+from ..utils.request import get_ip_address
+from ..utils.validators import username_validator
 from .managers import UserManager, ActiveUserManager
+from .utils import get_gravatar_url
 
 
 def update_last_ip(sender, user, request, **kwargs):
@@ -33,6 +34,7 @@ user_logged_in.connect(update_last_ip)
 
 
 @autoconnect
+@python_2_unicode_compatible
 class User(BaseModel, AbstractBaseUser):
     PRETTY_TIMEZONE_CHOICES = [('', '--- Select ---')]
 
