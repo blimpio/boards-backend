@@ -1,36 +1,34 @@
-import datetime
 import jwt
 import positions
+import datetime
 
+from django.db import models
+from django.dispatch import receiver
 from django.conf import settings
-from django.contrib.contenttypes import generic
-from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
-from django.db import models
-from django.db.models import F
+from django.contrib.contenttypes import generic
 from django.db.models.loading import get_model
+from django.db.models import F
 from django.db.models.signals import m2m_changed
-from django.dispatch import receiver
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
+from django.contrib.contenttypes.models import ContentType
 from django.utils.timezone import now
 
 from jsonfield import JSONField
 from rest_framework.utils.encoders import JSONEncoder
 
-from ..files.previews import queue_previews
-from ..files.utils import sign_s3_url
-from ..notifications.signals import notify
+from ..utils.models import BaseModel
 from ..utils.decorators import autoconnect
 from ..utils.fields import ReservedKeywordsAutoSlugField
-from ..utils.models import BaseModel
+from ..notifications.signals import notify
+from ..files.previews import queue_previews
+from ..files.utils import sign_s3_url
 from .constants import CARD_RESERVED_KEYWORDS
 from .managers import CardManager
 
 
 @autoconnect
-@python_2_unicode_compatible
 class Card(BaseModel):
     TYPE_CHOICES = (
         ('note', 'Note'),

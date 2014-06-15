@@ -1,20 +1,18 @@
 import jwt
 
+from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.db import models
 from django.db.models.loading import get_model
-from django.utils.encoding import python_2_unicode_compatible
 
-from ..notifications.signals import notify
+from ..utils.models import BaseModel
+from ..utils.decorators import autoconnect
 from ..users.models import User
 from ..users.utils import get_gravatar_url
-from ..utils.decorators import autoconnect
-from ..utils.models import BaseModel
+from ..notifications.signals import notify
 from .managers import SignupRequestManager, InvitedUserManager
 
 
-@python_2_unicode_compatible
 class SignupRequest(BaseModel):
     email = models.EmailField(unique=True)
     objects = SignupRequestManager()
@@ -55,7 +53,6 @@ class SignupRequest(BaseModel):
 
 
 @autoconnect
-@python_2_unicode_compatible
 class InvitedUser(BaseModel):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)

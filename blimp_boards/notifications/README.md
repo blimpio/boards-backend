@@ -1,8 +1,19 @@
-# Experimental notifications system
+notify.send([user, user2], notification_type)
 
-Based on ideas and approaches from:
-- pinax/django-notification
-- django-notifications/django-notifications
+
+'recipient', 'actor', 'verb', 'action_object', 'target', 'description',
+'timestamp'
+
+notify.send(from_user, recipient=to_user, target)
+send_now([recipient], 'comment_created')
+
+Developer should be able to trigger notification.
+    - Either trigger email or create notification, or both.
+
+notify.send()
+notification.send()
+email.send()
+
 
 # pinax/django-notification
 ```

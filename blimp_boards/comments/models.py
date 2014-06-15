@@ -1,14 +1,12 @@
+from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
-from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
-from ..utils.decorators import autoconnect
 from ..utils.models import BaseModel
+from ..utils.decorators import autoconnect
 
 
 @autoconnect
-@python_2_unicode_compatible
 class Comment(BaseModel):
     content = models.TextField()
 
