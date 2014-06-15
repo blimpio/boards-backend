@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 
 from django.core.exceptions import ValidationError
+from django.utils.encoding import smart_text
 
 from ...utils.tests import BaseTestCase, FuzzyInt
 from ...users.models import User
@@ -198,7 +199,7 @@ class BoardCollaboratorTestCase(BaseTestCase):
 
     def test_unicode_slugs(self):
         board = Board.objects.create(
-            name='自転車', account=self.account, created_by=self.user)
+            name=smart_text('自転車'), account=self.account, created_by=self.user)
 
         self.assertEqual(board.slug, 'zi-zhuan-che')
 

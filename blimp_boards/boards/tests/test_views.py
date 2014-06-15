@@ -1,3 +1,6 @@
+# -*- coding: utf8 -*-
+
+from django.utils.encoding import smart_text
 from rest_framework import status
 from rest_framework.test import APIClient
 
@@ -172,6 +175,44 @@ class BoardViewSetTestCase(AuthenticatedAPITestCase):
             'date_modified': board.date_modified,
             'name': 'New Board Name',
             'slug': 'new-board-name',
+            'account': board.account_id,
+            'is_shared': False,
+            'thumbnail_xs_path': self.board.thumbnail_xs_path,
+            'thumbnail_sm_path': self.board.thumbnail_sm_path,
+            'thumbnail_md_path': self.board.thumbnail_md_path,
+            'thumbnail_lg_path': self.board.thumbnail_lg_path,
+            'html_url': board.html_url,
+            'activity_html_url': board.activity_html_url,
+            'color': 'red',
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data, expected_response)
+
+    def test_viewset_should_create_board_with_unicode_name(self):
+        """
+        Tests that POST to viewset creates a board.
+        """
+        data = {
+            'name': smart_text('自転車'),
+            'account': self.account.id,
+            'color': 'red'
+        }
+
+        response = self.client.post(self.base_url, data, format='json')
+
+        board = Board.objects.get(pk=response.data['id'])
+        created_by = NestedUserSerializer(board.created_by).data
+        modified_by = NestedUserSerializer(board.modified_by).data
+
+        expected_response = {
+            'created_by': created_by,
+            'modified_by': modified_by,
+            'id': board.id,
+            'date_created': board.date_created,
+            'date_modified': board.date_modified,
+            'name': data['name'],
+            'slug': 'zi-zhuan-che',
             'account': board.account_id,
             'is_shared': False,
             'thumbnail_xs_path': self.board.thumbnail_xs_path,

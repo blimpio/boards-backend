@@ -1,19 +1,20 @@
 from copy import deepcopy
 
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
-from django.core.urlresolvers import reverse
-from django.core.exceptions import ValidationError
 from django.db.models.loading import get_model
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
-from django.conf import settings
 from django.utils.log import getLogger
 
-from ..utils.models import BaseModel
-from ..utils.fields import ReservedKeywordsAutoSlugField
-from ..utils.decorators import autoconnect
-from ..notifications.signals import notify
 from ..files.utils import sign_s3_url
+from ..notifications.signals import notify
+from ..utils.decorators import autoconnect
+from ..utils.fields import ReservedKeywordsAutoSlugField
+from ..utils.models import BaseModel
 from .constants import BOARD_RESERVED_KEYWORDS
 
 
@@ -21,6 +22,7 @@ logger = getLogger(__name__)
 
 
 @autoconnect
+@python_2_unicode_compatible
 class Board(BaseModel):
     name = models.CharField(max_length=255)
     slug = ReservedKeywordsAutoSlugField(
