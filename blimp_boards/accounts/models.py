@@ -1,14 +1,15 @@
-from django.db import models
-from django.db.models.loading import get_model
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+from django.db import models
+from django.db.models.loading import get_model
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
-from django.conf import settings
 
 from ..users.models import User
-from ..utils.models import BaseModel
 from ..utils.decorators import autoconnect
 from ..utils.fields import ReservedKeywordsAutoSlugField
+from ..utils.models import BaseModel
 from .constants import ACCOUNT_RESERVED_KEYWORDS
 from . import managers
 
@@ -21,6 +22,7 @@ class EmailDomain(BaseModel):
 
 
 @autoconnect
+@python_2_unicode_compatible
 class Account(BaseModel):
     PERSONAL_ACCOUNT = 'personal'
     TEAM_ACCOUNT = 'team'
@@ -138,6 +140,7 @@ class Account(BaseModel):
         return collaborators.exists()
 
 
+@python_2_unicode_compatible
 class AccountCollaborator(BaseModel):
     account = models.ForeignKey(Account)
     user = models.ForeignKey(User)

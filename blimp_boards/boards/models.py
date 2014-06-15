@@ -235,6 +235,7 @@ class Board(BaseModel):
 
 
 @autoconnect
+@python_2_unicode_compatible
 class BoardCollaborator(BaseModel):
     READ_PERMISSION = 'read'
     WRITE_PERMISSION = 'write'
@@ -338,6 +339,7 @@ class BoardCollaborator(BaseModel):
         )
 
 
+@python_2_unicode_compatible
 class BoardCollaboratorRequest(BaseModel):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
