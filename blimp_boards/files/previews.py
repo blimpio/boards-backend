@@ -42,13 +42,12 @@ def get_parsed_file_from_url(url):
     url_path = urlparse(url).path
     file_extension = os.path.splitext(url_path)[1].lower()
     file_mimetype, file_encoding = mimetypes.guess_type(url_path)
-    file_type = file_mimetype.split('/')[0]
 
     return {
         'extension': file_extension,
         'mimetype': file_mimetype,
         'encoding': file_encoding,
-        'type': file_type,
+        'type': file_mimetype.split('/')[0] if file_mimetype else None,
     }
 
 
