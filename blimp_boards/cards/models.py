@@ -33,6 +33,7 @@ from .managers import CardManager
 @python_2_unicode_compatible
 class Card(BaseModel):
     TYPE_CHOICES = (
+        ('link', 'Link'),
         ('note', 'Note'),
         ('file', 'File'),
         ('stack', 'Stack'),
