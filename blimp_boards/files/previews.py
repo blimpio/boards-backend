@@ -39,9 +39,14 @@ def get_parsed_file_from_url(url):
     """
     Returns a URL's file extension, mimetype, encoding, and type.
     """
-    url_path = urlparse(url).path
-    file_extension = os.path.splitext(url_path)[1].lower()
-    file_mimetype, file_encoding = mimetypes.guess_type(url_path)
+    try:
+        url_path = urlparse(url).path
+        file_extension = os.path.splitext(url_path)[1].lower()
+        file_mimetype, file_encoding = mimetypes.guess_type(url_path)
+    except:
+        file_extension = None
+        file_mimetype = None
+        file_encoding = None
 
     return {
         'extension': file_extension,
