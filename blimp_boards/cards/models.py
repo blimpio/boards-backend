@@ -263,7 +263,7 @@ class Card(BaseModel):
                 raise ValidationError(msg.format(field))
 
     def request_previews(self):
-        if self.type not in self.PREVIEWABLE_TYPES and not self.content:
+        if self.type not in self.PREVIEWABLE_TYPES or not self.content:
             return None
 
         if self.type == 'file':
