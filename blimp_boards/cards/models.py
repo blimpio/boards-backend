@@ -32,6 +32,7 @@ from .managers import CardManager
 @autoconnect
 @python_2_unicode_compatible
 class Card(BaseModel):
+    PREVIEWABLE_TYPES = ('link', 'file', )
     TYPE_CHOICES = (
         ('link', 'Link'),
         ('note', 'Note'),
@@ -262,13 +263,14 @@ class Card(BaseModel):
                 raise ValidationError(msg.format(field))
 
     def request_previews(self):
-        url = sign_s3_url(self.content)
-        sizes = ['original', '42>', '200>', '500>', '800>']
-        metadata = {
-            'cardId': self.id
-        }
+        if self.type in self.PREVIEWABLE_TYPES and self.content:
+            url = sign_s3_url(self.content)
+            sizes = ['original', '42>', '200>', '500>', '800>']
+            metadata = {
+                'cardId': self.id
+            }
 
-        return queue_previews(url, sizes, metadata)
+            return queue_previews(url, sizes, metadata)
 
     def update_notification_data(self):
         """
