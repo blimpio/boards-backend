@@ -263,14 +263,21 @@ class Card(BaseModel):
                 raise ValidationError(msg.format(field))
 
     def request_previews(self):
-        if self.type in self.PREVIEWABLE_TYPES and self.content:
-            url = sign_s3_url(self.content)
-            sizes = ['original', '42>', '200>', '500>', '800>']
-            metadata = {
-                'cardId': self.id
-            }
+        if self.type not in self.PREVIEWABLE_TYPES and not self.content:
+            return None
 
-            return queue_previews(url, sizes, metadata)
+        if self.type == 'file':
+            url = sign_s3_url(self.content)
+        elif self.type == 'link':
+            url = self.content
+
+        sizes = ['original', '42>', '200>', '500>', '800>']
+
+        metadata = {
+            'cardId': self.id
+        }
+
+        return queue_previews(url, sizes, metadata)
 
     def update_notification_data(self):
         """
