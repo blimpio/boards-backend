@@ -77,7 +77,7 @@ def generate_file_key(name=None):
     key = 'cards/{}'.format(uuid.uuid4())
 
     if name:
-        key = '{}/'.format(key, name)
+        key = '{}/{}'.format(key, name)
 
     return key
 
