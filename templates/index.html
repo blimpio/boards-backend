@@ -54,32 +54,10 @@
       };
     </script>
 
-    <!-- Google Analytics -->
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    {% include 'common/google_analytics.html' %}
+    {% include 'common/olark.html' %}
+    {% include 'common/sentry.html' %}
 
-      ga('create', 'UA-25728534-9', 'blimp.io');
-      ga('send', 'pageview');
-
-    </script>
-
-    <!-- Sentry -->
-    {% if not settings.DEBUG and settings.SENTRY_PUBLIC_DSN %}
-      <script src="//cdn.ravenjs.com/1.1.15/jquery,native/raven.min.js"></script>
-      <script>
-        var options = {
-            logger: 'javascript',
-            tags: {
-              git_commit: '{{ settings.BOARDS_WEB_CLIENT_VERSION }}'
-            }
-        };
-
-        Raven.config('{{ settings.SENTRY_PUBLIC_DSN }}', options).install();
-      </script>
-    {% endif %}
     <script src="{{ settings.BOARDS_SOCKETS_URL }}socket.io/socket.io.js"></script>
     <script src="{% boards_web_static "js/app.js" %}" onload="require('application');"></script>
   </body>

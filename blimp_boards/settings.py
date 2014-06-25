@@ -195,6 +195,13 @@ class Common(Configuration):
     # Sentry
     SENTRY_PUBLIC_DSN = values.Value(environ_prefix=None)
 
+    # Google Analytics
+    GOOGLE_ANALYTICS_PROPERTY_ID = values.Value(environ_prefix=None)
+    GOOGLE_ANALYTICS_DOMAIN = values.Value(environ_prefix=None)
+
+    # Olark
+    OLARK_SITE_ID = values.Value(environ_prefix=None)
+
     @property
     def APPLICATION_URL(self):
         return '{}://{}'.format(self.HTTP_PROTOCOL, self.DOMAIN)

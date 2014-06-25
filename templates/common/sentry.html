@@ -1,0 +1,14 @@
+<!-- Sentry -->
+{% if not settings.DEBUG and settings.SENTRY_PUBLIC_DSN %}
+  <script src="//cdn.ravenjs.com/1.1.15/jquery,native/raven.min.js"></script>
+  <script>
+    var options = {
+        logger: 'javascript',
+        tags: {
+          git_commit: '{{ settings.BOARDS_WEB_CLIENT_VERSION }}'
+        }
+    };
+
+    Raven.config('{{ settings.SENTRY_PUBLIC_DSN }}', options).install();
+  </script>
+{% endif %}
