@@ -15,7 +15,7 @@ class ValidateUsernameSerializer(serializers.Serializer):
     """
     Serializer that handles username validation endpoint.
     """
-    username = serializers.CharField()
+    username = serializers.CharField(max_length=30)
 
     def validate_username(self, attrs, source):
         username = attrs[source].lower()
@@ -37,9 +37,9 @@ class SignupSerializer(serializers.Serializer):
     """
     Serializer that handles signup endpoint data.
     """
-    email = serializers.EmailField()
+    email = serializers.EmailField(max_length=254)
     account_logo_color = serializers.CharField()
-    username = serializers.CharField()
+    username = serializers.CharField(max_length=30)
     password = fields.PasswordField(write_only=True)
     signup_request_token = serializers.CharField(write_only=True)
 
@@ -180,7 +180,7 @@ class SigninSerializer(serializers.Serializer):
     """
     Serializer that handles signin endpoint data.
     """
-    username = serializers.CharField()
+    username = serializers.CharField(max_length=30)
     password = fields.PasswordField(write_only=True)
 
     def validate(self, attrs):
@@ -229,7 +229,7 @@ class ForgotPasswordSerializer(serializers.Serializer):
     """
     Serializer that handles forgot password endpoint.
     """
-    email = serializers.EmailField()
+    email = serializers.EmailField(max_length=254)
 
     def validate_email(self, attrs, source):
         email = attrs[source].lower()

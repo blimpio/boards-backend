@@ -81,6 +81,25 @@ class ValidateUsernameSerializerTestCase(BaseTestCase):
 
         self.assertEqual(serializer.object, self.data)
 
+    def test_max_length_validation(self):
+        """
+        Tests that serializer validates max length on fields.
+        """
+        data = {
+            'username': 'juan' * 10
+        }
+
+        serializer = ValidateUsernameSerializer(data=data)
+        serializer.is_valid()
+
+        expected_error = {
+            'username': [
+                'Ensure this value has at most 30 characters (it has 40).'
+            ]
+        }
+
+        self.assertEqual(serializer.errors, expected_error)
+
 
 class SignupSerializerTestCase(BaseTestCase):
     def setUp(self):
