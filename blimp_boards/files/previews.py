@@ -111,20 +111,20 @@ def guess_extra_data(url, output_format):
     return list(set(extra_data))
 
 
-def queue_previews(url, sizes, metadata):
+def queue_previews(url, sizes, data):
     """
     Requests preview from FilePreviews.io.
-    extra_data: all, exif, psd, ocr, checksum, multimedia, raw
+    metadata: all, exif, psd, ocr, checksum, multimedia, raw
     """
     output_format = guess_output_format(url)
-    extra_data = guess_extra_data(url, output_format)
+    metadata = guess_extra_data(url, output_format)
 
     payload = {
         'api_key': settings.BLIMP_PREVIEWS_API_KEY,
         'url': url,
         'sizes': sizes,
+        'data': data,
         'metadata': metadata,
-        'extra_data': extra_data,
         'format': output_format,
         'uploader': {
             'headers': {

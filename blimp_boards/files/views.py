@@ -54,20 +54,20 @@ class FilePreviewsWebhook(APIView):
     def post(self, request):
         payload = decode_previews_payload(request.DATA)
 
-        logger.info('Received previews payload')
+        logger.info('Received previews payload: {}'.format(payload))
 
         if not payload:
             logger.info('Error decoding previews payload data')
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        metadata = payload.get('metadata')
+        data = payload.get('data')
         error = payload.get('error')
 
         if error:
             logger.info('Error found in payload data: {}'.format(error))
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        card_id = metadata['cardId']
+        card_id = data['cardId']
 
         try:
             card = Card.objects.get(pk=card_id)
