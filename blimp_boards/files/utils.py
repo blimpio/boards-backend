@@ -67,14 +67,19 @@ def generate_signature(policy, secret_key):
     return base64.b64encode(hmac_signature.digest())
 
 
-def generate_file_key(name=None, user=None):
+def generate_file_key(name=None):
     """
     Returns a string name for the S3 object that will
     store the uploaded file's data.
 
     TODO: Generate correct key depending on what object the file belongs.
     """
-    return 'cards/{}/{}'.format(uuid.uuid4(), name)
+    key = 'cards/{}'.format(uuid.uuid4())
+
+    if name:
+        key = '{}/'.format(key, name)
+
+    return key
 
 
 class S3UrlSigner(object):

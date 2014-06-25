@@ -111,7 +111,7 @@ def guess_extra_data(url, output_format):
     return list(set(extra_data))
 
 
-def queue_previews(url, sizes, data):
+def queue_previews(url, sizes, data, uploader_destination=None):
     """
     Requests preview from FilePreviews.io.
     metadata: all, exif, psd, ocr, checksum, multimedia, raw
@@ -133,6 +133,9 @@ def queue_previews(url, sizes, data):
             }
         }
     }
+
+    if uploader_destination:
+        payload['uploader']['destination'] = uploader_destination
 
     token = jwt.encode(payload, settings.BLIMP_PREVIEWS_SECRET_KEY)
 

@@ -20,7 +20,7 @@ from jsonfield import JSONField
 from rest_framework.utils.encoders import JSONEncoder
 
 from ..files.previews import queue_previews
-from ..files.utils import sign_s3_url
+from ..files.utils import sign_s3_url, generate_file_key
 from ..notifications.signals import notify
 from ..utils.decorators import autoconnect
 from ..utils.fields import ReservedKeywordsAutoSlugField
@@ -266,10 +266,13 @@ class Card(BaseModel):
         if self.type not in self.PREVIEWABLE_TYPES or not self.content:
             return None
 
+        destination = None
+
         if self.type == 'file':
             url = sign_s3_url(self.content)
         elif self.type == 'link':
             url = self.content
+            destination = generate_file_key()
 
         sizes = ['original', '42>', '200>', '500>', '800>']
 
@@ -277,7 +280,8 @@ class Card(BaseModel):
             'cardId': self.id
         }
 
-        return queue_previews(url, sizes, metadata)
+        return queue_previews(url, sizes, metadata,
+                              uploader_destination=destination)
 
     def update_notification_data(self):
         """

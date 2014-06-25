@@ -72,7 +72,7 @@ class UtilsTestCase(BaseTestCase):
         user = Mock()
         user.id = 1
 
-        key = generate_file_key(name='photo.jpg', user=user)
+        key = generate_file_key(name='photo.jpg')
 
         expected_key = ('cards/16fd2706-8baf-433b-82eb-8c7fada847da/photo.jpg')
 

@@ -32,7 +32,7 @@ class SignS3FileUploadAPIView(APIView):
         policy = generate_policy(bucket, mime_type, file_size)
         signature = generate_signature(policy, secret_key)
 
-        key = generate_file_key(name=file_name, user=request.user)
+        key = generate_file_key(name=file_name)
 
         params = {
             'access_key': access_key,
