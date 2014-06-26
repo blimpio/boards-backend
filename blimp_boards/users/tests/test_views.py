@@ -673,6 +673,7 @@ class UserSettingsAPIViewTestCase(AuthenticatedAPITestCase):
         Tests that endpoint can be used to update logged in user's data.
         """
         data = {
+            'username': self.username,
             'email': 'anotheremail@example.com'
         }
 
@@ -696,6 +697,35 @@ class UserSettingsAPIViewTestCase(AuthenticatedAPITestCase):
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+    @freeze_time("2012-01-14")
+    def test_update_should_validate_name_length(self):
+        """
+        Tests that endpoint can be used to update logged in user's data.
+        """
+        data = {
+            'first_name': 'a' * 40,
+            'last_name': 'b' * 40,
+            'email': 'anotheremail@example.com'
+        }
+
+        response = self.client.patch(self.url, data)
+
+        self.user = User.objects.get(username=self.username)
+
+        expected_response = {
+            'error': {
+                'last_name': [
+                    'Ensure this value has at most 30 characters (it has 40).'
+                ],
+                'first_name': [
+                    'Ensure this value has at most 30 characters (it has 40).'
+                ]
+            }
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data, expected_response)
 
 

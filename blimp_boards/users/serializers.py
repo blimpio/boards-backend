@@ -332,8 +332,8 @@ class UserSettingsSerializer(serializers.ModelSerializer):
     """
     Serializer that handles user settings endpoint.
     """
-    first_name = serializers.CharField(required=False)
-    last_name = serializers.CharField(required=False)
+    first_name = serializers.CharField(required=False, max_length=30)
+    last_name = serializers.CharField(required=False, max_length=30)
     token = serializers.Field(source='token')
 
     class Meta:
