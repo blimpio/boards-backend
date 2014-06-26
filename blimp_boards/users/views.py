@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from ..utils.response import ErrorResponse
+from ..utils.generics import RetrieveUpdateAPIView
 from ..invitations.models import SignupRequest, InvitedUser
 from .models import User
 from . import serializers
@@ -78,7 +79,7 @@ class ForgotPasswordAPIView(generics.CreateAPIView):
         return ErrorResponse(serializer.errors)
 
 
-class UserSettingsAPIView(generics.RetrieveUpdateAPIView):
+class UserSettingsAPIView(RetrieveUpdateAPIView):
     model = User
     serializer_class = serializers.UserSettingsSerializer
 
