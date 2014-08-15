@@ -20,55 +20,55 @@
     "env": {
         "AWS_ACCESS_KEY_ID": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "AWS_SECRET_ACCESS_KEY": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "AWS_STORAGE_BUCKET_NAME": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "BLIMP_PREVIEWS_API_KEY": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "BLIMP_PREVIEWS_SECRET_KEY": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "BOARDS_SOCKETS_REDIS_URL": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "BOARDS_SOCKETS_URL": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "BOARDS_WEB_CLIENT_VERSION": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "BOARDS_WEB_STATIC_URL": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "CAMO_URL": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "DATABASE_URL": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "DEFAULT_FROM_EMAIL": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "DJANGO_DEBUG": {
             "description": "",
-            "value": "no",
+            "value": "no"
         },
         "DJANGO_SECRET_KEY": {
             "description": "",
@@ -76,27 +76,27 @@
         },
         "DJANGO_TEMPLATE_DEBUG": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "DOMAIN": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "ENVIRONMENT": {
             "description": "",
-            "value": "PRODUCTION",
+            "value": "PRODUCTION"
         },
         "GOOGLE_ANALYTICS_DOMAIN": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "GOOGLE_ANALYTICS_PROPERTY_ID": {
             "description": "",
-            "value": "",
+            "value": ""
         },
         "MANDRILL_API_KEY": {
             "description": "",
-            "value": "",
+            "value": ""
         }
     }
 }
