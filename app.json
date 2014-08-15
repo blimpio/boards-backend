@@ -56,6 +56,10 @@
             "required": false,
             "value": ""
         },
+        "BLIMP_PREVIEWS_URL": {
+            "description": "",
+            "value": "https://api.filepreviews.io/v1/"
+        },
         "BOARDS_SOCKETS_REDIS_URL": {
             "description": "",
             "required": false,
