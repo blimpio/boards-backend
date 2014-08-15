@@ -1,0 +1,20 @@
+{
+    "name": "Blimp Boards Backend",
+    "description": "Backend API for Blimp Boards",
+    "website": "https://boards.blimp.io",
+    "repository": "https://github.com/GetBlimp/boards-backend/",
+    "logo": "",
+    "success_url": "/",
+    "keywords": [
+        "productivity",
+        "design",
+        "boards",
+        "team"
+    ],
+    "scripts": {
+        "postdeploy": "python manage.py syncdb --noinput && python manage.py migrate apps.users && python manage.py migrate"
+    },
+    "addons": [
+        "heroku-postgresql"
+    ]
+}
