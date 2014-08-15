@@ -3,7 +3,7 @@
     "description": "Backend API for Blimp Boards",
     "website": "https://boards.blimp.io",
     "repository": "https://github.com/GetBlimp/boards-backend/",
-    "logo": "",
+    "logo": "https://boards.blimp.io/static/images/boards-share.png",
     "success_url": "/",
     "keywords": [
         "productivity",
