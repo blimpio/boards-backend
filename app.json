@@ -32,18 +32,22 @@
         },
         "BLIMP_PREVIEWS_API_KEY": {
             "description": "",
+            "required": false,
             "value": ""
         },
         "BLIMP_PREVIEWS_SECRET_KEY": {
             "description": "",
+            "required": false,
             "value": ""
         },
         "BOARDS_SOCKETS_REDIS_URL": {
             "description": "",
+            "required": false,
             "value": ""
         },
         "BOARDS_SOCKETS_URL": {
             "description": "",
+            "required": false,
             "value": ""
         },
         "BOARDS_WEB_CLIENT_VERSION": {
@@ -76,10 +80,11 @@
         },
         "DJANGO_TEMPLATE_DEBUG": {
             "description": "",
-            "value": ""
+            "value": "no"
         },
         "DOMAIN": {
             "description": "",
+            "required": false,
             "value": ""
         },
         "ENVIRONMENT": {
@@ -88,14 +93,17 @@
         },
         "GOOGLE_ANALYTICS_DOMAIN": {
             "description": "",
+            "required": false,
             "value": ""
         },
         "GOOGLE_ANALYTICS_PROPERTY_ID": {
             "description": "",
+            "required": false,
             "value": ""
         },
         "MANDRILL_API_KEY": {
             "description": "",
+            "required": false,
             "value": ""
         }
     }
