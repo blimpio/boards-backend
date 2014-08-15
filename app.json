@@ -16,5 +16,87 @@
     },
     "addons": [
         "heroku-postgresql"
-    ]
+    ],
+    "env": {
+        "AWS_ACCESS_KEY_ID": {
+            "description": "",
+            "value": "",
+        },
+        "AWS_SECRET_ACCESS_KEY": {
+            "description": "",
+            "value": "",
+        },
+        "AWS_STORAGE_BUCKET_NAME": {
+            "description": "",
+            "value": "",
+        },
+        "BLIMP_PREVIEWS_API_KEY": {
+            "description": "",
+            "value": "",
+        },
+        "BLIMP_PREVIEWS_SECRET_KEY": {
+            "description": "",
+            "value": "",
+        },
+        "BOARDS_SOCKETS_REDIS_URL": {
+            "description": "",
+            "value": "",
+        },
+        "BOARDS_SOCKETS_URL": {
+            "description": "",
+            "value": "",
+        },
+        "BOARDS_WEB_CLIENT_VERSION": {
+            "description": "",
+            "value": "",
+        },
+        "BOARDS_WEB_STATIC_URL": {
+            "description": "",
+            "value": "",
+        },
+        "CAMO_URL": {
+            "description": "",
+            "value": "",
+        },
+        "DATABASE_URL": {
+            "description": "",
+            "value": "",
+        },
+        "DEFAULT_FROM_EMAIL": {
+            "description": "",
+            "value": "",
+        },
+        "DJANGO_DEBUG": {
+            "description": "",
+            "value": "no",
+        },
+        "DJANGO_SECRET_KEY": {
+            "description": "",
+            "generator": "secret"
+        },
+        "DJANGO_TEMPLATE_DEBUG": {
+            "description": "",
+            "value": "",
+        },
+        "DOMAIN": {
+            "description": "",
+            "value": "",
+        },
+        "ENVIRONMENT": {
+            "description": "",
+            "value": "PRODUCTION",
+        },
+        "GOOGLE_ANALYTICS_DOMAIN": {
+            "description": "",
+            "value": "",
+        },
+        "GOOGLE_ANALYTICS_PROPERTY_ID": {
+            "description": "",
+            "value": "",
+        },
+        "MANDRILL_API_KEY": {
+            "description": "",
+            "value": "",
+        }
+    }
 }
