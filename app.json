@@ -18,6 +18,22 @@
         "heroku-postgresql"
     ],
     "env": {
+        "ENVIRONMENT": {
+            "description": "",
+            "value": "PRODUCTION"
+        },
+        "DJANGO_DEBUG": {
+            "description": "",
+            "value": "no"
+        },
+        "DJANGO_SECRET_KEY": {
+            "description": "",
+            "generator": "secret"
+        },
+        "DJANGO_TEMPLATE_DEBUG": {
+            "description": "",
+            "value": "no"
+        },
         "AWS_ACCESS_KEY_ID": {
             "description": "",
             "value": ""
@@ -66,26 +82,10 @@
             "description": "",
             "value": ""
         },
-        "DJANGO_DEBUG": {
-            "description": "",
-            "value": "no"
-        },
-        "DJANGO_SECRET_KEY": {
-            "description": "",
-            "generator": "secret"
-        },
-        "DJANGO_TEMPLATE_DEBUG": {
-            "description": "",
-            "value": "no"
-        },
         "DOMAIN": {
             "description": "",
             "required": false,
             "value": ""
-        },
-        "ENVIRONMENT": {
-            "description": "",
-            "value": "PRODUCTION"
         },
         "GOOGLE_ANALYTICS_DOMAIN": {
             "description": "",
